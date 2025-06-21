@@ -104,6 +104,15 @@
                         <span>Total Cost:</span>
                         <span id="total-cost">$0</span>
                     </div>
+                    
+                    <div class="action-buttons">
+                        <button type="button" id="save-calendar-btn" class="action-btn calendar-btn">
+                            📅 Save to Calendar
+                        </button>
+                        <button type="button" id="clear-data-btn" class="action-btn clear-btn">
+                            🗑️ Clear All Data
+                        </button>
+                    </div>
                 </div>
 
                 <div id="error-message" class="error hidden"></div>
@@ -258,6 +267,18 @@
                             <button type="button" id="cancel-dog-btn" class="cancel-btn">Cancel</button>
                             <button type="button" id="save-dog-btn" class="save-btn" disabled>Add Dog</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmation Modal -->
+            <div id="confirm-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h3>🤔 Are you sure?</h3>
+                    <p id="confirm-message" class="confirm-message">Are you sure you want to clear all data? This will remove all dogs and reset the calculator.</p>
+                    <div class="modal-buttons">
+                        <button type="button" id="confirm-cancel-btn" class="cancel-btn">Cancel</button>
+                        <button type="button" id="confirm-yes-btn" class="save-btn">Yes, Clear Data</button>
                     </div>
                 </div>
             </div>

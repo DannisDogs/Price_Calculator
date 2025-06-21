@@ -372,6 +372,54 @@ select option {
     100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
 }
 
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Quicksand', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.calendar-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.calendar-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.clear-btn {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
+
+.clear-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+
+.action-btn:active {
+    transform: translateY(-1px);
+}
+
 .error {
     background-color: #ff4757;
     color: white;
@@ -501,6 +549,16 @@ footer {
     .bouncing-dog:nth-child(3) { animation: dogBounceMobile3 7s ease-in-out infinite 1.2s; }
     .bouncing-dog:nth-child(4) { animation: dogBounceMobile4 5.5s ease-in-out infinite 0.3s; }
     .bouncing-dog:nth-child(5) { animation: dogBounceMobile5 6.5s ease-in-out infinite 1s; }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .action-btn {
+        font-size: 0.9rem;
+        padding: 0.8rem;
+    }
 }
 
 @keyframes dogBounceMobile1 {
@@ -872,6 +930,31 @@ footer {
 .save-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Confirmation modal styles */
+.confirm-message {
+    color: var(--text-color);
+    text-align: center;
+    margin: 1.5rem 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+#confirm-modal .modal-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+#confirm-yes-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+#confirm-yes-btn:hover:not(:disabled) {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
 }
 
 /* Hide print receipt in normal view */

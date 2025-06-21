@@ -30,6 +30,62 @@ document.addEventListener('DOMContentLoaded', function() {
     let dogs = [];
     let currentDogData = { name: '', breed: '', customBreed: '', size: '' };
     
+    // Data persistence functions
+    function saveAppState() {
+        const appState = {
+            dogs: dogs,
+            dropoffDate: dropoffInput.dataset.dateValue,
+            pickupDate: pickupInput.dataset.dateValue,
+            dropoffDisplayValue: dropoffInput.value,
+            pickupDisplayValue: pickupInput.value,
+            timestamp: new Date().toISOString()
+        };
+        localStorage.setItem('dogSittingCalculatorState', JSON.stringify(appState));
+    }
+    
+    function loadAppState() {
+        try {
+            const savedState = localStorage.getItem('dogSittingCalculatorState');
+            if (savedState) {
+                const appState = JSON.parse(savedState);
+                
+                // Restore dogs
+                if (appState.dogs && Array.isArray(appState.dogs)) {
+                    dogs = appState.dogs;
+                    updateDogsDisplay();
+                    updateHeaderDogs();
+                }
+                
+                // Restore dates if they exist and are not too old (older than 7 days)
+                const savedTime = new Date(appState.timestamp);
+                const now = new Date();
+                const daysDiff = (now - savedTime) / (1000 * 60 * 60 * 24);
+                
+                if (daysDiff < 7 && appState.dropoffDate && appState.pickupDate) {
+                    // Only restore if the dates are in the future
+                    const dropoffDate = new Date(appState.dropoffDate);
+                    const pickupDate = new Date(appState.pickupDate);
+                    
+                    if (dropoffDate > now || pickupDate > now) {
+                        dropoffInput.value = appState.dropoffDisplayValue || '';
+                        dropoffInput.dataset.dateValue = appState.dropoffDate;
+                        pickupInput.value = appState.pickupDisplayValue || '';
+                        pickupInput.dataset.dateValue = appState.pickupDate;
+                    }
+                }
+                
+                // Trigger calculation if we have all required data
+                calculateRealTime();
+            }
+        } catch (error) {
+            console.warn('Failed to load saved state:', error);
+        }
+    }
+    
+    function clearAppState() {
+        localStorage.removeItem('dogSittingCalculatorState');
+    }
+    
     // Header dogs management
     const headerDogsContainer = document.getElementById('header-dogs');
     
@@ -144,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateHeaderDogs();
             dogModal.classList.add('hidden');
             calculateRealTime();
+            saveAppState();
         }
     });
     
@@ -218,6 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateDogsDisplay();
                 updateHeaderDogs();
                 calculateRealTime();
+                saveAppState();
             });
         });
     }
@@ -600,6 +658,166 @@ document.addEventListener('DOMContentLoaded', function() {
     
     resultsDiv.appendChild(printBtn);
     
+    // Calendar and data management functionality
+    const saveCalendarBtn = document.getElementById('save-calendar-btn');
+    const clearDataBtn = document.getElementById('clear-data-btn');
+    
+    // Save to calendar functionality
+    saveCalendarBtn.addEventListener('click', function() {
+        if (!dropoffInput.dataset.dateValue || !pickupInput.dataset.dateValue || dogs.length === 0) {
+            alert('Please add dogs and select drop-off/pick-up times before saving to calendar.');
+            return;
+        }
+        
+        generateCalendarEvent();
+    });
+    
+    // Confirmation modal elements
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmMessage = document.getElementById('confirm-message');
+    const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+    const confirmYesBtn = document.getElementById('confirm-yes-btn');
+    let confirmCallback = null;
+
+    // Custom confirm function
+    function showConfirm(message, callback) {
+        confirmMessage.textContent = message;
+        confirmCallback = callback;
+        confirmModal.classList.remove('hidden');
+    }
+
+    // Confirm modal event listeners
+    confirmCancelBtn.addEventListener('click', function() {
+        confirmModal.classList.add('hidden');
+        confirmCallback = null;
+    });
+
+    confirmYesBtn.addEventListener('click', function() {
+        confirmModal.classList.add('hidden');
+        if (confirmCallback) {
+            confirmCallback();
+            confirmCallback = null;
+        }
+    });
+
+    // Close modal when clicking outside
+    confirmModal.addEventListener('click', function(e) {
+        if (e.target === confirmModal) {
+            confirmModal.classList.add('hidden');
+            confirmCallback = null;
+        }
+    });
+
+    // Clear all data functionality
+    clearDataBtn.addEventListener('click', function() {
+        showConfirm('Are you sure you want to clear all data? This will remove all dogs and reset the calculator.', function() {
+            dogs = [];
+            dropoffInput.value = '';
+            dropoffInput.dataset.dateValue = '';
+            pickupInput.value = '';
+            pickupInput.dataset.dateValue = '';
+            updateDogsDisplay();
+            updateHeaderDogs();
+            resultsDiv.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+            clearAppState();
+            
+            // Reset to default values
+            const now = new Date();
+            now.setHours(9, 0, 0, 0);
+            dropoffInput.value = now.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+            dropoffInput.dataset.dateValue = now.toISOString();
+            
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            pickupInput.value = tomorrow.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+            pickupInput.dataset.dateValue = tomorrow.toISOString();
+        });
+    });
+    
+    // Generate .ics calendar event file
+    function generateCalendarEvent() {
+        const dropoffDate = new Date(dropoffInput.dataset.dateValue);
+        const pickupDate = new Date(pickupInput.dataset.dateValue);
+        
+        // Format dates for .ics format (YYYYMMDDTHHMMSSZ)
+        function formatICSDate(date) {
+            return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        }
+        
+        // Create dog list for description
+        const dogList = dogs.map(dog => {
+            const displayBreed = dog.breed === 'mixed' && dog.customBreed ? 
+                                dog.customBreed : 
+                                dog.breed.charAt(0).toUpperCase() + dog.breed.slice(1).replace('-', ' ');
+            return `${dog.name} (${displayBreed}, ${dog.size.charAt(0).toUpperCase() + dog.size.slice(1)})`;
+        }).join('\\n');
+        
+        // Get pricing info
+        const pricing = calculatePricing(dropoffDate, pickupDate, dogs.length);
+        
+        // Create .ics content
+        const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Dog Sitting At Danni's House//Calculator//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${Date.now()}@dogsittingdannis.com
+DTSTART:${formatICSDate(dropoffDate)}
+DTEND:${formatICSDate(pickupDate)}
+SUMMARY:Dog Sitting at Danni's House - ${dogs.map(d => d.name).join(', ')}
+DESCRIPTION:Dog Sitting Service\\n\\nDogs in care:\\n${dogList}\\n\\nService Details:\\n• Drop-off: ${dropoffDate.toLocaleString()}\\n• Pick-up: ${pickupDate.toLocaleString()}\\n• Total Cost: $${pricing.total}\\n\\nBreakdown:\\n${pricing.daySessions > 0 ? `• Day Sessions: ${pricing.daySessions}\\n` : ''}${pricing.overnightSessions > 0 ? `• Overnight Stays: ${pricing.overnightSessions}\\n` : ''}${pricing.extraHours > 0 ? `• Extra Hours: ${pricing.extraHours}\\n` : ''}\\nYour furry friends are in great hands!
+LOCATION:Danni's House
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+BEGIN:VALARM
+TRIGGER:-PT1H
+ACTION:DISPLAY
+DESCRIPTION:Dog drop-off in 1 hour
+END:VALARM
+BEGIN:VALARM
+TRIGGER:PT1H
+ACTION:DISPLAY
+DESCRIPTION:Dog pick-up in 1 hour
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+        
+        // Create blob and download
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `dog-sitting-${dogs.map(d => d.name.toLowerCase()).join('-')}-${dropoffDate.getFullYear()}-${(dropoffDate.getMonth() + 1).toString().padStart(2, '0')}-${dropoffDate.getDate().toString().padStart(2, '0')}.ics`;
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        
+        // Show success message
+        const originalText = saveCalendarBtn.innerHTML;
+        saveCalendarBtn.innerHTML = '✅ Saved!';
+        saveCalendarBtn.disabled = true;
+        setTimeout(() => {
+            saveCalendarBtn.innerHTML = originalText;
+            saveCalendarBtn.disabled = false;
+        }, 2000);
+    }
+    
     // Date/Time picker functions
     function openDatetimePicker(input) {
         currentDatetimeInput = input;
@@ -794,6 +1012,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentDatetimeInput.dataset.dateValue = selectedDate.toISOString();
             datetimeModal.classList.add('hidden');
             calculateRealTime();
+            saveAppState();
         }
     });
     
@@ -907,26 +1126,36 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Remove old calculateCost function (lines 162-216) since we replaced it above
     
-    // Set default datetime values
-    const now = new Date();
-    now.setHours(9, 0, 0, 0);
-    dropoffInput.value = now.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit'
-    });
-    dropoffInput.dataset.dateValue = now.toISOString();
+    // Load saved state or set default datetime values
+    loadAppState();
     
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    pickupInput.value = tomorrow.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit'
-    });
-    pickupInput.dataset.dateValue = tomorrow.toISOString();
+    // Set default datetime values only if not loaded from state
+    if (!dropoffInput.value || !pickupInput.value) {
+        const now = new Date();
+        now.setHours(9, 0, 0, 0);
+        
+        if (!dropoffInput.value) {
+            dropoffInput.value = now.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+            dropoffInput.dataset.dateValue = now.toISOString();
+        }
+        
+        if (!pickupInput.value) {
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            pickupInput.value = tomorrow.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+            pickupInput.dataset.dateValue = tomorrow.toISOString();
+        }
+    }
 });
