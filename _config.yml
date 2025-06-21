@@ -1,0 +1,23 @@
+# Jekyll configuration for GitHub Pages
+title: Paw-some Pet Care Calculator
+description: A friendly dog sitting cost calculator for pet care services
+theme: null # Using custom CSS, no Jekyll theme needed
+baseurl: "" # Set this to your repository name if not using custom domain
+url: "" # Your custom domain if you have one
+
+# Build settings
+markdown: kramdown
+exclude:
+  - README.md
+  - CLAUDE.md
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# GitHub Pages settings
+github: [metadata]

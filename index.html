@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paw-some Pet Care Calculator 🐾</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="paw-print">🐾</div>
+                <div class="header-text">
+                    <h1>Paw-some Pet Care Calculator</h1>
+                    <p class="subtitle">Find out how much your furry friend's stay will cost! 🐕</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="calculator-card">
+                <form id="calculator-form">
+                    <div class="form-group">
+                        <label for="dropoff-date">🐶 When is your pup arriving?</label>
+                        <input type="datetime-local" id="dropoff-date" name="dropoff-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pickup-date">🏠 When are you picking them up?</label>
+                        <input type="datetime-local" id="pickup-date" name="pickup-date" required>
+                    </div>
+
+                    <button type="submit" class="calculate-btn">Calculate Cost 🦴</button>
+                </form>
+
+                <div id="results" class="results hidden">
+                    <h2>🎯 Your Pricing Details</h2>
+                    <div class="breakdown">
+                        <div class="breakdown-item">
+                            <span class="label">☀️ Daytime Play Sessions (9am - 5pm):</span>
+                            <span class="value" id="day-count">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="label">🌙 Overnight Stays (5pm - 9am):</span>
+                            <span class="value" id="night-count">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="label">⏰ Extra Hours:</span>
+                            <span class="value" id="hourly-count">0</span>
+                        </div>
+                        <div class="breakdown-divider"></div>
+                        <div class="breakdown-item">
+                            <span class="label">Day Rate:</span>
+                            <span class="value">$35 per session</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="label">Overnight Rate:</span>
+                            <span class="value">$50 per night</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="label">Hourly Rate:</span>
+                            <span class="value">$4 per hour</span>
+                        </div>
+                    </div>
+                    <div class="total">
+                        <span>Total Cost:</span>
+                        <span id="total-cost">$0</span>
+                    </div>
+                </div>
+
+                <div id="error-message" class="error hidden"></div>
+            </div>
+
+            <div class="info-section">
+                <h3>🎈 How Our Pricing Works</h3>
+                <ul>
+                    <li>☀️ <strong>Daytime Fun:</strong> $35 flat rate (9:00 AM - 5:00 PM)</li>
+                    <li>🌙 <strong>Overnight Care:</strong> $50 flat rate (stay past 5:00 PM until 9:00 AM next day)</li>
+                    <li>⏰ <strong>Extra Hours:</strong> $4 per hour for pickup after 5:00 PM (same day) or after 9:00 AM (next day)</li>
+                    <li>💡 <strong>Example:</strong> Drop off at 9am, pick up at 7pm = $35 (day) + $8 (2 extra hours) = $43</li>
+                </ul>
+                <div class="testimonial">
+                    <p>"Your furry friend will have the time of their life with us!" 🐾</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Made with ❤️ for our furry friends | &copy; 2025 Paw-some Pet Care</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
