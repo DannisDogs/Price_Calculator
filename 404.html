@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found - Paw-some Pet Care</title>
+    <title>Page Not Found - Dog Sitting At Danni's House</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,44 +12,135 @@
     <style>
         .error-container {
             text-align: center;
-            padding: 3rem 1rem;
-            max-width: 600px;
-            margin: 2rem auto;
+            padding: 3rem 2rem;
+            max-width: 700px;
+            margin: 0 auto;
         }
-        .error-icon {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            animation: shake 0.5s ease-in-out;
+        
+        .lost-dog {
+            font-size: 6rem;
+            margin-bottom: 1.5rem;
+            animation: wiggle 2s ease-in-out infinite;
+            display: block;
         }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
         .error-title {
-            color: #ff6b6b;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
         }
-        .error-message {
-            font-size: 1.2rem;
-            color: #7a6a62;
+        
+        .error-subtitle {
+            color: var(--primary-color);
+            font-size: 1.4rem;
             margin-bottom: 2rem;
+            font-weight: 600;
         }
+        
+        .error-message {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+        
         .home-btn {
             display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             text-decoration: none;
             border-radius: 15px;
             font-weight: 700;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            font-family: 'Quicksand', sans-serif;
         }
+        
         .home-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+        
+        .helpful-links {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px dashed var(--border-color);
+        }
+        
+        .helpful-links h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .helpful-links p {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .quick-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .quick-link {
+            padding: 0.8rem 1.5rem;
+            background: var(--border-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .quick-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 600px) {
+            .error-title {
+                font-size: 2.2rem;
+            }
+            
+            .error-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .lost-dog {
+                font-size: 4.5rem;
+            }
+            
+            .home-btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+            
+            .quick-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .quick-link {
+                width: 100%;
+                max-width: 250px;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -58,29 +150,58 @@
             <div class="header-content">
                 <div class="paw-print">🐾</div>
                 <div class="header-text">
-                    <h1>Paw-some Pet Care Calculator</h1>
+                    <h1>Dog Sitting At Danni's House</h1>
                     <p class="subtitle">Oops! This page went for a walk! 🐕</p>
                 </div>
             </div>
+            <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                <span class="sun-icon">☀️</span>
+                <span class="moon-icon">🌙</span>
+            </button>
         </header>
 
         <main>
             <div class="calculator-card">
                 <div class="error-container">
-                    <div class="error-icon">🐶❓</div>
-                    <h2 class="error-title">404 - Page Not Found</h2>
+                    <div class="lost-dog">🐕</div>
+                    <h2 class="error-title">404</h2>
+                    <h3 class="error-subtitle">Oops! Page Not Found</h3>
                     <p class="error-message">
-                        Looks like this page ran off to chase squirrels! 
-                        Let's get you back to calculating pet care costs.
+                        Looks like this page ran off to chase squirrels! 🐿️<br>
+                        Don't worry - let's get you back to calculating your furry friend's stay costs.
                     </p>
-                    <a href="index.html" class="home-btn">Return Home 🏠</a>
+                    <a href="index.html" class="home-btn">🏠 Return to Calculator</a>
+                    
+                    <div class="helpful-links">
+                        <h3>🐾 Need Help?</h3>
+                        <p>Here are some helpful places to get started:</p>
+                        <div class="quick-links">
+                            <a href="index.html" class="quick-link">💰 Cost Calculator</a>
+                            <a href="index.html#pricing" class="quick-link">📋 Our Pricing</a>
+                            <a href="mailto:contact@dannishouse.com" class="quick-link">📧 Contact Us</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
 
         <footer>
-            <p>Made with ❤️ for our furry friends | &copy; 2025 Paw-some Pet Care</p>
+            <p>Made with ❤️ for our furry friends | &copy; 2025 Dog Sitting At Danni's House</p>
         </footer>
     </div>
+
+    <script>
+        // Dark mode functionality for 404 page
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        darkModeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
 </body>
 </html>
