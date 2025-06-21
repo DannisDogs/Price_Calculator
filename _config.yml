@@ -2,7 +2,7 @@
 title: Paw-some Pet Care Calculator
 description: A friendly dog sitting cost calculator for pet care services
 theme: null # Using custom CSS, no Jekyll theme needed
-baseurl: "" # Set this to your repository name if not using custom domain
+baseurl: "/Calculator" # Set this to your repository name if not using custom domain
 url: "" # Your custom domain if you have one
 
 # Build settings

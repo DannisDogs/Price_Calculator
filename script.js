@@ -1,26 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script loaded!');
     const form = document.getElementById('calculator-form');
     const dropoffInput = document.getElementById('dropoff-date');
     const pickupInput = document.getElementById('pickup-date');
     const resultsDiv = document.getElementById('results');
     const errorDiv = document.getElementById('error-message');
     
-    console.log('Form element:', form);
-    
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        console.log('Form submitted!');
         calculateCost();
     });
     
     function calculateCost() {
-        console.log('calculateCost called!');
         const dropoffDate = new Date(dropoffInput.value);
         const pickupDate = new Date(pickupInput.value);
-        
-        console.log('Dropoff:', dropoffDate);
-        console.log('Pickup:', pickupDate);
         
         errorDiv.classList.add('hidden');
         resultsDiv.classList.add('hidden');
@@ -36,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const pricing = calculatePricing(dropoffDate, pickupDate);
-        console.log('Pricing calculated:', pricing);
         
         document.getElementById('day-count').textContent = pricing.daySessions;
         document.getElementById('night-count').textContent = pricing.overnightSessions;
