@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Sitting At Danni's House - Cost Calculator 🐾</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="paw-print">🐾</div>
+                <div class="header-text">
+                    <h1>Dog Sitting At Danni's House</h1>
+                    <p class="subtitle">Find out how much your furry friend's stay will cost! 🐕</p>
+                </div>
+            </div>
+            <div id="header-dogs" class="header-dogs">
+                <!-- Dynamic dogs will be added here -->
+            </div>
+            <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                <span class="sun-icon">☀️</span>
+                <span class="moon-icon">🌙</span>
+            </button>
+        </header>
+
+        <main>
+            <div class="calculator-card">
+                <form id="calculator-form">
+                    <div class="form-group">
+                        <label for="dropoff-date">🐶 When is your pup arriving?</label>
+                        <input type="text" id="dropoff-date" name="dropoff-date" readonly placeholder="Select date and time" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pickup-date">🏠 When are you picking them up?</label>
+                        <input type="text" id="pickup-date" name="pickup-date" readonly placeholder="Select date and time" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🐕 Your Dogs</label>
+                        <div id="dogs-container" class="dogs-container">
+                            <!-- Dog cards will be added here dynamically -->
+                        </div>
+                        <button type="button" id="add-dog-btn" class="add-dog-btn">+ Add a Dog</button>
+                    </div>
+
+                    <button type="submit" class="calculate-btn">Calculate Cost 🦴</button>
+                </form>
+
+                <div id="results" class="results hidden">
+                    <h2>🎯 Your Pricing Details</h2>
+                    <div class="breakdown">
+                        <div class="breakdown-item">
+                            <span class="label">🐕 Number of Dogs:</span>
+                            <span class="value" id="num-dogs-display">1</span>
+                        </div>
+                        <div class="breakdown-divider"></div>
+                        <div class="breakdown-item" id="day-sessions-row">
+                            <span class="label">☀️ Daytime Play Sessions (9am - 5pm):</span>
+                            <span class="value" id="day-count">0</span>
+                        </div>
+                        <div class="breakdown-item" id="night-sessions-row">
+                            <span class="label">🌙 Overnight Stays (5pm - 9am):</span>
+                            <span class="value" id="night-count">0</span>
+                        </div>
+                        <div class="breakdown-item" id="extra-hours-row">
+                            <span class="label">⏰ Extra Hours:</span>
+                            <span class="value" id="hourly-count">0</span>
+                        </div>
+                        <div class="breakdown-divider"></div>
+                        <div class="breakdown-item" id="day-rate-row">
+                            <span class="label">Day Rate (per dog):</span>
+                            <span class="value">$35 per session</span>
+                        </div>
+                        <div class="breakdown-item" id="night-rate-row">
+                            <span class="label">Overnight Rate (per dog):</span>
+                            <span class="value">$50 per night</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="label">Hourly Rate (per dog):</span>
+                            <span class="value">$4 per hour</span>
+                        </div>
+                        <div class="breakdown-divider"></div>
+                        <div class="breakdown-item" id="multi-dog-row" style="display: none;">
+                            <span class="label">🐕🐕 Multi-Dog Surcharge (25% per additional dog):</span>
+                            <span class="value" id="multi-dog-surcharge">+$0</span>
+                        </div>
+                        <div class="breakdown-item" id="subtotal-row" style="display: none;">
+                            <span class="label">Subtotal:</span>
+                            <span class="value" id="subtotal">$0</span>
+                        </div>
+                        <div class="breakdown-item" id="discount-row" style="display: none;">
+                            <span class="label">🎉 Weekly Stay Discount (10%):</span>
+                            <span class="value" id="discount-amount">-$0</span>
+                        </div>
+                    </div>
+                    <div class="total">
+                        <span>Total Cost:</span>
+                        <span id="total-cost">$0</span>
+                    </div>
+                </div>
+
+                <div id="error-message" class="error hidden"></div>
+            </div>
+
+            <!-- Date/Time Picker Modal -->
+            <div id="datetime-modal" class="modal hidden">
+                <div class="modal-content datetime-picker">
+                    <h3>📅 Select Date & Time</h3>
+                    <div class="picker-container">
+                        <div class="calendar-section">
+                            <div class="calendar-header">
+                                <button type="button" class="calendar-nav" id="prev-month">‹</button>
+                                <div class="calendar-month-year">
+                                    <span id="calendar-month">January</span>
+                                    <span id="calendar-year">2025</span>
+                                </div>
+                                <button type="button" class="calendar-nav" id="next-month">›</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div>Sun</div>
+                                <div>Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                                <div>Sat</div>
+                            </div>
+                            <div class="calendar-days" id="calendar-days">
+                                <!-- Days will be dynamically generated -->
+                            </div>
+                        </div>
+                        
+                        <div class="time-section">
+                            <h4>🕐 Select Time</h4>
+                            <div class="time-inputs">
+                                <div class="time-group">
+                                    <label>Hour</label>
+                                    <select id="time-hour">
+                                        <option value="12">12</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9" selected>9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                    </select>
+                                </div>
+                                <div class="time-group">
+                                    <label>Minute</label>
+                                    <select id="time-minute">
+                                        <option value="00" selected>00</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
+                                    </select>
+                                </div>
+                                <div class="time-group">
+                                    <label>AM/PM</label>
+                                    <select id="time-ampm">
+                                        <option value="AM" selected>AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="quick-times">
+                                <button type="button" class="quick-time-btn" data-hour="9" data-minute="00" data-ampm="AM">9:00 AM</button>
+                                <button type="button" class="quick-time-btn" data-hour="12" data-minute="00" data-ampm="PM">12:00 PM</button>
+                                <button type="button" class="quick-time-btn" data-hour="5" data-minute="00" data-ampm="PM">5:00 PM</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="datetime-preview">
+                        <strong>Selected:</strong> <span id="datetime-preview-text">No date selected</span>
+                    </div>
+                    
+                    <div class="modal-buttons">
+                        <button type="button" id="cancel-datetime-btn" class="cancel-btn">Cancel</button>
+                        <button type="button" id="save-datetime-btn" class="save-btn" disabled>Set Date & Time</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dog Selection Modal -->
+            <div id="dog-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h3>🐾 Add Your Dog</h3>
+                    <div class="dog-form">
+                        <div class="form-group">
+                            <label for="dog-name">Dog's Name</label>
+                            <input type="text" id="dog-name" placeholder="Enter your dog's name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Breed</label>
+                            <div class="breed-grid">
+                                <button type="button" class="breed-option" data-breed="labrador">
+                                    <span class="breed-icon">🦮</span>
+                                    <span>Labrador</span>
+                                </button>
+                                <button type="button" class="breed-option" data-breed="german-shepherd">
+                                    <span class="breed-icon">🐕‍🦺</span>
+                                    <span>German Shepherd</span>
+                                </button>
+                                <button type="button" class="breed-option" data-breed="poodle">
+                                    <span class="breed-icon">🐩</span>
+                                    <span>Poodle</span>
+                                </button>
+                                <button type="button" class="breed-option" data-breed="bulldog">
+                                    <span class="breed-icon">🐕</span>
+                                    <span>Bulldog</span>
+                                </button>
+                                <button type="button" class="breed-option" data-breed="chihuahua">
+                                    <span class="breed-icon">🐕</span>
+                                    <span>Chihuahua</span>
+                                </button>
+                                <button type="button" class="breed-option" data-breed="mixed">
+                                    <span class="breed-icon">🐶</span>
+                                    <span>Other/Mixed</span>
+                                </button>
+                            </div>
+                            <div class="custom-breed-input" id="custom-breed-input" style="display: none;">
+                                <input type="text" id="custom-breed-name" placeholder="Enter breed name" maxlength="30">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Size</label>
+                            <div class="size-options">
+                                <button type="button" class="size-option" data-size="small">
+                                    <span class="size-label">Small</span>
+                                    <span class="size-desc">&lt; 25 lbs</span>
+                                </button>
+                                <button type="button" class="size-option" data-size="medium">
+                                    <span class="size-label">Medium</span>
+                                    <span class="size-desc">25-60 lbs</span>
+                                </button>
+                                <button type="button" class="size-option" data-size="large">
+                                    <span class="size-label">Large</span>
+                                    <span class="size-desc">&gt; 60 lbs</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-buttons">
+                            <button type="button" id="cancel-dog-btn" class="cancel-btn">Cancel</button>
+                            <button type="button" id="save-dog-btn" class="save-btn" disabled>Add Dog</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Print Receipt Content (Hidden in normal view) -->
+            <div id="print-receipt" class="print-receipt hidden">
+                <div class="receipt-header">
+                    <h1>🐾 Dog Sitting At Danni's House</h1>
+                    <h2>Service Receipt</h2>
+                    <div class="receipt-date" id="receipt-date"></div>
+                </div>
+                
+                <div class="receipt-dogs" id="receipt-dogs">
+                    <!-- Dogs will be populated here -->
+                </div>
+                
+                <div class="receipt-summary" id="receipt-summary">
+                    <!-- Summary will be populated here -->
+                </div>
+                
+                <div class="receipt-breakdown" id="receipt-breakdown">
+                    <!-- Breakdown will be populated here -->
+                </div>
+                
+                <div class="receipt-total" id="receipt-total">
+                    <!-- Total will be populated here -->
+                </div>
+                
+                <div class="receipt-footer">
+                    <p>Thank you for choosing Dog Sitting At Danni's House!</p>
+                    <p>Your furry friends are in great hands! 🐾</p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>🎈 How Our Pricing Works</h3>
+                <ul>
+                    <li>☀️ <strong>Daytime Care:</strong> $35 flat rate (9:00 AM - 5:00 PM)</li>
+                    <li>🌙 <strong>Overnight Care:</strong> $50 per night (stay past 5:00 PM until 9:00 AM next day)</li>
+                    <li>⏰ <strong>Extra Hours:</strong> $4 per hour for short extensions after standard times</li>
+                    <li>🏠 <strong>Multi-Night Stays:</strong> Pay per night + day rate if staying 8+ hours after 9:00 AM on pickup day</li>
+                    <li>🐕🐕 <strong>Multiple Dogs:</strong> Each additional dog adds 25% to the total cost</li>
+                    <li>💡 <strong>Examples:</strong> 
+                        <br>• Same day 9am-7pm: $35 (day) + $8 (2 extra hours) = $43
+                        <br>• Multi-night Fri 9am-Sun 10am: $100 (2 nights) + $4 (1 hour) = $104
+                        <br>• Multi-night Fri 9am-Sun 5pm: $100 (2 nights) + $35 (day) = $135
+                    </li>
+                </ul>
+                <div class="testimonial">
+                    <p>"Your furry friend will have the time of their life with us!" 🐾</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Made with ❤️ for our furry friends | &copy; 2025 Dog Sitting At Danni's House</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,102 +1,122 @@
-# Paw-some Pet Care Calculator 🐾
+# Dog Sitting At Danni's House 🐾
 
-A friendly and intuitive web calculator for dog sitting services that helps calculate costs based on drop-off and pick-up times.
+Welcome to our dog sitting cost calculator! This friendly web application helps you calculate the cost of your furry friend's stay with us.
 
 ![Dog Sitting Calculator](https://img.shields.io/badge/status-active-success.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Pet Friendly](https://img.shields.io/badge/pet-friendly-green.svg)
 
-## Features
+## 🏠 About Us
 
-- 📅 Easy date/time selection for drop-off and pick-up
-- 💰 Automatic cost calculation with detailed breakdown
-- 🌙 Separate pricing for day and overnight sessions
-- ⏰ Hourly rates for extended stays
-- 📱 Mobile-responsive design
-- 🎨 Playful, pet-themed interface with animations
+Dog Sitting At Danni's House provides loving, professional pet care in a home environment. Your furry friends will receive personalized attention and care while you're away.
 
-## Pricing Structure
+## ✨ Calculator Features
 
-- **☀️ Daytime Sessions** (9:00 AM - 5:00 PM): $35 flat rate
-- **🌙 Overnight Stays** (5:00 PM - 9:00 AM): $50 flat rate
-- **⏰ Extra Hours**: $4 per hour
-  - Applied when picking up after 5:00 PM (same day, no overnight)
-  - Applied when picking up after 9:00 AM (following an overnight stay)
+- 🐕 **Multiple Dog Support** - Add all your furry friends with breed and size details
+- 📅 **Custom Date/Time Picker** - Easy calendar and time selection
+- 💰 **Transparent Pricing** - Detailed breakdown of all costs
+- 🌙 **Flexible Stay Options** - Day care, overnight, and multi-night stays
+- 🎉 **Weekly Discounts** - 10% off for stays of 7+ days  
+- 🖨️ **Professional Receipts** - Print-friendly receipts for your records
+- 🌙 **Dark Mode** - Easy on the eyes for any time of day
+- 📱 **Mobile Friendly** - Works perfectly on all devices
 
-### Example Calculations
-- Drop off at 9am, pick up at 7pm same day: $35 (day) + $8 (2 extra hours) = $43
-- Drop off at 9am, pick up at 10am next day: $35 (day) + $50 (overnight) + $4 (1 extra hour) = $89
+## 💸 Our Pricing
 
-## Getting Started
+### Basic Rates
+- **☀️ Daytime Care** (9:00 AM - 5:00 PM): $35 per day
+- **🌙 Overnight Care**: $50 per night
+- **⏰ Extra Hours**: $4 per hour for extensions
 
-### Prerequisites
-- A modern web browser
-- Python 3.x (for local development server)
+### Multi-Dog Pricing
+- **First Dog**: Full price
+- **Each Additional Dog**: +25% of total cost
 
-### Running Locally
+### Special Offers
+- **🎉 Weekly Discount**: 10% off for stays of 7+ days
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/dog-sitting-calculator.git
-   cd dog-sitting-calculator
-   ```
+### Pricing Examples
 
-2. Start a local web server:
-   ```bash
-   python3 -m http.server 8080
-   ```
+**Same Day Care:**
+- Drop off 9am, pick up 7pm: $35 (day) + $8 (2 extra hours) = **$43**
 
-3. Open your browser and navigate to:
-   ```
-   http://localhost:8080
-   ```
+**Multi-Night Stays:**
+- Friday 9am → Sunday 10am: $100 (2 nights) + $4 (1 hour) = **$104**
+- Friday 9am → Sunday 5pm: $100 (2 nights) + $35 (day) = **$135**
 
-## Deployment
+**Multiple Dogs:**
+- 2 dogs, same day 9am-5pm: $35 × 1.25 = **$44** (25% surcharge)
 
-This application is designed to be hosted on GitHub Pages:
+## 🚀 Using the Calculator
 
-1. Push your code to a GitHub repository
-2. Go to Settings → Pages
-3. Select "Deploy from a branch"
-4. Choose "main" branch and "/ (root)" folder
-5. Your calculator will be live at `https://[username].github.io/[repository-name]/`
+1. **Add Your Dogs** - Click "Add a Dog" and enter their details
+2. **Select Dates** - Choose drop-off and pick-up times using our calendar
+3. **Get Your Quote** - See the detailed cost breakdown instantly
+4. **Print Receipt** - Save or print your quote for your records
 
-## Project Structure
+## 🌐 Access the Calculator
 
+Visit our calculator at: [Your GitHub Pages URL]
+
+Or run it locally:
+```bash
+# Clone the repository
+git clone [your-repo-url]
+cd [repo-name]
+
+# Start local server
+python3 -m http.server 8080
+
+# Visit http://localhost:8080
+```
+
+## 📱 Browser Support
+
+Our calculator works on all modern browsers:
+- Chrome, Firefox, Safari, Edge
+- Mobile browsers (iOS Safari, Chrome Mobile)
+- Tablets and desktop computers
+
+## 🛠️ Technical Details
+
+**Built with:**
+- HTML5, CSS3, Vanilla JavaScript
+- Responsive design for all screen sizes
+- Print-optimized CSS for professional receipts
+- Local storage for dark mode preferences
+
+**Project Structure:**
 ```
 /
-├── index.html      # Main HTML file with form and layout
-├── style.css       # Styling with animations and responsive design
-├── script.js       # Calculator logic and form handling
-├── README.md       # This file
-├── CLAUDE.md       # Development guidance for AI assistants
-└── .gitignore      # Git ignore file
+├── index.html          # Main calculator page
+├── style.css           # Styling and animations
+├── script.js           # Calculator logic
+├── favicon.svg         # Paw print icon
+├── README.md           # This file
+├── CLAUDE.md           # Development documentation
+└── .gitignore          # Git ignore rules
 ```
 
-## Technologies Used
+## 📞 Contact Us
 
-- HTML5
-- CSS3 (with animations and gradients)
-- Vanilla JavaScript
-- Google Fonts (Quicksand)
+Have questions about pricing or want to book a stay? 
 
-## Browser Compatibility
+**Dog Sitting At Danni's House**
+- 🏠 Professional in-home pet care
+- 🐕 Experienced with dogs of all sizes and breeds
+- ❤️ Your pets are family to us
 
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
-- Mobile browsers
+---
 
-## Contributing
+## 🔧 For Developers
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+This is an open-source calculator built for transparency and ease of use. 
 
-## License
+**Contributing:**
+- Feel free to submit issues or pull requests
+- All contributions welcome to improve the pet care experience
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+**License:** MIT License - Feel free to use and modify
 
-## Acknowledgments
+---
 
-- Built with ❤️ for our furry friends
-- Emoji icons for a friendly user experience
-- Quicksand font for playful typography
+*Made with ❤️ for our furry friends | © 2025 Dog Sitting At Danni's House*
