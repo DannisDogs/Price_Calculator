@@ -61,37 +61,62 @@
                             <span class="value" id="num-dogs-display">1</span>
                         </div>
                         <div class="breakdown-divider"></div>
-                        <div class="breakdown-item" id="day-sessions-row">
-                            <span class="label">☀️ Daytime Play Sessions (9am - 5pm):</span>
-                            <span class="value" id="day-count">0</span>
+                        
+                        <!-- Day Sessions Line Item -->
+                        <div class="breakdown-item cost-line-item" id="day-sessions-row" style="display: none;">
+                            <span class="label">☀️ Day Sessions (9am-5pm):</span>
+                            <span class="calculation">
+                                <span id="day-sessions-count">0</span> × $30 = 
+                                <span class="item-cost" id="day-sessions-cost">$0</span>
+                            </span>
                         </div>
 
-                        <div class="breakdown-item" id="extra-hours-row">
+                        <!-- 24-Hour Sessions Line Item -->
+                        <div class="breakdown-item cost-line-item" id="twenty-four-hour-row" style="display: none;">
+                            <span class="label">🕐 24-Hour Sessions:</span>
+                            <span class="calculation">
+                                <span id="twenty-four-hour-count">0</span> × $45 = 
+                                <span class="item-cost" id="twenty-four-hour-cost">$0</span>
+                            </span>
+                        </div>
+
+                        <!-- Extra Hours Line Item -->
+                        <div class="breakdown-item cost-line-item" id="extra-hours-row" style="display: none;">
                             <span class="label">⏰ Extra Hours:</span>
-                            <span class="value" id="hourly-count">0</span>
-                        </div>
-                        <div class="breakdown-divider"></div>
-                        <div class="breakdown-item" id="day-rate-row">
-                            <span class="label">Day Rate (per dog):</span>
-                            <span class="value">$30 per session</span>
+                            <span class="calculation">
+                                <span id="extra-hours-count">0</span> × $4 = 
+                                <span class="item-cost" id="extra-hours-cost">$0</span>
+                            </span>
                         </div>
 
-                        <div class="breakdown-item">
-                            <span class="label">Hourly Rate (per dog):</span>
-                            <span class="value">$4 per hour</span>
+                        <!-- Base Cost Subtotal -->
+                        <div class="breakdown-item subtotal-line" id="base-subtotal-row" style="display: none;">
+                            <span class="label">Base Cost (per dog):</span>
+                            <span class="value" id="base-subtotal">$0</span>
                         </div>
-                        <div class="breakdown-divider"></div>
-                        <div class="breakdown-item" id="multi-dog-row" style="display: none;">
+
+                        <!-- Multi-Dog Surcharge -->
+                        <div class="breakdown-item cost-line-item" id="multi-dog-row" style="display: none;">
                             <span class="label">🐕🐕 Multi-Dog Surcharge (25% per additional dog):</span>
-                            <span class="value" id="multi-dog-surcharge">+$0</span>
+                            <span class="calculation">
+                                +<span class="item-cost" id="multi-dog-surcharge">$0</span>
+                            </span>
                         </div>
-                        <div class="breakdown-item" id="subtotal-row" style="display: none;">
+
+                        <div class="breakdown-divider" id="discount-divider" style="display: none;"></div>
+
+                        <!-- Subtotal Before Discounts -->
+                        <div class="breakdown-item subtotal-line" id="subtotal-row" style="display: none;">
                             <span class="label">Subtotal:</span>
                             <span class="value" id="subtotal">$0</span>
                         </div>
-                        <div class="breakdown-item" id="discount-row" style="display: none;">
-                            <span class="label">🎉 Weekly Stay Discount:</span>
-                            <span class="value" id="discount-amount">-$0</span>
+
+                        <!-- Discount Line Item -->
+                        <div class="breakdown-item discount-line" id="discount-row" style="display: none;">
+                            <span class="label" id="discount-label">🎉 Discount:</span>
+                            <span class="calculation">
+                                -<span class="item-cost" id="discount-amount">$0</span>
+                            </span>
                         </div>
                     </div>
                     <div class="total">
