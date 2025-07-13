@@ -1,24 +1,42 @@
 :root {
     --primary-color: #ff6b6b;
     --secondary-color: #feca57;
+    --accent-color: #ff6b6b;
+    --text-primary: #5a4a42;
+    --text-secondary: #8a7a72;
     --text-color: #5a4a42;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
     --bg-gradient-start: #fff5f5;
     --bg-gradient-end: #ffe0e6;
+    --gradient-bg: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
     --card-bg: white;
     --border-color: #ffe0e6;
+    --border-light: #f0f0f0;
+    --success-color: #4caf50;
     --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.1);
     --modal-bg: rgba(0, 0, 0, 0.5);
 }
 
 [data-theme="dark"] {
     --primary-color: #ff8787;
     --secondary-color: #ffd93d;
+    --accent-color: #ff8787;
+    --text-primary: #f0f0f0;
+    --text-secondary: #c0c0c0;
     --text-color: #f0f0f0;
+    --bg-primary: #2a2a2a;
+    --bg-secondary: #333333;
     --bg-gradient-start: #2a2a2a;
     --bg-gradient-end: #1a1a1a;
+    --gradient-bg: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
     --card-bg: #333333;
     --border-color: #4a4a4a;
+    --border-light: #4a4a4a;
+    --success-color: #66bb6a;
     --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.3);
     --modal-bg: rgba(0, 0, 0, 0.8);
 }
 
@@ -293,9 +311,12 @@ select option {
 }
 
 .results {
-    margin-top: 2.5rem;
-    padding-top: 2.5rem;
-    border-top: 3px dashed #ffe0e6;
+    background: var(--gradient-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--border-light);
     animation: fadeIn 0.5s ease;
 }
 
@@ -305,71 +326,126 @@ select option {
 }
 
 .results h2 {
-    color: var(--primary-color);
+    color: var(--text-primary);
     margin-bottom: 1.5rem;
-    font-size: 1.8rem;
+    text-align: center;
+    font-size: 1.5rem;
 }
 
 .breakdown {
-    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--border-color) 50%);
+    background: var(--bg-secondary);
+    border-radius: 15px;
     padding: 1.5rem;
-    border-radius: 20px;
     margin-bottom: 1.5rem;
-    border: 2px solid var(--border-color);
+    border: 1px solid var(--border-light);
 }
 
 .breakdown-item {
     display: flex;
     justify-content: space-between;
-    padding: 0.8rem 0;
     align-items: center;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    color: var(--text-primary);
 }
 
 .breakdown-item .label {
-    color: var(--text-color);
-    opacity: 0.8;
     font-weight: 500;
+    color: var(--text-secondary);
 }
 
 .breakdown-item .value {
-    font-weight: 700;
-    color: var(--primary-color);
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+/* New styling for cost line items */
+.cost-line-item .calculation {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.cost-line-item .item-cost {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+/* Subtotal styling */
+.subtotal-line {
+    font-weight: 600;
+    border-top: 1px solid var(--border-light);
+    padding-top: 1rem !important;
+    margin-top: 0.5rem;
+}
+
+.subtotal-line .label {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+
+.subtotal-line .value {
     font-size: 1.1rem;
 }
 
-#discount-row .value {
-    color: #4caf50;
+/* Discount styling */
+.discount-line {
+    color: var(--success-color) !important;
 }
 
-#multi-dog-row .value {
-    color: #ff6b6b;
-    font-weight: 700;
+.discount-line .label {
+    color: var(--success-color) !important;
+    font-weight: 600;
+}
+
+.discount-line .item-cost {
+    color: var(--success-color) !important;
+    font-weight: 600;
 }
 
 .breakdown-divider {
-    height: 2px;
-    background: linear-gradient(to right, transparent, var(--border-color), transparent);
+    height: 1px;
+    background: var(--border-light);
     margin: 1rem 0;
+    opacity: 0.5;
 }
 
 .total {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: var(--accent-color, #ff6b6b);
+    color: white !important;
     padding: 1.5rem;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: white;
-    border-radius: 20px;
-    font-size: 1.5rem;
+    border-radius: 15px;
+    font-size: 1.2rem;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    animation: pulse 2s infinite;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 1.5rem;
+    border: 2px solid var(--accent-color, #ff6b6b);
 }
 
-@keyframes pulse {
-    0% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
-    50% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5); }
-    100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+.total span:first-child {
+    font-size: 1.1rem;
+    font-weight: 600;
+    opacity: 0.95;
+    color: white !important;
+}
+
+#total-cost {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white !important;
+}
+
+#total-cost.animating {
+    animation: priceGlow 0.5s ease;
+}
+
+@keyframes priceGlow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .action-buttons {
@@ -538,6 +614,8 @@ footer {
     
     .total {
         font-size: 1.2rem;
+        background: var(--accent-color, #ff6b6b) !important;
+        color: white !important;
     }
     
     .bouncing-dog {
@@ -1424,5 +1502,160 @@ input[type="text"]#pickup-date:hover {
     
     .time-section {
         width: 100%;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .main-container, 
+    .header,
+    .datetime-modal,
+    .dog-modal,
+    .confirm-modal {
+        display: none !important;
+    }
+    
+    .print-receipt {
+        display: block !important;
+        max-width: none;
+        margin: 0;
+        padding: 20px;
+        background: white;
+        color: black;
+        box-shadow: none;
+        border: none;
+    }
+    
+    .receipt-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 20px;
+    }
+    
+    .receipt-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .receipt-subtitle {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    
+    .receipt-date {
+        font-size: 12px;
+        color: #999;
+    }
+    
+    .receipt-section {
+        margin-bottom: 25px;
+        page-break-inside: avoid;
+    }
+    
+    .receipt-section h3 {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+    }
+    
+    .receipt-dog {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 8px;
+        background: #f9f9f9;
+        border-radius: 5px;
+    }
+    
+    .dog-icon {
+        font-size: 20px;
+        margin-right: 10px;
+    }
+    
+    .dog-name {
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+    }
+    
+    .dog-details {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .summary-item,
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        font-size: 14px;
+        color: #333;
+    }
+    
+    /* Print receipt line item styles */
+    .breakdown-item.cost-line {
+        font-weight: 500;
+        border-left: 3px solid #e0e0e0;
+        padding-left: 10px;
+        margin: 5px 0;
+    }
+    
+    .breakdown-item.subtotal-line {
+        font-weight: 600;
+        border-top: 1px solid #ddd;
+        padding-top: 8px;
+        margin-top: 10px;
+        background: #f5f5f5;
+        padding: 8px;
+        border-radius: 3px;
+    }
+    
+    .breakdown-item.discount-line {
+        color: #2e7d32 !important;
+        font-weight: 600;
+        background: #e8f5e8;
+        padding: 8px;
+        border-radius: 3px;
+        border-left: 3px solid #4caf50;
+    }
+    
+    .breakdown-item.multi-dog {
+        color: #d32f2f !important;
+        font-weight: 500;
+        background: #ffeaa7;
+        padding: 8px;
+        border-radius: 3px;
+    }
+    
+    .breakdown-divider {
+        height: 1px;
+        background: #ddd;
+        margin: 10px 0;
+    }
+    
+    .total-amount {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        background: #f0f0f0;
+        padding: 15px;
+        border-radius: 5px;
+        border: 2px solid #ddd;
     }
 }
