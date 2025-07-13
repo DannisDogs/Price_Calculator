@@ -15,7 +15,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 - 📅 **Custom Date/Time Picker** - Easy calendar and time selection
 - 💰 **Transparent Pricing** - Detailed breakdown of all costs
 - 🌙 **Flexible Stay Options** - Day care, overnight, and multi-night stays
-- 🎉 **Weekly Discounts** - 10% off for stays of 7+ days  
+- 🎉 **Weekly Discounts** - Fixed $300 for 7 days, 20% off for longer stays  
 - 🖨️ **Professional Receipts** - Print-friendly receipts for your records
 - 🌙 **Dark Mode** - Easy on the eyes for any time of day
 - 📱 **Mobile Friendly** - Works perfectly on all devices
@@ -23,28 +23,37 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 ## 💸 Our Pricing
 
 ### Basic Rates
-- **☀️ Daytime Care** (9:00 AM - 5:00 PM): $35 per day
+- **☀️ Daytime Care** (9:00 AM - 5:00 PM): $30 per day
 - **🌙 Overnight Care**: $50 per night
 - **⏰ Extra Hours**: $4 per hour for extensions
+- **🕐 24-Hour Stay**: $45 flat rate
 
 ### Multi-Dog Pricing
 - **First Dog**: Full price
 - **Each Additional Dog**: +25% of total cost
 
 ### Special Offers
-- **🎉 Weekly Discount**: 10% off for stays of 7+ days
+- **🎉 7-Day Stay**: Fixed $300 rate
+- **🎉 Extended Stay Discount**: 20% off for stays longer than 7 days
 
 ### Pricing Examples
 
 **Same Day Care:**
-- Drop off 9am, pick up 7pm: $35 (day) + $8 (2 extra hours) = **$43**
+- Drop off 9am, pick up 7pm: $30 (day) + $8 (2 extra hours) = **$38**
+
+**24-Hour Stay:**
+- Drop off 3pm, pick up 3pm next day: **$45** flat rate
 
 **Multi-Night Stays:**
 - Friday 9am → Sunday 10am: $100 (2 nights) + $4 (1 hour) = **$104**
-- Friday 9am → Sunday 5pm: $100 (2 nights) + $35 (day) = **$135**
+- Friday 9am → Sunday 5pm: $100 (2 nights) + $30 (day) = **$130**
 
 **Multiple Dogs:**
-- 2 dogs, same day 9am-5pm: $35 × 1.25 = **$44** (25% surcharge)
+- 2 dogs, same day 9am-5pm: $30 × 1.25 = **$38** (25% surcharge)
+
+**Weekly Stays:**
+- 7 days: **$300** fixed rate
+- 10 days: Regular rate minus 20% discount
 
 ## 🚀 Using the Calculator
 
