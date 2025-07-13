@@ -397,30 +397,44 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let subtotal = dayCost + overnightCost + hourlyCost;
         
-        // Apply new discount logic
+        // Apply new discount logic for 7+ day stays
         const totalDays = Math.ceil((pickup - dropoff) / (1000 * 60 * 60 * 24));
         let discount = 0;
+        let finalTotal = subtotal;
+        
         if (totalDays >= 7) {
-            // 7+ day stays: $300 base for first 7 days, then 20% discount on additional costs
             const baseSevenDayPrice = Math.round(300 * multiDogMultiplier);
             
-            if (totalDays === 7) {
-                // Exactly 7 days: fixed $300 rate
-                discount = subtotal - baseSevenDayPrice;
+            // Calculate what constitutes "base 7 days" (7 overnight sessions)
+            const baseSevenDayNights = Math.min(7, overnightSessions);
+            const baseSevenDayCost = baseSevenDayNights * 50; // 7 nights at $50 each
+            const baseSevenDayWithMultiDog = Math.round(baseSevenDayCost * multiDogMultiplier);
+            
+            // Calculate additional costs beyond the base 7 days
+            let additionalNights = Math.max(0, overnightSessions - 7);
+            let additionalDaySessions = daySessions;
+            let additionalHours = extraHours;
+            
+            // Calculate additional costs
+            const additionalNightCost = additionalNights * 50;
+            const additionalDayCost = additionalDaySessions * 30;
+            const additionalHourCost = additionalHours * 4;
+            const totalAdditionalBaseCost = additionalNightCost + additionalDayCost + additionalHourCost;
+            const totalAdditionalCost = Math.round(totalAdditionalBaseCost * multiDogMultiplier);
+            
+            if (totalAdditionalCost > 0) {
+                // Apply 20% discount to additional time only
+                const discountedAdditionalCost = Math.round(totalAdditionalCost * 0.8);
+                finalTotal = baseSevenDayPrice + discountedAdditionalCost;
+                discount = subtotal - finalTotal;
             } else {
-                // More than 7 days: $300 for first 7 days + 20% discount on excess
-                const excessCost = subtotal - baseSevenDayPrice;
-                if (excessCost > 0) {
-                    const discountOnExcess = Math.round(excessCost * 0.2);
-                    discount = discountOnExcess;
-                } else {
-                    // If calculated cost is somehow less than $300, use fixed rate
-                    discount = subtotal - baseSevenDayPrice;
-                }
+                // Exactly 7 days with no extra: use $300 flat rate
+                finalTotal = baseSevenDayPrice;
+                discount = subtotal - finalTotal;
             }
         }
         
-        const total = subtotal - discount;
+        const total = finalTotal;
         
         return {
             daySessions,
