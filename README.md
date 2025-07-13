@@ -15,7 +15,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 - 📅 **Custom Date/Time Picker** - Easy calendar and time selection
 - 💰 **Transparent Pricing** - Detailed breakdown of all costs
 - 🌙 **Flexible Stay Options** - Day care, overnight, and multi-night stays
-- 🎉 **Weekly Discounts** - Fixed $300 for 7 days, 20% off for longer stays  
+- 🎉 **Weekly Discounts** - Fixed $300 for 7 days + 20% off additional costs  
 - 🖨️ **Professional Receipts** - Print-friendly receipts for your records
 - 🌙 **Dark Mode** - Easy on the eyes for any time of day
 - 📱 **Mobile Friendly** - Works perfectly on all devices
@@ -34,7 +34,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 
 ### Special Offers
 - **🎉 7-Day Stay**: Fixed $300 rate
-- **🎉 Extended Stay Discount**: 20% off for stays longer than 7 days
+- **🎉 Extended Stay Discount**: $300 base for first 7 days + 20% off additional costs
 
 ### Pricing Examples
 
@@ -53,7 +53,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 
 **Weekly Stays:**
 - 7 days: **$300** fixed rate
-- 10 days: Regular rate minus 20% discount
+- 10 days: $300 base + 20% off excess (e.g., $300 + $160 = **$460**)
 
 ## 🚀 Using the Calculator
 

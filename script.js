@@ -400,13 +400,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply new discount logic
         const totalDays = Math.ceil((pickup - dropoff) / (1000 * 60 * 60 * 24));
         let discount = 0;
-        if (totalDays === 7) {
-            // 7-day stay: fixed price of $300
-            const fixedPrice = Math.round(300 * multiDogMultiplier);
-            discount = subtotal - fixedPrice;
-        } else if (totalDays > 7) {
-            // More than 7 days: 20% discount
-            discount = Math.round(subtotal * 0.2);
+        if (totalDays >= 7) {
+            // 7+ day stays: $300 base for first 7 days, then 20% discount on additional costs
+            const baseSevenDayPrice = Math.round(300 * multiDogMultiplier);
+            
+            if (totalDays === 7) {
+                // Exactly 7 days: fixed $300 rate
+                discount = subtotal - baseSevenDayPrice;
+            } else {
+                // More than 7 days: $300 for first 7 days + 20% discount on excess
+                const excessCost = subtotal - baseSevenDayPrice;
+                if (excessCost > 0) {
+                    const discountOnExcess = Math.round(excessCost * 0.2);
+                    discount = discountOnExcess;
+                } else {
+                    // If calculated cost is somehow less than $300, use fixed rate
+                    discount = subtotal - baseSevenDayPrice;
+                }
+            }
         }
         
         const total = subtotal - discount;
