@@ -15,7 +15,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 - 📅 **Custom Date/Time Picker** - Easy calendar and time selection
 - 💰 **Transparent Pricing** - Detailed breakdown of all costs
 - 🌙 **Flexible Stay Options** - Day care, overnight, and multi-night stays
-- 🎉 **Weekly Discounts** - Fixed $300 for 7 days + 20% off additional costs  
+- 🎉 **Weekly Discounts** - Fixed $300 for 7 days + 20% off additional time  
 - 🖨️ **Professional Receipts** - Print-friendly receipts for your records
 - 🌙 **Dark Mode** - Easy on the eyes for any time of day
 - 📱 **Mobile Friendly** - Works perfectly on all devices
@@ -24,9 +24,8 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 
 ### Basic Rates
 - **☀️ Daytime Care** (9:00 AM - 5:00 PM): $30 per day
-- **🌙 Overnight Care**: $50 per night
+- **🕐 24-Hour Stay**: $45 flat rate for exactly 24-hour periods
 - **⏰ Extra Hours**: $4 per hour for extensions
-- **🕐 24-Hour Stay**: $45 flat rate
 
 ### Multi-Dog Pricing
 - **First Dog**: Full price
@@ -34,7 +33,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 
 ### Special Offers
 - **🎉 7-Day Stay**: Fixed $300 rate
-- **🎉 Extended Stay Discount**: $300 base for first 7 days + 20% off additional costs
+- **🎉 Extended Stay Discount**: Additional time beyond 7 days gets 20% off, added to $300 base
 
 ### Pricing Examples
 
@@ -44,16 +43,17 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 **24-Hour Stay:**
 - Drop off 3pm, pick up 3pm next day: **$45** flat rate
 
-**Multi-Night Stays:**
-- Friday 9am → Sunday 10am: $100 (2 nights) + $4 (1 hour) = **$104**
-- Friday 9am → Sunday 5pm: $100 (2 nights) + $30 (day) = **$130**
+**Multi-Day Stays:**
+- Friday 9am → Sunday 10am: 2 × $45 (24-hour periods) + $4 (1 hour) = **$94**
+- Friday 9am → Sunday 5pm: 2 × $45 (24-hour periods) + $30 (day) = **$120**
 
 **Multiple Dogs:**
 - 2 dogs, same day 9am-5pm: $30 × 1.25 = **$38** (25% surcharge)
 
 **Weekly Stays:**
 - 7 days: **$300** fixed rate
-- 10 days: $300 base + 20% off excess (e.g., $300 + $160 = **$460**)
+- 7 days + 3 hours: $300 + (3 × $4 × 0.8) = **$309.60**
+- 8 days: $300 + ($45 × 0.8) = **$336**
 
 ## 🚀 Using the Calculator
 

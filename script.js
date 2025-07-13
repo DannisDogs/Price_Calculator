@@ -295,24 +295,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function calculatePricing(dropoff, pickup, numDogs = 1) {
         let daySessions = 0;
-        let overnightSessions = 0;
+        let twentyFourHourSessions = 0;
         let extraHours = 0;
         let is24HourStay = false;
         
         // Calculate total duration in hours
         const totalHours = (pickup - dropoff) / (1000 * 60 * 60);
         
-        // Check if it's a 24-hour stay (between 23-25 hours for tolerance)
+        // Check if it's a single 24-hour stay (between 23-25 hours for tolerance)
         if (totalHours >= 23 && totalHours <= 25) {
             is24HourStay = true;
-        } else {
-            // Use existing logic for non-24-hour stays
+            twentyFourHourSessions = 1;
+        } else if (totalHours < 24) {
+            // Same day or short stay - use day sessions + hourly
             const sameDay = dropoff.toDateString() === pickup.toDateString();
             
             if (sameDay) {
                 const dropoffHour = dropoff.getHours();
                 const pickupHour = pickup.getHours();
-                const pickupMinutes = pickup.getMinutes();
                 
                 // If dropoff is before or during day session and pickup is before/during day session
                 if (dropoffHour < 17 && pickupHour < 17) {
@@ -329,57 +329,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 // If dropoff is after 5pm (same day, no overnight)
                 else if (dropoffHour >= 17) {
-                    const totalHours = Math.ceil((pickup - dropoff) / (1000 * 60 * 60));
-                    extraHours = totalHours;
+                    const totalSameDayHours = Math.ceil((pickup - dropoff) / (1000 * 60 * 60));
+                    extraHours = totalSameDayHours;
                 }
             } else {
-                // Multi-day stay - count overnight sessions and handle final day
-                const dropoffDate = new Date(dropoff.getFullYear(), dropoff.getMonth(), dropoff.getDate());
-                const pickupDate = new Date(pickup.getFullYear(), pickup.getMonth(), pickup.getDate());
-                
-                // Count the number of nights
-                const millisecondsPerDay = 24 * 60 * 60 * 1000;
-                const nightsStaying = Math.ceil((pickupDate - dropoffDate) / millisecondsPerDay);
-                overnightSessions = nightsStaying;
-                
-                // Handle final day pickup - only charge extra if pickup is after 9am
-                const finalDay9am = new Date(pickup.getFullYear(), pickup.getMonth(), pickup.getDate(), 9, 0, 0);
-                const finalDay5pm = new Date(pickup.getFullYear(), pickup.getMonth(), pickup.getDate(), 17, 0, 0);
-                
-                if (pickup > finalDay9am) {
-                    const hoursAfter9am = Math.ceil((pickup - finalDay9am) / (1000 * 60 * 60));
-                    
-                    // If staying 8+ hours after 9am (until 5pm or later), charge day rate
-                    if (hoursAfter9am >= 8) {
-                        daySessions = 1;
-                        // If pickup is after 5pm, also charge hourly for time after 5pm
-                        if (pickup > finalDay5pm) {
-                            const hoursAfter5pm = Math.ceil((pickup - finalDay5pm) / (1000 * 60 * 60));
-                            extraHours = hoursAfter5pm;
-                        }
-                    } else {
-                        // If staying less than 8 hours after 9am, just charge hourly
-                        extraHours = hoursAfter9am;
+                // Cross-day but less than 24 hours - charge as hourly
+                extraHours = Math.ceil(totalHours);
+            }
+        } else {
+            // Multi-day stay - calculate as 24-hour periods + remaining time
+            twentyFourHourSessions = Math.floor(totalHours / 24);
+            const remainingHours = totalHours % 24;
+            
+            if (remainingHours > 0) {
+                // Handle remaining time
+                if (remainingHours >= 8) {
+                    // If 8+ hours remaining, charge as day session + extra hours
+                    daySessions = 1;
+                    if (remainingHours > 8) {
+                        extraHours = Math.ceil(remainingHours - 8);
                     }
+                } else {
+                    // Less than 8 hours, charge as hourly
+                    extraHours = Math.ceil(remainingHours);
                 }
             }
         }
         
-        let baseDayCost, baseOvernightCost, baseHourlyCost;
+        let baseDayCost, base24HourCost, baseHourlyCost;
         
         if (is24HourStay) {
             // 24-hour stay: flat rate of $45
-            baseDayCost = 45;
-            baseOvernightCost = 0;
+            baseDayCost = 0;
+            base24HourCost = 45;
             baseHourlyCost = 0;
-            // Reset sessions for proper display
-            daySessions = 0;
-            overnightSessions = 0;
-            extraHours = 24; // Show as 24 hours for display purposes
         } else {
-            // Calculate base costs for one dog with new rates
-            baseDayCost = daySessions * 30; // Changed from 35 to 30
-            baseOvernightCost = overnightSessions * 50;
+            // Calculate base costs for one dog
+            baseDayCost = daySessions * 30;
+            base24HourCost = twentyFourHourSessions * 45;
             baseHourlyCost = extraHours * 4;
         }
         
@@ -387,15 +374,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const multiDogMultiplier = 1 + (numDogs - 1) * 0.25;
         
         let dayCost = Math.round(baseDayCost * multiDogMultiplier);
-        let overnightCost = Math.round(baseOvernightCost * multiDogMultiplier);
+        let twentyFourHourCost = Math.round(base24HourCost * multiDogMultiplier);
         let hourlyCost = Math.round(baseHourlyCost * multiDogMultiplier);
         
         // Calculate multi-dog surcharge for display
-        const baseCostBeforeSurcharge = baseDayCost + baseOvernightCost + baseHourlyCost;
-        const totalCostAfterSurcharge = dayCost + overnightCost + hourlyCost;
+        const baseCostBeforeSurcharge = baseDayCost + base24HourCost + baseHourlyCost;
+        const totalCostAfterSurcharge = dayCost + twentyFourHourCost + hourlyCost;
         const multiDogSurcharge = numDogs > 1 ? totalCostAfterSurcharge - baseCostBeforeSurcharge : 0;
         
-        let subtotal = dayCost + overnightCost + hourlyCost;
+        let subtotal = dayCost + twentyFourHourCost + hourlyCost;
         
         // Apply new discount logic for 7+ day stays
         const totalDays = Math.ceil((pickup - dropoff) / (1000 * 60 * 60 * 24));
@@ -405,21 +392,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (totalDays >= 7) {
             const baseSevenDayPrice = Math.round(300 * multiDogMultiplier);
             
-            // Calculate what constitutes "base 7 days" (7 overnight sessions)
-            const baseSevenDayNights = Math.min(7, overnightSessions);
-            const baseSevenDayCost = baseSevenDayNights * 50; // 7 nights at $50 each
+            // Calculate what constitutes "base 7 days" (7 × 24-hour sessions = $315)
+            const baseSevenDay24HourSessions = Math.min(7, twentyFourHourSessions);
+            const baseSevenDayCost = baseSevenDay24HourSessions * 45; // 7 days at $45 each = $315
             const baseSevenDayWithMultiDog = Math.round(baseSevenDayCost * multiDogMultiplier);
             
             // Calculate additional costs beyond the base 7 days
-            let additionalNights = Math.max(0, overnightSessions - 7);
+            let additional24HourSessions = Math.max(0, twentyFourHourSessions - 7);
             let additionalDaySessions = daySessions;
             let additionalHours = extraHours;
             
             // Calculate additional costs
-            const additionalNightCost = additionalNights * 50;
+            const additional24HourCost = additional24HourSessions * 45;
             const additionalDayCost = additionalDaySessions * 30;
             const additionalHourCost = additionalHours * 4;
-            const totalAdditionalBaseCost = additionalNightCost + additionalDayCost + additionalHourCost;
+            const totalAdditionalBaseCost = additional24HourCost + additionalDayCost + additionalHourCost;
             const totalAdditionalCost = Math.round(totalAdditionalBaseCost * multiDogMultiplier);
             
             if (totalAdditionalCost > 0) {
@@ -438,10 +425,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return {
             daySessions,
-            overnightSessions,
+            twentyFourHourSessions,
             extraHours,
             dayCost,
-            overnightCost,
+            twentyFourHourCost,
             hourlyCost,
             total,
             numDogs,
@@ -590,10 +577,10 @@ document.addEventListener('DOMContentLoaded', function() {
         receiptSummary.innerHTML = summaryHtml;
         
         // Build breakdown section
-        const daySessions = parseInt(document.getElementById('day-count').textContent);
-        const nightSessions = parseInt(document.getElementById('night-count').textContent);
-        const extraHours = parseInt(document.getElementById('hourly-count').textContent);
-        const numDogsDisplay = document.getElementById('num-dogs-display').textContent;
+        const daySessions = pricing.daySessions;
+        const twentyFourHourSessions = pricing.twentyFourHourSessions;
+        const extraHours = pricing.extraHours;
+        const numDogsDisplay = dogs.length;
         
         let breakdownHtml = `
             <h3>💰 Pricing Breakdown</h3>
@@ -621,11 +608,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
             
-            if (nightSessions > 0) {
+            if (twentyFourHourSessions > 0) {
                 breakdownHtml += `
                     <div class="breakdown-item">
-                        <span>🌙 Overnight Stays (5pm-9am):</span>
-                        <span>${nightSessions}</span>
+                        <span>🕐 24-Hour Periods:</span>
+                        <span>${twentyFourHourSessions}</span>
                     </div>
                 `;
             }
@@ -660,11 +647,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
             
-            if (nightSessions > 0) {
+            if (twentyFourHourSessions > 0) {
                 breakdownHtml += `
                     <div class="breakdown-item">
-                        <span>Overnight Rate (per dog):</span>
-                        <span>$50 per night</span>
+                        <span>24-Hour Rate (per dog):</span>
+                        <span>$45 per period</span>
                     </div>
                 `;
             }
@@ -1134,16 +1121,13 @@ END:VCALENDAR`;
         
         // Show/hide breakdown items based on what applies
         const daySessionsRow = document.getElementById('day-sessions-row');
-        const nightSessionsRow = document.getElementById('night-sessions-row');
         const extraHoursRow = document.getElementById('extra-hours-row');
         const dayRateRow = document.getElementById('day-rate-row');
-        const nightRateRow = document.getElementById('night-rate-row');
-        const hourlyRateRow = document.querySelector('.breakdown-item:nth-child(9)'); // The hourly rate row
+        const hourlyRateRow = document.querySelector('.breakdown-item:nth-child(7)'); // The hourly rate row (adjusted index)
         
         if (pricing.is24HourStay) {
-            // For 24-hour stays, show as special 24-hour rate
+            // For single 24-hour stays, show as special 24-hour rate
             document.getElementById('day-count').textContent = 0;
-            document.getElementById('night-count').textContent = 0;
             document.getElementById('hourly-count').textContent = 1; // Show as 1 "24-hour session"
             
             // Update the hourly row label and rate for 24-hour stays
@@ -1153,29 +1137,32 @@ END:VCALENDAR`;
             
             // Only show the modified hourly row for 24-hour stays
             daySessionsRow.style.display = 'none';
-            nightSessionsRow.style.display = 'none';
             extraHoursRow.style.display = 'flex';
             dayRateRow.style.display = 'none';
-            nightRateRow.style.display = 'none';
         } else {
             // Normal display logic
             document.getElementById('day-count').textContent = pricing.daySessions;
-            document.getElementById('night-count').textContent = pricing.overnightSessions;
-            document.getElementById('hourly-count').textContent = pricing.extraHours;
             
-            // Reset the hourly row labels in case they were changed for 24-hour stays
-            extraHoursRow.querySelector('.label').textContent = '⏰ Extra Hours:';
+            // For multi-day stays, show 24-hour sessions in the hourly field
+            if (pricing.twentyFourHourSessions > 0) {
+                const totalUnits = pricing.twentyFourHourSessions + pricing.extraHours;
+                document.getElementById('hourly-count').textContent = totalUnits;
+                extraHoursRow.querySelector('.label').textContent = '🕐 24-Hr Sessions + Extra Hours:';
+            } else {
+                document.getElementById('hourly-count').textContent = pricing.extraHours;
+                extraHoursRow.querySelector('.label').textContent = '⏰ Extra Hours:';
+            }
+            
+            // Reset the hourly rate row for normal pricing
             hourlyRateRow.querySelector('.label').textContent = 'Hourly Rate (per dog):';
             hourlyRateRow.querySelector('.value').textContent = '$4 per hour';
             
             // Only show sessions/hours that apply
             daySessionsRow.style.display = pricing.daySessions > 0 ? 'flex' : 'none';
-            nightSessionsRow.style.display = pricing.overnightSessions > 0 ? 'flex' : 'none';
-            extraHoursRow.style.display = pricing.extraHours > 0 ? 'flex' : 'none';
+            extraHoursRow.style.display = (pricing.extraHours > 0 || pricing.twentyFourHourSessions > 0) ? 'flex' : 'none';
             
-            // Only show rates that apply (hourly rate always shown)
+            // Only show day rate if day sessions apply
             dayRateRow.style.display = pricing.daySessions > 0 ? 'flex' : 'none';
-            nightRateRow.style.display = pricing.overnightSessions > 0 ? 'flex' : 'none';
         }
         
         // Show/hide multi-dog surcharge
@@ -1198,7 +1185,7 @@ END:VCALENDAR`;
         if (pricing.discount > 0) {
             subtotalRow.style.display = 'flex';
             discountRow.style.display = 'flex';
-            subtotalEl.textContent = `$${pricing.dayCost + pricing.overnightCost + pricing.hourlyCost}`;
+            subtotalEl.textContent = `$${pricing.dayCost + pricing.twentyFourHourCost + pricing.hourlyCost}`;
             discountEl.textContent = `-$${pricing.discount}`;
         } else {
             subtotalRow.style.display = 'none';
