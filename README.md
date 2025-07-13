@@ -62,6 +62,29 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 3. **Get Your Quote** - See the detailed cost breakdown instantly
 4. **Print Receipt** - Save or print your quote for your records
 
+### Pricing Breakdown Example
+
+The calculator shows clear, itemized pricing so you understand exactly what you're paying for:
+
+```
+🐕 Number of Dogs: 2
+
+☀️ Day Sessions (9am-5pm): 1 × $30 = $30
+🕐 24-Hour Sessions: 2 × $45 = $90
+⏰ Extra Hours: 3 × $4 = $12
+
+Base Cost (per dog): $132
+🐕🐕 Multi-Dog Surcharge (25% per additional dog): +$33
+
+Total Cost: $165
+```
+
+This transparent breakdown helps you see:
+- Exactly what services you're receiving
+- How pricing is calculated for each component  
+- Multi-dog surcharges applied clearly
+- Any applicable discounts or special rates
+
 ## 🌐 Access the Calculator
 
 Visit our calculator at: [Your GitHub Pages URL]
