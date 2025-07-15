@@ -603,11 +603,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show day sessions line item if applicable
         if (daySessions > 0) {
-            const dayCostPerDog = pricing.dayCost / numDogsDisplay;
+            const dayCostPerDog = 30; // Base cost per dog for day session
             breakdownHtml += `
                 <div class="breakdown-item cost-line">
                     <span>☀️ Day Sessions (9am-5pm):</span>
-                    <span>${daySessions} × $30 = $${dayCostPerDog}</span>
+                    <span>${daySessions} × $${dayCostPerDog} = $${dayCostPerDog * daySessions}</span>
                 </div>
             `;
             hasLineItems = true;
@@ -615,19 +615,19 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show 24-hour sessions line item if applicable
         if (twentyFourHourSessions > 0) {
-            const twentyFourHourCostPerDog = pricing.twentyFourHourCost / numDogsDisplay;
+            const twentyFourHourCostPerDog = 45; // Base cost per dog for 24-hour session
             if (pricing.is24HourStay) {
                 breakdownHtml += `
                     <div class="breakdown-item cost-line">
                         <span>🕐 24-Hour Stay:</span>
-                        <span>1 × $45 = $${pricing.total / numDogsDisplay}</span>
+                        <span>1 × $${twentyFourHourCostPerDog} = $${twentyFourHourCostPerDog}</span>
                     </div>
                 `;
             } else {
                 breakdownHtml += `
                     <div class="breakdown-item cost-line">
                         <span>🕐 24-Hour Sessions:</span>
-                        <span>${twentyFourHourSessions} × $45 = $${twentyFourHourCostPerDog}</span>
+                        <span>${twentyFourHourSessions} × $${twentyFourHourCostPerDog} = $${twentyFourHourCostPerDog * twentyFourHourSessions}</span>
                     </div>
                 `;
             }
@@ -636,11 +636,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show extra hours line item if applicable
         if (extraHours > 0) {
-            const hourlyCostPerDog = pricing.hourlyCost / numDogsDisplay;
+            const hourlyCostPerDog = 4; // Base cost per dog per hour
             breakdownHtml += `
                 <div class="breakdown-item cost-line">
                     <span>⏰ Extra Hours:</span>
-                    <span>${extraHours} × $4 = $${hourlyCostPerDog}</span>
+                    <span>${extraHours} × $${hourlyCostPerDog} = $${hourlyCostPerDog * extraHours}</span>
                 </div>
             `;
             hasLineItems = true;
@@ -648,12 +648,27 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show base cost subtotal if multiple items or multi-dog
         if ((hasLineItems && numDogsDisplay > 1) || (daySessions > 0 && twentyFourHourSessions > 0) || (daySessions > 0 && extraHours > 0) || (twentyFourHourSessions > 0 && extraHours > 0)) {
+            let baseCostPerDog = 0;
+            if (daySessions > 0) baseCostPerDog += 30 * daySessions;
+            if (twentyFourHourSessions > 0) baseCostPerDog += 45 * twentyFourHourSessions;
+            if (extraHours > 0) baseCostPerDog += 4 * extraHours;
+            
             breakdownHtml += `
                 <div class="breakdown-item subtotal-line">
                     <span>Base Cost (per dog):</span>
-                    <span>$${pricing.baseCostBeforeSurcharge}</span>
+                    <span>$${baseCostPerDog}</span>
                 </div>
             `;
+            
+            // Show total for all dogs if multi-dog
+            if (numDogsDisplay > 1) {
+                breakdownHtml += `
+                    <div class="breakdown-item subtotal-line">
+                        <span>Total for ${numDogsDisplay} dogs:</span>
+                        <span>$${baseCostPerDog * numDogsDisplay}</span>
+                    </div>
+                `;
+            }
         }
         
         // Add multi-dog surcharge if applicable
