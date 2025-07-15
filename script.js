@@ -370,8 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
             baseHourlyCost = extraHours * 4;
         }
         
-        // Apply multi-dog pricing: first dog at full price, each additional dog adds 25%
-        const multiDogMultiplier = 1 + (numDogs - 1) * 0.25;
+        // Apply multi-dog pricing: first dog at full price, each additional dog adds 50%
+        const multiDogMultiplier = 1 + (numDogs - 1) * 0.50;
         
         let dayCost = Math.round(baseDayCost * multiDogMultiplier);
         let twentyFourHourCost = Math.round(base24HourCost * multiDogMultiplier);
@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (pricing.multiDogSurcharge > 0) {
             breakdownHtml += `
                 <div class="breakdown-item cost-line multi-dog">
-                    <span>🐕🐕 Multi-Dog Surcharge (25% per additional dog):</span>
+                    <span>🐕🐕 Multi-Dog Surcharge (50% per additional dog):</span>
                     <span>+$${pricing.multiDogSurcharge}</span>
                 </div>
             `;
