@@ -29,7 +29,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 
 ### Multi-Dog Pricing
 - **First Dog**: Full price
-- **Each Additional Dog**: +25% of total cost
+- **Each Additional Dog**: +50% of total cost
 
 ### Special Offers
 - **🎉 7-Day Stay**: Fixed $300 rate
@@ -48,7 +48,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 - Friday 9am → Sunday 5pm: 2 × $45 (24-hour periods) + $30 (day) = **$120**
 
 **Multiple Dogs:**
-- 2 dogs, same day 9am-5pm: $30 × 1.25 = **$38** (25% surcharge)
+- 2 dogs, same day 9am-5pm: $30 × 1.50 = **$45** (50% surcharge)
 
 **Weekly Stays:**
 - 7 days: **$300** fixed rate
@@ -74,9 +74,9 @@ The calculator shows clear, itemized pricing so you understand exactly what you'
 ⏰ Extra Hours: 3 × $4 = $12
 
 Base Cost (per dog): $132
-🐕🐕 Multi-Dog Surcharge (25% per additional dog): +$33
+🐕🐕 Multi-Dog Surcharge (50% per additional dog): +$66
 
-Total Cost: $165
+Total Cost: $198
 ```
 
 This transparent breakdown helps you see:
