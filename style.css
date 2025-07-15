@@ -1618,9 +1618,10 @@ input[type="text"]#pickup-date:hover {
         border-top: 1px solid #ddd;
         padding-top: 8px;
         margin-top: 10px;
-        background: #f5f5f5;
+        background: #f9f9f9 !important;
         padding: 8px;
         border-radius: 3px;
+        color: #333 !important;
     }
     
     .breakdown-item.discount-line {
@@ -1652,29 +1653,63 @@ input[type="text"]#pickup-date:hover {
         align-items: center;
         font-size: 18px;
         font-weight: bold;
-        color: #333;
-        background: #f0f0f0;
+        color: #333 !important;
+        background: white !important;
         padding: 15px;
         border-radius: 5px;
-        border: 2px solid #ddd;
+        border: 2px solid #333 !important;
     }
     
     /* Fix colors for main pricing sections in print */
-    .total {
+    .results .total {
         background: white !important;
         color: #333 !important;
         border: 2px solid #333 !important;
         box-shadow: none !important;
     }
     
-    .subtotal-line {
-        background: white !important;
+    .results .total span {
         color: #333 !important;
+    }
+    
+    .results .subtotal-line {
+        background: #f9f9f9 !important;
+        color: #333 !important;
+        border: 1px solid #ddd !important;
+        border-radius: 5px !important;
+        padding: 10px !important;
+    }
+    
+    .results .subtotal-line .label,
+    .results .subtotal-line .value {
+        color: #333 !important;
+    }
+    
+    /* Fix all breakdown items for better print readability */
+    .results .breakdown-item {
+        color: #333 !important;
+        border-bottom: 1px dotted #ccc !important;
+        padding: 8px 0 !important;
+    }
+    
+    .results .breakdown-item .label {
+        color: #666 !important;
+    }
+    
+    .results .breakdown-item .value,
+    .results .breakdown-item .item-cost {
+        color: #333 !important;
+        font-weight: bold !important;
+    }
+    
+    .results .breakdown {
+        background: white !important;
         border: 1px solid #ddd !important;
     }
     
-    .subtotal-line .label,
-    .subtotal-line .value {
-        color: #333 !important;
+    .results {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
     }
 }
