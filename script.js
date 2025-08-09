@@ -136,11 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
         currentDogData = { name: '', breed: '', customBreed: '', size: '' };
         resetDogForm();
         dogModal.classList.remove('hidden');
+        updateBodyScrollLock();
     });
     
     // Cancel dog button
     cancelDogBtn.addEventListener('click', function() {
         dogModal.classList.add('hidden');
+        updateBodyScrollLock();
     });
     
     // Dog name input
@@ -201,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
             dogModal.classList.add('hidden');
             calculateRealTime();
             saveAppState();
+            updateBodyScrollLock();
         }
     });
     
@@ -670,17 +673,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmYesBtn = document.getElementById('confirm-yes-btn');
     let confirmCallback = null;
 
+    // Utility: lock/unlock background scroll when any modal is open (mobile UX)
+    function updateBodyScrollLock() {
+        const anyModalOpen =
+            !dogModal.classList.contains('hidden') ||
+            !datetimeModal.classList.contains('hidden') ||
+            !confirmModal.classList.contains('hidden');
+        if (anyModalOpen) {
+            document.body.classList.add('no-scroll');
+        } else {
+            document.body.classList.remove('no-scroll');
+        }
+    }
+
     // Custom confirm function
     function showConfirm(message, callback) {
         confirmMessage.textContent = message;
         confirmCallback = callback;
         confirmModal.classList.remove('hidden');
+        updateBodyScrollLock();
     }
 
     // Confirm modal event listeners
     confirmCancelBtn.addEventListener('click', function() {
         confirmModal.classList.add('hidden');
         confirmCallback = null;
+        updateBodyScrollLock();
     });
 
     confirmYesBtn.addEventListener('click', function() {
@@ -689,6 +707,7 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmCallback();
             confirmCallback = null;
         }
+        updateBodyScrollLock();
     });
 
     // Close modal when clicking outside
@@ -696,6 +715,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === confirmModal) {
             confirmModal.classList.add('hidden');
             confirmCallback = null;
+            updateBodyScrollLock();
         }
     });
 
@@ -850,6 +870,7 @@ END:VCALENDAR`;
         renderCalendar();
         updateDatetimePreview();
         datetimeModal.classList.remove('hidden');
+        updateBodyScrollLock();
     }
     
     function renderCalendar() {
@@ -1004,12 +1025,14 @@ END:VCALENDAR`;
             datetimeModal.classList.add('hidden');
             calculateRealTime();
             saveAppState();
+            updateBodyScrollLock();
         }
     });
     
     // Cancel datetime
     cancelDatetimeBtn.addEventListener('click', function() {
         datetimeModal.classList.add('hidden');
+        updateBodyScrollLock();
     });
     
     // Add click handlers to date inputs
