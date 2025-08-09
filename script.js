@@ -295,11 +295,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function calculatePricing(dropoff, pickup, numDogs = 1) {
         // New simplified pricing model:
-        // - $40 per 24-hour period (overnight)
+        // - $45 per 24-hour period (overnight)
         // - $4 per extra hour, unless extra hours reach another 24 hours (then count as another night)
         // - Keep multi-dog pricing (first dog full price, each additional +50%)
 
-        const NIGHTLY_RATE_PER_DOG = 40;
+        const NIGHTLY_RATE_PER_DOG = 45;
         const HOURLY_RATE_PER_DOG = 4;
 
         // Calculate total duration
@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show 24-hour sessions line item if applicable
         if (twentyFourHourSessions > 0) {
-            const twentyFourHourCostPerDog = 40; // Base cost per dog for 24-hour session
+            const twentyFourHourCostPerDog = 45; // Base cost per dog for 24-hour session
             if (pricing.is24HourStay) {
                 breakdownHtml += `
                     <div class="breakdown-item cost-line">
@@ -566,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if ((hasLineItems && numDogsDisplay > 1) || (daySessions > 0 && twentyFourHourSessions > 0) || (daySessions > 0 && extraHours > 0) || (twentyFourHourSessions > 0 && extraHours > 0)) {
             let baseCostPerDog = 0;
             // Day sessions removed in new model
-            if (twentyFourHourSessions > 0) baseCostPerDog += 40 * twentyFourHourSessions;
+            if (twentyFourHourSessions > 0) baseCostPerDog += 45 * twentyFourHourSessions;
             if (extraHours > 0) baseCostPerDog += 4 * extraHours;
             
             breakdownHtml += `
