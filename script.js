@@ -587,11 +587,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Add multi-dog surcharge if applicable
+        // Add multi-dog pricing line if applicable
         if (pricing.multiDogSurcharge > 0) {
             breakdownHtml += `
                 <div class="breakdown-item cost-line multi-dog">
-                    <span>🐕🐕 Multi-Dog Surcharge (50% per additional dog):</span>
+                    <span>🐕🐕 Multi-Dog Pricing (50% per additional dog):</span>
                     <span>+$${pricing.multiDogSurcharge}</span>
                 </div>
             `;
