@@ -842,12 +842,12 @@ PRODID:-//Dog Sitting At Danni's House//Calculator//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:${Date.now()}@dogsittingdannis.com
+UID:${Date.now()}@local
 DTSTART:${formatICSDate(dropoffDate)}
 DTEND:${formatICSDate(pickupDate)}
 SUMMARY:Dog Sitting at Danni's House - ${dogs.map(d => d.name).join(', ')}
 DESCRIPTION:Dog Sitting Service\\n\\nDogs in care:\\n${dogList}\\n\\nService Details:\\n• Drop-off: ${dropoffDate.toLocaleString()}\\n• Pick-up: ${pickupDate.toLocaleString()}\\n• Total Cost: $${pricing.total}\\n\\nBreakdown:\\n${pricing.twentyFourHourSessions > 0 ? `• 24-Hour Sessions: ${pricing.twentyFourHourSessions}\\n` : ''}${pricing.extraHours > 0 ? `• Extra Hours: ${pricing.extraHours}\\n` : ''}\\nYour furry friends are in great hands!
-LOCATION:Danni's House
+LOCATION:—
 STATUS:CONFIRMED
 TRANSP:OPAQUE
 BEGIN:VALARM
