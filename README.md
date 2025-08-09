@@ -22,7 +22,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 ## 💸 Our Pricing
 
 ### Base Rates
-- **🕐 24-Hour Boarding**: $40 per 24-hour period (overnight)
+- **🕐 24-Hour Boarding**: $45 per 24-hour period (overnight)
 - **⏰ Extra Hours**: $4 per hour. If extra hours reach 24, they become another 24-hour period
 
 ### Multi-Dog Pricing
@@ -35,17 +35,17 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 ### Pricing Examples
 
 **24-Hour Boarding:**
-- Drop off 3pm, pick up 3pm next day: **$40**
+- Drop off 3pm, pick up 3pm next day: **$45**
 
 **Extra Hours:**
-- 1 night + 3 hours (3pm → 6pm next day): $40 + (3 × $4) = **$52**
+- 1 night + 3 hours (3pm → 6pm next day): $45 + (3 × $4) = **$57**
 
 **Multi-Night:**
-- Friday 5pm → Sunday 5pm: 2 × $40 = **$80**
-- Friday 5pm → Sunday 7pm: (2 × $40) + (2 × $4) = **$88**
+- Friday 5pm → Sunday 5pm: 2 × $45 = **$90**
+- Friday 5pm → Sunday 7pm: (2 × $45) + (2 × $4) = **$98**
 
 **Multiple Dogs:**
-- 2 dogs, 1 night: $40 × 1.50 = **$60** total
+- 2 dogs, 1 night: $45 × 1.50 = **$68** total
 
 ## 🚀 Using the Calculator
 
@@ -61,7 +61,7 @@ The calculator shows clear, itemized pricing so you understand exactly what you'
 ```
 🐕 Number of Dogs: 2
 
-🕐 24-Hour Sessions: 2 × $40 = $80
+🕐 24-Hour Sessions: 2 × $45 = $90
 ⏰ Extra Hours: 3 × $4 = $12
 
 Base Cost (per dog): $92
