@@ -119,15 +119,6 @@ Our calculator works on all modern browsers:
 └── .gitignore          # Git ignore rules
 ```
 
-## 📞 Contact Us
-
-Have questions about pricing or want to book a stay? 
-
-**Dog Sitting At Danni's House**
-- 🏠 Professional in-home pet care
-- 🐕 Experienced with dogs of all sizes and breeds
-- ❤️ Your pets are family to us
-
 ---
 
 ## 🔧 For Developers
