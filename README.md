@@ -14,46 +14,38 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 - 🐕 **Multiple Dog Support** - Add all your furry friends with breed and size details
 - 📅 **Custom Date/Time Picker** - Easy calendar and time selection
 - 💰 **Transparent Pricing** - Detailed breakdown of all costs
-- 🌙 **Flexible Stay Options** - Day care, overnight, and multi-night stays
-- 🎉 **Weekly Discounts** - Fixed $300 for 7 days + 20% off additional time  
+- 🌙 **Flexible Stay Options** - Overnight and multi-night stays
 - 🖨️ **Professional Receipts** - Print-friendly receipts for your records
 - 🌙 **Dark Mode** - Easy on the eyes for any time of day
 - 📱 **Mobile Friendly** - Works perfectly on all devices
 
 ## 💸 Our Pricing
 
-### Basic Rates
-- **☀️ Daytime Care** (9:00 AM - 5:00 PM): $30 per day
-- **🕐 24-Hour Stay**: $45 flat rate for exactly 24-hour periods
-- **⏰ Extra Hours**: $4 per hour for extensions
+### Base Rates
+- **🕐 24-Hour Boarding**: $40 per 24-hour period (overnight)
+- **⏰ Extra Hours**: $4 per hour. If extra hours reach 24, they become another 24-hour period
 
 ### Multi-Dog Pricing
 - **First Dog**: Full price
 - **Each Additional Dog**: +50% of total cost
 
-### Special Offers
-- **🎉 7-Day Stay**: Fixed $300 rate
-- **🎉 Extended Stay Discount**: Additional time beyond 7 days gets 20% off, added to $300 base
+### Notes
+- Simple, predictable nightly pricing. No weekly discounting; we just count full 24-hour nights and any extra hours.
 
 ### Pricing Examples
 
-**Same Day Care:**
-- Drop off 9am, pick up 7pm: $30 (day) + $8 (2 extra hours) = **$38**
+**24-Hour Boarding:**
+- Drop off 3pm, pick up 3pm next day: **$40**
 
-**24-Hour Stay:**
-- Drop off 3pm, pick up 3pm next day: **$45** flat rate
+**Extra Hours:**
+- 1 night + 3 hours (3pm → 6pm next day): $40 + (3 × $4) = **$52**
 
-**Multi-Day Stays:**
-- Friday 9am → Sunday 10am: 2 × $45 (24-hour periods) + $4 (1 hour) = **$94**
-- Friday 9am → Sunday 5pm: 2 × $45 (24-hour periods) + $30 (day) = **$120**
+**Multi-Night:**
+- Friday 5pm → Sunday 5pm: 2 × $40 = **$80**
+- Friday 5pm → Sunday 7pm: (2 × $40) + (2 × $4) = **$88**
 
 **Multiple Dogs:**
-- 2 dogs, same day 9am-5pm: $30 × 1.50 = **$45** (50% surcharge)
-
-**Weekly Stays:**
-- 7 days: **$300** fixed rate
-- 7 days + 3 hours: $300 + (3 × $4 × 0.8) = **$309.60**
-- 8 days: $300 + ($45 × 0.8) = **$336**
+- 2 dogs, 1 night: $40 × 1.50 = **$60** total
 
 ## 🚀 Using the Calculator
 
@@ -69,14 +61,13 @@ The calculator shows clear, itemized pricing so you understand exactly what you'
 ```
 🐕 Number of Dogs: 2
 
-☀️ Day Sessions (9am-5pm): 1 × $30 = $30
-🕐 24-Hour Sessions: 2 × $45 = $90
+🕐 24-Hour Sessions: 2 × $40 = $80
 ⏰ Extra Hours: 3 × $4 = $12
 
-Base Cost (per dog): $132
-🐕🐕 Multi-Dog Surcharge (50% per additional dog): +$66
+Base Cost (per dog): $92
+🐕🐕 Multi-Dog Surcharge (50% per additional dog): +$46
 
-Total Cost: $198
+Total Cost: $138
 ```
 
 This transparent breakdown helps you see:
