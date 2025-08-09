@@ -65,7 +65,7 @@ The calculator shows clear, itemized pricing so you understand exactly what you'
 ⏰ Extra Hours: 3 × $4 = $12
 
 Base Cost (per dog): $92
-🐕🐕 Multi-Dog Surcharge (50% per additional dog): +$46
+🐕🐕 Multi-Dog Pricing (50% per additional dog): +$46
 
 Total Cost: $138
 ```
@@ -73,7 +73,7 @@ Total Cost: $138
 This transparent breakdown helps you see:
 - Exactly what services you're receiving
 - How pricing is calculated for each component  
-- Multi-dog surcharges applied clearly
+- Multi-dog pricing applied clearly
 - Any applicable discounts or special rates
 
 ## 🌐 Access the Calculator
