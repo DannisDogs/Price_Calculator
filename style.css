@@ -17,6 +17,11 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
     --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.1);
     --modal-bg: rgba(0, 0, 0, 0.5);
+
+    /* Scrollbar theme */
+    --scrollbar-track: var(--bg-secondary);
+    --scrollbar-thumb: var(--primary-color);
+    --scrollbar-thumb-hover: #ff4d4d;
 }
 
 [data-theme="dark"] {
@@ -38,6 +43,11 @@
     --shadow-color: rgba(0, 0, 0, 0.3);
     --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.3);
     --modal-bg: rgba(0, 0, 0, 0.8);
+
+    /* Scrollbar theme (dark) */
+    --scrollbar-track: #3a3a3a;
+    --scrollbar-thumb: #ff8787;
+    --scrollbar-thumb-hover: #ffa0a0;
 }
 
 * {
@@ -53,6 +63,34 @@ body {
     background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
     min-height: 100vh;
     transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Themed, consistent scrollbars across the app */
+html, body, .modal-content, .results, .calculator-card {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* WebKit-based browsers (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+*::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 10px;
+}
+*::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 10px;
+    border: 2px solid transparent; /* makes the thumb slimmer visually */
+    background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
+}
+*::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 .container {
@@ -1145,6 +1183,7 @@ footer {
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     body {
@@ -1156,6 +1195,7 @@ footer {
         padding: 0;
         font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
     
@@ -1206,6 +1246,7 @@ footer {
         padding: 8pt 0 6pt 0;
         margin-bottom: 6pt;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
         position: relative;
     }
     
@@ -1219,6 +1260,53 @@ footer {
     }
     
     .receipt-header h2 { display: none !important; }
+
+    /* Meta block */
+    .receipt-meta {
+        display: grid !important;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 8pt;
+        margin: 6pt 0 8pt 0;
+        align-items: start;
+    }
+    .receipt-meta .business-info {
+        background: #f8f9fa !important;
+        border: 1px solid #eef1f3 !important;
+        border-radius: 6px !important;
+        padding: 8pt;
+    }
+    .receipt-meta .brand {
+        font-weight: 700;
+        color: #2c3e50 !important;
+        margin-bottom: 2pt;
+    }
+    .receipt-meta .biz-line {
+        color: #6c757d !important;
+        font-size: 8.5pt;
+        line-height: 1.4;
+    }
+    .receipt-meta .receipt-info {
+        background: #fff !important;
+        border: 1px solid #eef1f3 !important;
+        border-radius: 6px !important;
+        padding: 8pt;
+    }
+    .receipt-meta .info-row {
+        display: flex !important;
+        justify-content: space-between;
+        padding: 3pt 0;
+        border-bottom: 1px dotted #e9ecef !important;
+        font-size: 9.5pt;
+    }
+    .receipt-meta .info-row:last-child { border-bottom: none; }
+    .receipt-meta .info-row span:first-child {
+        color: #6c757d !important;
+        font-weight: 500;
+    }
+    .receipt-meta .info-row span:last-child {
+        color: #2c3e50 !important;
+        font-weight: 700;
+    }
     
     .receipt-date {
         color: #6c757d !important;
@@ -1237,6 +1325,7 @@ footer {
         padding: 6pt;
         border: 1px solid #eef1f3 !important;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
     
@@ -1265,6 +1354,7 @@ footer {
         box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
         max-width: none;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     .receipt-dog .dog-icon {
@@ -1350,6 +1440,7 @@ footer {
         padding: 10pt;
         margin-bottom: 8pt;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
         position: relative;
     }
     
@@ -1420,6 +1511,7 @@ footer {
         margin: 6pt 0 !important;
         border: none !important;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     /* Total Section */
@@ -1458,7 +1550,59 @@ footer {
         display: inline-block;
     }
     
-    /* Footer */
+    /* Payment / Notes / Signatures / Terms */
+    .receipt-payment,
+    .receipt-notes,
+    .receipt-signatures,
+    .receipt-terms,
+    .receipt-client {
+        page-break-inside: avoid;
+        background: #fff !important;
+        border: 1px solid #eef1f3 !important;
+        border-radius: 6px !important;
+        padding: 8pt;
+        margin-bottom: 8pt;
+    }
+
+    .receipt-client h3,
+    .receipt-payment h3,
+    .receipt-notes h3 {
+        margin: 0 0 6pt 0;
+        font-size: 11pt;
+        color: #2c3e50 !important;
+        border-bottom: 1px solid #e9ecef !important;
+        padding-bottom: 4pt;
+    }
+
+    .receipt-client .client-fields {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 6pt 12pt;
+    }
+    .receipt-client .field { display: flex; align-items: center; gap: 8pt; }
+    .receipt-client .field span:first-child { color: #6c757d !important; min-width: 60pt; }
+    .receipt-client .field .line { flex: 1; border-bottom: 1px dotted #adb5bd; height: 10pt; }
+    .receipt-client .field .line.long { min-width: 200pt; }
+
+    .receipt-payment .payment-options { display: flex; gap: 12pt; font-size: 10pt; margin-bottom: 4pt; }
+    .receipt-payment .due-note { color: #6c757d !important; font-size: 8.5pt; }
+
+    .receipt-notes .notes-box {
+        height: 48pt;
+        border: 1px dashed #ced4da !important;
+        border-radius: 4pt;
+        background: #fdfdfd !important;
+    }
+
+    .receipt-signatures { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12pt; }
+    .receipt-signatures .sig-block { text-align: center; }
+    .receipt-signatures .signature-line { border-bottom: 1px solid #343a40; height: 18pt; margin-bottom: 4pt; }
+    .receipt-signatures .sig-label { color: #6c757d !important; font-size: 9pt; }
+
+    .receipt-terms { font-size: 8.5pt; color: #6c757d !important; }
+    .receipt-terms .terms-title { font-weight: 600; color: #2c3e50 !important; margin-bottom: 4pt; }
+
+    /* Hide decorative on-screen footer in print */
     .receipt-footer { display: none !important; }
     
     .receipt-footer p {
@@ -1494,6 +1638,8 @@ footer {
             padding: 15pt;
             font-size: 10pt;
         }
+        .receipt-meta { grid-template-columns: 1fr; }
+        .receipt-client .client-fields { grid-template-columns: 1fr; }
         
         .receipt-header h1 {
             font-size: 20pt;
