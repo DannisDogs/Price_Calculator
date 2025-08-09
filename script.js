@@ -472,6 +472,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function buildPrintReceipt() {
         const printReceipt = document.getElementById('print-receipt');
         const receiptDate = document.getElementById('receipt-date');
+        const receiptDateDup = document.getElementById('receipt-date-dup');
+        const receiptNumber = document.getElementById('receipt-number');
         const receiptDogs = document.getElementById('receipt-dogs');
         const receiptSummary = document.getElementById('receipt-summary');
         const receiptBreakdown = document.getElementById('receipt-breakdown');
@@ -494,6 +496,15 @@ document.addEventListener('DOMContentLoaded', function() {
             minute: '2-digit'
         });
         receiptDate.textContent = printDate;
+        if (receiptDateDup) receiptDateDup.textContent = now.toLocaleString();
+
+        // Simple readable receipt number YYYYMMDD-HHMM-XXX
+        if (receiptNumber) {
+            const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+            const timePart = `${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+            const randPart = Math.floor(Math.random()*1000).toString().padStart(3,'0');
+            receiptNumber.textContent = `${datePart}-${timePart}-${randPart}`;
+        }
         
         // Build dogs section
         let dogsHtml = '<h3>Dogs in Care</h3>';
@@ -532,6 +543,13 @@ document.addEventListener('DOMContentLoaded', function() {
             weekday: 'short', month: 'short', day: 'numeric', 
             hour: 'numeric', minute: '2-digit' 
         });
+        // Duration in days/hours for clarity
+        const ms = Math.max(0, pickupDate - dropoffDate);
+        const totalHours = Math.round(ms / (1000*60*60));
+        const fullDays = Math.floor(totalHours / 24);
+        const remHours = totalHours % 24;
+        const durationLabel = `${fullDays} day${fullDays!==1?'s':''}${remHours>0?` ${remHours} hr${remHours!==1?'s':''}`:''}`;
+
         const summaryHtml = `
             <h3>Service Period</h3>
             <div class="summary-item">
@@ -541,6 +559,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="summary-item">
                 <span>Pick-up:</span>
                 <span>${pickupDateFormatted}</span>
+            </div>
+            <div class="summary-item">
+                <span>Duration:</span>
+                <span>${durationLabel}</span>
             </div>
         `;
         receiptSummary.innerHTML = summaryHtml;
