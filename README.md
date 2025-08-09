@@ -14,6 +14,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 - 🐕 **Multiple Dog Support** - Add all your furry friends with breed and size details
 - 📅 **Custom Date/Time Picker** - Easy calendar and time selection
 - 💰 **Transparent Pricing** - Detailed breakdown of all costs
+- 🧮 **Exact Totals (No Rounding)** - Amounts show true values with cents
 - 🌙 **Flexible Stay Options** - Overnight and multi-night stays
 - 🖨️ **Professional Receipts** - Print-friendly receipts for your records
 - 🌙 **Dark Mode** - Easy on the eyes for any time of day
@@ -45,7 +46,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 - Friday 5pm → Sunday 7pm: (2 × $45) + (2 × $4) = **$98**
 
 **Multiple Dogs:**
-- 2 dogs, 1 night: $45 × 1.50 = **$68** total
+- 2 dogs, 1 night: $45 × 1.50 = **$67.5** total
 
 ## 🚀 Using the Calculator
 
@@ -64,10 +65,10 @@ The calculator shows clear, itemized pricing so you understand exactly what you'
 🕐 24-Hour Sessions: 2 × $45 = $90
 ⏰ Extra Hours: 3 × $4 = $12
 
-Base Cost (per dog): $92
-🐕🐕 Multi-Dog Pricing (50% per additional dog): +$46
+Base Cost (per dog): $102
+🐕🐕 Multi-Dog Pricing (50% per additional dog): +$51
 
-Total Cost: $138
+Total Cost: $153
 ```
 
 This transparent breakdown helps you see:
@@ -92,6 +93,17 @@ python3 -m http.server 8080
 # Visit http://localhost:8080
 ```
 
+### Run tests
+```bash
+npm install
+
+# Unit tests (pricing logic)
+npm test
+
+# E2E smoke (start local server first in another terminal)
+npm run e2e
+```
+
 ## 📱 Browser Support
 
 Our calculator works on all modern browsers:
@@ -106,6 +118,7 @@ Our calculator works on all modern browsers:
 - Responsive design for all screen sizes
 - Print-optimized CSS for professional receipts
 - Local storage for dark mode preferences
+ - Print receipt payment options: Cash and Venmo
 
 **Project Structure:**
 ```
@@ -115,7 +128,9 @@ Our calculator works on all modern browsers:
 ├── script.js           # Calculator logic
 ├── favicon.svg         # Paw print icon
 ├── README.md           # This file
-├── CLAUDE.md           # Development documentation
+  ├── tests/              # Unit and E2E tests (Jest/Playwright)
+  ├── jest.config.js      # Jest configuration
+  ├── playwright.config.ts# Playwright configuration
 └── .gitignore          # Git ignore rules
 ```
 
