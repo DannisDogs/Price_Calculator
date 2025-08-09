@@ -332,6 +332,24 @@ select option {
     font-size: 1.5rem;
 }
 
+/* Mobile toggle for breakdown */
+.toggle-breakdown-btn {
+    display: none;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin: -0.5rem 0 0.75rem 0;
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .toggle-breakdown-btn { display: block; }
+}
+
 .breakdown {
     background: var(--bg-secondary);
     border-radius: 15px;
@@ -616,11 +634,11 @@ footer {
     }
     
     .calculator-card {
-        padding: 2rem;
+        padding: 1.25rem;
     }
     
     .total {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         background: var(--accent-color, #ff6b6b) !important;
         color: white !important;
     }
@@ -662,7 +680,7 @@ footer {
 
     /* Extra bottom padding so sticky button doesn't cover content */
     .calculator-card {
-        padding-bottom: 5rem;
+        padding-bottom: 4.5rem;
     }
 
     /* Larger tap target for remove icon */
@@ -1692,6 +1710,26 @@ input[type="text"]#pickup-date:hover {
 }
 
 @media (max-width: 600px) {
+    .dogs-container {
+        min-height: 48px;
+        gap: 0.75rem;
+    }
+
+    .dog-card {
+        padding: 0.75rem;
+    }
+
+    .dog-icon {
+        font-size: 1.6rem;
+    }
+
+    .dog-name {
+        margin-bottom: 0.1rem;
+    }
+
+    .size-options {
+        gap: 0.75rem;
+    }
     .picker-container {
         flex-direction: column;
     }
