@@ -1188,25 +1188,14 @@ footer {
         border: 1px solid #e9ecef !important;
         border-radius: 8px !important;
         margin: 0 auto;
-        box-shadow: 0 0 20px rgba(0,0,0,0.1) !important;
+        box-shadow: none !important;
     }
     
     /* Professional watermark */
     .print-receipt::before { display: none !important; }
     
-    /* Decorative corner elements */
-    .print-receipt::after {
-        content: "🐾 DOG SITTING AT DANNI'S HOUSE 🐾";
-        position: absolute;
-        bottom: 15pt;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 8pt;
-        color: #dee2e6 !important;
-        opacity: 0.6;
-        text-align: center;
-        font-weight: 400;
-    }
+    /* Hide decorative footer text in print for a cleaner look */
+    .print-receipt::after { display: none !important; content: none !important; }
     
     /* Receipt Header */
     .receipt-header {
@@ -1435,7 +1424,7 @@ footer {
     
     /* Total Section */
     .receipt-total {
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        background: #2c3e50 !important;
         color: white !important;
         border: 1px solid #2c3e50 !important;
         border-radius: 6px !important;
@@ -1458,6 +1447,15 @@ footer {
     .total-amount span {
         color: white !important;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
+    }
+
+    /* Align currency neatly with tabular figures */
+    .receipt-breakdown .breakdown-item span:last-child,
+    .total-amount span:last-child {
+        font-variant-numeric: tabular-nums;
+        min-width: 80pt;
+        text-align: right;
+        display: inline-block;
     }
     
     /* Footer */
