@@ -295,6 +295,40 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         calculateCost(true);
     });
+
+    // Mobile: toggle breakdown visibility
+    const toggleBreakdownBtn = document.getElementById('toggle-breakdown-btn');
+    const resultsBreakdown = document.getElementById('results-breakdown');
+    let isBreakdownCollapsed = false;
+
+    function updateBreakdownToggleVisibility() {
+        // Show toggle on small screens only
+        const isSmall = window.matchMedia('(max-width: 600px)').matches;
+        toggleBreakdownBtn.style.display = isSmall ? 'block' : 'none';
+        if (!isSmall) {
+            // Always expanded on desktop
+            resultsBreakdown.style.display = '';
+            toggleBreakdownBtn.setAttribute('aria-expanded', 'true');
+            toggleBreakdownBtn.textContent = 'Show details ▾';
+            isBreakdownCollapsed = false;
+        }
+    }
+
+    toggleBreakdownBtn.addEventListener('click', function() {
+        isBreakdownCollapsed = !isBreakdownCollapsed;
+        if (isBreakdownCollapsed) {
+            resultsBreakdown.style.display = 'none';
+            toggleBreakdownBtn.setAttribute('aria-expanded', 'false');
+            toggleBreakdownBtn.textContent = 'Show details ▸';
+        } else {
+            resultsBreakdown.style.display = '';
+            toggleBreakdownBtn.setAttribute('aria-expanded', 'true');
+            toggleBreakdownBtn.textContent = 'Hide details ▾';
+        }
+    });
+
+    window.addEventListener('resize', updateBreakdownToggleVisibility);
+    updateBreakdownToggleVisibility();
     
     function calculatePricing(dropoff, pickup, numDogs = 1) {
         // New simplified pricing model:
