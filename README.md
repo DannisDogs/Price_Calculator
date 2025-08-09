@@ -93,16 +93,7 @@ python3 -m http.server 8080
 # Visit http://localhost:8080
 ```
 
-### Run tests
-```bash
-npm install
-
-# Unit tests (pricing logic)
-npm test
-
-# E2E smoke (start local server first in another terminal)
-npm run e2e
-```
+ 
 
 ## 📱 Browser Support
 
@@ -128,9 +119,6 @@ Our calculator works on all modern browsers:
 ├── script.js           # Calculator logic
 ├── favicon.svg         # Paw print icon
 ├── README.md           # This file
-  ├── tests/              # Unit and E2E tests (Jest/Playwright)
-  ├── jest.config.js      # Jest configuration
-  ├── playwright.config.ts# Playwright configuration
 └── .gitignore          # Git ignore rules
 ```
 
