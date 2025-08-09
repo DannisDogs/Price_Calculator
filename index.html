@@ -312,6 +312,31 @@
                     <h2>Service Receipt</h2>
                     <div class="receipt-date" id="receipt-date"></div>
                 </div>
+
+                <!-- Business + Receipt metadata -->
+                <div class="receipt-meta">
+                    <div class="business-info">
+                        <div class="brand">🐾 Dog Sitting At Danni's House</div>
+                        <div class="biz-line">123 Paw Lane, Tailtown, PA 19000</div>
+                        <div class="biz-line">📞 (555) 123-PAWS • 📧 hello@dannisdogs.com • 🌐 dannisdogs.com</div>
+                    </div>
+                    <div class="receipt-info">
+                        <div class="info-row"><span>Receipt #</span><span id="receipt-number">—</span></div>
+                        <div class="info-row"><span>Date</span><span id="receipt-date-dup">—</span></div>
+                        <div class="info-row"><span>Prepared by</span><span>Danni</span></div>
+                    </div>
+                </div>
+
+                <!-- Client box (to be filled by hand if desired) -->
+                <div class="receipt-client" id="receipt-client">
+                    <h3>Client Information</h3>
+                    <div class="client-fields">
+                        <div class="field"><span>Name</span><span class="line"></span></div>
+                        <div class="field"><span>Phone</span><span class="line"></span></div>
+                        <div class="field"><span>Email</span><span class="line"></span></div>
+                        <div class="field"><span>Address</span><span class="line long"></span></div>
+                    </div>
+                </div>
                 
                 <div class="receipt-dogs" id="receipt-dogs">
                     <!-- Dogs will be populated here -->
@@ -328,14 +353,39 @@
                 <div class="receipt-total" id="receipt-total">
                     <!-- Total will be populated here -->
                 </div>
-                
-                <div class="receipt-footer">
-                    <p>Thank you for choosing Dog Sitting At Danni's House!</p>
-                    <p>Your furry friends are in great hands! 🐾</p>
-                    <div class="contact-info">
-                        <p>📞 Contact: (555) 123-PAWS • 📧 hello@dannisdogs.com</p>
-                        <p>🏠 Licensed & Insured • ⭐ 5-Star Rated Pet Care</p>
+
+                <!-- Payment + Notes -->
+                <div class="receipt-payment">
+                    <h3>Payment</h3>
+                    <div class="payment-options">
+                        <span>☐ Cash</span>
+                        <span>☐ Card</span>
+                        <span>☐ Venmo</span>
+                        <span>☐ Zelle</span>
+                        <span>☐ Other</span>
                     </div>
+                    <div class="due-note">Payment due upon pickup unless otherwise arranged.</div>
+                </div>
+
+                <div class="receipt-notes">
+                    <h3>Notes</h3>
+                    <div class="notes-box"></div>
+                </div>
+
+                <div class="receipt-signatures">
+                    <div class="sig-block">
+                        <div class="signature-line"></div>
+                        <div class="sig-label">Client Signature</div>
+                    </div>
+                    <div class="sig-block">
+                        <div class="signature-line"></div>
+                        <div class="sig-label">Provider Signature</div>
+                    </div>
+                </div>
+
+                <div class="receipt-terms">
+                    <div class="terms-title">Terms</div>
+                    <p>Cancellations within 24 hours of drop-off may incur a fee. Owner confirms dogs are up to date on vaccinations and provides emergency contact details upon request. We treat every pup like family.</p>
                 </div>
             </div>
 
