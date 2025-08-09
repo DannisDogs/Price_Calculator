@@ -1162,13 +1162,13 @@ footer {
         display: block !important;
         background: white !important;
         color: #2c3e50 !important;
-        padding: 12pt;
+        padding: 10pt;
         max-width: 100%;
         overflow: hidden;
         page-break-inside: avoid;
         position: relative;
-        border: 3px solid #e8f4f8 !important;
-        border-radius: 12px !important;
+        border: 1px solid #e9ecef !important;
+        border-radius: 8px !important;
         margin: 0 auto;
         box-shadow: 0 0 20px rgba(0,0,0,0.1) !important;
     }
@@ -1193,37 +1193,29 @@ footer {
     /* Receipt Header */
     .receipt-header {
         text-align: center;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-        border: 2px solid #dee2e6 !important;
-        border-radius: 12px !important;
-        padding: 12pt;
-        margin-bottom: 12pt;
+        background: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 8pt 0 6pt 0;
+        margin-bottom: 6pt;
         -webkit-print-color-adjust: exact !important;
         position: relative;
     }
     
     .receipt-header h1 {
         color: #2c3e50 !important;
-        font-size: 20pt;
+        font-size: 16pt;
         font-weight: 700;
-        margin: 0 0 6pt 0;
+        margin: 0 0 2pt 0;
         letter-spacing: -0.5pt;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        text-shadow: none;
     }
     
-    .receipt-header h2 {
-        color: #6c757d !important;
-        font-size: 12pt;
-        font-weight: 500;
-        margin: 0 0 8pt 0;
-        text-transform: uppercase;
-        letter-spacing: 1pt;
-        display: block !important;
-    }
+    .receipt-header h2 { display: none !important; }
     
     .receipt-date {
         color: #6c757d !important;
-        font-size: 10pt;
+        font-size: 8pt;
         font-weight: 400;
         margin: 0;
         display: block !important;
@@ -1232,22 +1224,22 @@ footer {
     
     /* Dogs Section */
     .receipt-dogs {
-        margin-bottom: 12pt;
+        margin-bottom: 8pt;
         background: #f8f9fa !important;
-        border-radius: 8px !important;
-        padding: 8pt;
-        border: 1px solid #dee2e6 !important;
+        border-radius: 6px !important;
+        padding: 6pt;
+        border: 1px solid #eef1f3 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
     
     .receipt-dogs h3 {
         color: #2c3e50 !important;
-        font-size: 14pt;
+        font-size: 11pt;
         font-weight: 600;
-        margin: 0 0 12pt 0;
-        border-bottom: 2px solid #ff6b6b !important;
-        padding-bottom: 6pt;
+        margin: 0 0 6pt 0;
+        border-bottom: 1px solid #e9ecef !important;
+        padding-bottom: 4pt;
         display: flex;
         align-items: center;
         gap: 6pt;
@@ -1257,19 +1249,19 @@ footer {
         display: inline-flex !important;
         align-items: center;
         background: white !important;
-        border: 1px solid #dee2e6 !important;
-        border-radius: 6px !important;
-        padding: 6pt 8pt;
-        margin: 0 6pt 6pt 0;
+        border: 1px solid #e9ecef !important;
+        border-radius: 4px !important;
+        padding: 4pt 6pt;
+        margin: 0 4pt 4pt 0;
         gap: 8pt;
-        width: calc(50% - 6pt);
+        width: calc(33.333% - 4pt);
         box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
         max-width: none;
         -webkit-print-color-adjust: exact !important;
     }
     
     .receipt-dog .dog-icon {
-        font-size: 18pt;
+        font-size: 14pt;
         color: #ff6b6b !important;
         flex-shrink: 0;
         margin-right: 2pt;
@@ -1283,8 +1275,8 @@ footer {
     .receipt-dog .dog-name {
         font-weight: 700 !important;
         color: #2c3e50 !important;
-        font-size: 11pt;
-        margin-bottom: 2pt;
+        font-size: 10pt;
+        margin-bottom: 1pt;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1292,7 +1284,7 @@ footer {
     
     .receipt-dog .dog-details {
         color: #6c757d !important;
-        font-size: 9pt;
+        font-size: 8pt;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1300,11 +1292,11 @@ footer {
     
     /* Summary Section */
     .receipt-summary {
-        margin-bottom: 12pt;
+        margin-bottom: 8pt;
         background: #f8f9fa !important;
-        border-radius: 8px !important;
-        padding: 10pt;
-        border: 1px solid #dee2e6 !important;
+        border-radius: 6px !important;
+        padding: 8pt;
+        border: 1px solid #eef1f3 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
@@ -1324,9 +1316,9 @@ footer {
     .summary-item {
         display: flex !important;
         justify-content: space-between;
-        padding: 4pt 0;
-        border-bottom: 1px dotted #dee2e6 !important;
-        font-size: 10pt;
+        padding: 3pt 0;
+        border-bottom: 1px dotted #e9ecef !important;
+        font-size: 9.5pt;
     }
     
     .summary-item:last-child {
@@ -1346,22 +1338,22 @@ footer {
     /* Breakdown Section */
     .receipt-breakdown {
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-        border: 2px solid #dee2e6 !important;
-        border-radius: 12px !important;
-        padding: 12pt;
-        margin-bottom: 12pt;
+        border: 1px solid #e9ecef !important;
+        border-radius: 6px !important;
+        padding: 10pt;
+        margin-bottom: 8pt;
         -webkit-print-color-adjust: exact !important;
         position: relative;
     }
     
     .receipt-breakdown h3 {
         color: #2c3e50 !important;
-        font-size: 14pt;
+        font-size: 12pt;
         font-weight: 600;
-        margin: 0 0 12pt 0;
+        margin: 0 0 6pt 0;
         text-align: center;
-        border-bottom: 2px solid #ff6b6b !important;
-        padding-bottom: 6pt;
+        border-bottom: 1px solid #e9ecef !important;
+        padding-bottom: 4pt;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1371,10 +1363,10 @@ footer {
     .receipt-breakdown .breakdown-item {
         display: flex !important;
         justify-content: space-between;
-        padding: 4pt 0;
-        font-size: 10pt;
+        padding: 3pt 0;
+        font-size: 9.5pt;
         color: #2c3e50 !important;
-        border-bottom: 1px dotted #dee2e6 !important;
+        border-bottom: 1px dotted #e9ecef !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
@@ -1417,8 +1409,8 @@ footer {
     
     .receipt-breakdown .breakdown-divider {
         height: 2pt !important;
-        background: linear-gradient(to right, transparent, #dee2e6, transparent) !important;
-        margin: 8pt 0 !important;
+        background: linear-gradient(to right, transparent, #e9ecef, transparent) !important;
+        margin: 6pt 0 !important;
         border: none !important;
         -webkit-print-color-adjust: exact !important;
     }
@@ -1427,11 +1419,11 @@ footer {
     .receipt-total {
         background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
         color: white !important;
-        border: 3px solid #2c3e50 !important;
-        border-radius: 12px !important;
-        padding: 14pt;
+        border: 1px solid #2c3e50 !important;
+        border-radius: 6px !important;
+        padding: 10pt;
         text-align: center;
-        margin-bottom: 14pt;
+        margin-bottom: 10pt;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         position: relative;
@@ -1441,7 +1433,7 @@ footer {
         display: flex !important;
         justify-content: space-between;
         align-items: center;
-        font-size: 16pt;
+        font-size: 14pt;
         font-weight: 700;
     }
     
@@ -1451,14 +1443,7 @@ footer {
     }
     
     /* Footer */
-    .receipt-footer {
-        text-align: center;
-        border-top: 2px dashed #dee2e6 !important;
-        padding-top: 10pt;
-        color: #6c757d !important;
-        font-style: italic;
-        margin-top: 12pt;
-    }
+    .receipt-footer { display: none !important; }
     
     .receipt-footer p {
         margin: 4pt 0;
