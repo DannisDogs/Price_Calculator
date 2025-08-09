@@ -600,6 +600,13 @@ footer {
     .paw-print {
         display: none;
     }
+
+    /* Hide decorative header animations on mobile for performance/clarity */
+    .header-dogs,
+    .bouncing-dog {
+        display: none !important;
+        animation: none !important;
+    }
     
     .dark-mode-toggle {
         top: 0.8rem;
@@ -616,6 +623,16 @@ footer {
         font-size: 1.2rem;
         background: var(--accent-color, #ff6b6b) !important;
         color: white !important;
+    }
+
+    /* Make the calculate button sticky at the bottom of the viewport */
+    .calculate-btn {
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        padding-bottom: calc(1.2rem + env(safe-area-inset-bottom));
     }
     
     .bouncing-dog {
@@ -637,6 +654,59 @@ footer {
         font-size: 0.9rem;
         padding: 0.8rem;
     }
+
+    /* Prevent iOS zoom on inputs by ensuring >=16px font size */
+    input[type="text"], select, .time-group select {
+        font-size: 16px !important;
+    }
+
+    /* Extra bottom padding so sticky button doesn't cover content */
+    .calculator-card {
+        padding-bottom: 5rem;
+    }
+
+    /* Larger tap target for remove icon */
+    .remove-dog {
+        font-size: 1.4rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    /* Full-screen modal layout on mobile */
+    .modal .modal-content {
+        width: 100% !important;
+        max-width: none !important;
+        height: 100dvh !important;
+        max-height: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 1rem !important;
+    }
+
+    /* Larger tap targets for time quick buttons */
+    .quick-time-btn {
+        padding: 1rem !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* Prevent background scroll when a modal is open */
+.no-scroll {
+    overflow: hidden !important;
+    height: 100dvh;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Improve tap responsiveness; disable double-tap zoom side-effect on buttons */
+.calculate-btn, .action-btn, .add-dog-btn, .remove-dog, .breed-option, .size-option, .quick-time-btn {
+    touch-action: manipulation;
 }
 
 @keyframes dogBounceMobile1 {
@@ -1056,7 +1126,7 @@ footer {
     
     * {
         -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     body {
@@ -1167,6 +1237,8 @@ footer {
         border-radius: 8px !important;
         padding: 8pt;
         border: 1px solid #dee2e6 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     .receipt-dogs h3 {
@@ -1233,6 +1305,8 @@ footer {
         border-radius: 8px !important;
         padding: 10pt;
         border: 1px solid #dee2e6 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     .receipt-summary h3 {
@@ -1301,6 +1375,8 @@ footer {
         font-size: 10pt;
         color: #2c3e50 !important;
         border-bottom: 1px dotted #dee2e6 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     .receipt-breakdown .breakdown-item:last-child {
@@ -1357,6 +1433,7 @@ footer {
         text-align: center;
         margin-bottom: 14pt;
         -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
         position: relative;
     }
     
@@ -1393,6 +1470,8 @@ footer {
         font-weight: 600;
         color: #2c3e50 !important;
         font-size: 11pt;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
     
     .receipt-footer .contact-info {
