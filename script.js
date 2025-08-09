@@ -369,9 +369,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply multi-dog pricing: first dog at full price, each additional dog adds 50%
         const multiDogMultiplier = 1 + (numDogs - 1) * 0.50;
 
-        const dayCost = Math.round(baseDayCost * multiDogMultiplier);
-        const twentyFourHourCost = Math.round(base24HourCost * multiDogMultiplier);
-        const hourlyCost = Math.round(baseHourlyCost * multiDogMultiplier);
+        // Do not round; preserve exact fractional values (e.g., .5 for multi-dog)
+        const dayCost = baseDayCost * multiDogMultiplier;
+        const twentyFourHourCost = base24HourCost * multiDogMultiplier;
+        const hourlyCost = baseHourlyCost * multiDogMultiplier;
 
         // Calculate multi-dog surcharge for display
         const baseCostBeforeSurcharge = baseDayCost + base24HourCost + baseHourlyCost;
@@ -403,30 +404,33 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
+    // Currency formatting without rounding to whole dollars.
+    function formatCurrencyExact(amount) {
+        const fixed = amount.toFixed(2);
+        const trimmed = fixed.replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
+        return `$${trimmed}`;
+    }
+
     function animatePrice(element, finalValue) {
         const startValue = 0;
         const duration = 500;
         const startTime = performance.now();
-        
+
         element.classList.add('animating');
-        
+
         function updateValue(currentTime) {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            
-            // Easing function
             const easeOutQuad = 1 - (1 - progress) * (1 - progress);
-            
-            const currentValue = Math.round(startValue + (finalValue - startValue) * easeOutQuad);
-            element.textContent = `$${currentValue}`;
-            
+            const currentValue = startValue + (finalValue - startValue) * easeOutQuad;
+            element.textContent = formatCurrencyExact(progress < 1 ? currentValue : finalValue);
             if (progress < 1) {
                 requestAnimationFrame(updateValue);
             } else {
                 element.classList.remove('animating');
             }
         }
-        
+
         requestAnimationFrame(updateValue);
     }
     
@@ -595,14 +599,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 breakdownHtml += `
                     <div class="breakdown-item cost-line">
                         <span>24-Hour Stay:</span>
-                        <span>1 × $${twentyFourHourCostPerDog} = $${twentyFourHourCostPerDog}</span>
+                        <span>1 × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog)}</span>
                     </div>
                 `;
             } else {
                 breakdownHtml += `
                     <div class="breakdown-item cost-line">
                         <span>24-Hour Sessions:</span>
-                        <span>${twentyFourHourSessions} × $${twentyFourHourCostPerDog} = $${twentyFourHourCostPerDog * twentyFourHourSessions}</span>
+                        <span>${twentyFourHourSessions} × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog * twentyFourHourSessions)}</span>
                     </div>
                 `;
             }
@@ -615,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownHtml += `
                 <div class="breakdown-item cost-line">
                     <span>Extra Hours:</span>
-                    <span>${extraHours} × $${hourlyCostPerDog} = $${hourlyCostPerDog * extraHours}</span>
+                    <span>${extraHours} × ${formatCurrencyExact(hourlyCostPerDog)} = ${formatCurrencyExact(hourlyCostPerDog * extraHours)}</span>
                 </div>
             `;
             hasLineItems = true;
@@ -631,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownHtml += `
                 <div class="breakdown-item subtotal-line">
                     <span>Base Cost (per dog):</span>
-                    <span>$${baseCostPerDog}</span>
+                    <span>${formatCurrencyExact(baseCostPerDog)}</span>
                 </div>
             `;
             
@@ -640,7 +644,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 breakdownHtml += `
                     <div class="breakdown-item subtotal-line">
                         <span>Total for ${numDogsDisplay} dogs:</span>
-                        <span>$${baseCostPerDog * numDogsDisplay}</span>
+                        <span>${formatCurrencyExact(baseCostPerDog * numDogsDisplay)}</span>
                     </div>
                 `;
             }
@@ -651,7 +655,7 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownHtml += `
                 <div class="breakdown-item cost-line multi-dog">
                     <span>Multi-Dog Pricing (50% per additional dog):</span>
-                    <span>+$${pricing.multiDogSurcharge}</span>
+                    <span>+${formatCurrencyExact(pricing.multiDogSurcharge)}</span>
                 </div>
             `;
         }
@@ -665,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownHtml += `
                 <div class="breakdown-item subtotal-line">
                     <span>Subtotal:</span>
-                    <span>$${subtotalAmount}</span>
+                    <span>${formatCurrencyExact(subtotalAmount)}</span>
                 </div>
             `;
             
@@ -682,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownHtml += `
                 <div class="breakdown-item discount-line">
                     <span>${discountLabel}</span>
-                    <span>-$${pricing.discount}</span>
+                    <span>-${formatCurrencyExact(pricing.discount)}</span>
                 </div>
             `;
         }
@@ -1160,7 +1164,9 @@ END:VCALENDAR`;
         // Show 24-hour sessions if applicable  
         if (pricing.twentyFourHourSessions > 0) {
             document.getElementById('twenty-four-hour-count').textContent = pricing.twentyFourHourSessions;
-            document.getElementById('twenty-four-hour-cost').textContent = `$${pricing.twentyFourHourCost / numDogs}`;
+            // Display base per-dog amount (without multi-dog surcharge)
+            const baseTwentyFourHourCostPerDog = 45 * pricing.twentyFourHourSessions;
+            document.getElementById('twenty-four-hour-cost').textContent = `$${baseTwentyFourHourCostPerDog}`;
             twentyFourHourRow.style.display = 'flex';
             hasLineItems = true;
         }
@@ -1168,7 +1174,9 @@ END:VCALENDAR`;
         // Show extra hours if applicable
         if (pricing.extraHours > 0) {
             document.getElementById('extra-hours-count').textContent = pricing.extraHours;
-            document.getElementById('extra-hours-cost').textContent = `$${pricing.hourlyCost / numDogs}`;
+            // Display base per-dog amount (without multi-dog surcharge)
+            const baseExtraHoursCostPerDog = 4 * pricing.extraHours;
+            document.getElementById('extra-hours-cost').textContent = `$${baseExtraHoursCostPerDog}`;
             extraHoursRow.style.display = 'flex';
             hasLineItems = true;
         }
@@ -1222,9 +1230,9 @@ END:VCALENDAR`;
             extraHoursRow.style.display = 'none';
             baseSubtotalRow.style.display = 'none';
             
-            // Update 24-hour display for single stays
+            // Update 24-hour display for single stays (base per-dog amount)
             document.getElementById('twenty-four-hour-count').textContent = '1';
-            document.getElementById('twenty-four-hour-cost').textContent = `$${pricing.total / numDogs}`;
+            document.getElementById('twenty-four-hour-cost').textContent = `$${45}`;
             twentyFourHourRow.style.display = 'flex';
             
             // Update label for clarity
