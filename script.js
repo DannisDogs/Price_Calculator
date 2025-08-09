@@ -496,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
         receiptDate.textContent = printDate;
         
         // Build dogs section
-        let dogsHtml = '<h3>🐕 Dogs in Care</h3>';
+        let dogsHtml = '<h3>Dogs in Care</h3>';
         dogs.forEach((dog, index) => {
             const breedIcons = {
                 'labrador': '🦮',
@@ -533,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hour: 'numeric', minute: '2-digit' 
         });
         const summaryHtml = `
-            <h3>📅 Service Period</h3>
+            <h3>Service Period</h3>
             <div class="summary-item">
                 <span>Drop-off:</span>
                 <span>${dropoffDateFormatted}</span>
@@ -552,9 +552,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const numDogsDisplay = dogs.length;
         
         let breakdownHtml = `
-            <h3>💰 Pricing Breakdown</h3>
+            <h3>Pricing Breakdown</h3>
             <div class="breakdown-item">
-                <span>🐕 Number of Dogs:</span>
+                <span>Number of Dogs:</span>
                 <span>${numDogsDisplay}</span>
             </div>
         `;
@@ -572,14 +572,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (pricing.is24HourStay) {
                 breakdownHtml += `
                     <div class="breakdown-item cost-line">
-                        <span>🕐 24-Hour Stay:</span>
+                        <span>24-Hour Stay:</span>
                         <span>1 × $${twentyFourHourCostPerDog} = $${twentyFourHourCostPerDog}</span>
                     </div>
                 `;
             } else {
                 breakdownHtml += `
                     <div class="breakdown-item cost-line">
-                        <span>🕐 24-Hour Sessions:</span>
+                        <span>24-Hour Sessions:</span>
                         <span>${twentyFourHourSessions} × $${twentyFourHourCostPerDog} = $${twentyFourHourCostPerDog * twentyFourHourSessions}</span>
                     </div>
                 `;
@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const hourlyCostPerDog = 4; // Base cost per dog per hour
             breakdownHtml += `
                 <div class="breakdown-item cost-line">
-                    <span>⏰ Extra Hours:</span>
+                    <span>Extra Hours:</span>
                     <span>${extraHours} × $${hourlyCostPerDog} = $${hourlyCostPerDog * extraHours}</span>
                 </div>
             `;
@@ -628,7 +628,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (pricing.multiDogSurcharge > 0) {
             breakdownHtml += `
                 <div class="breakdown-item cost-line multi-dog">
-                    <span>🐕🐕 Multi-Dog Pricing (50% per additional dog):</span>
+                    <span>Multi-Dog Pricing (50% per additional dog):</span>
                     <span>+$${pricing.multiDogSurcharge}</span>
                 </div>
             `;
