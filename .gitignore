@@ -1,97 +1,75 @@
-# OS generated files
+# Dog Sitting At Danni's House Calculator
+# Static website project - minimal gitignore
+
+# Operating System Files
 .DS_Store
 .DS_Store?
 ._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# IDE/Editor directories and files
-.idea/
+# Editor/IDE Files
 .vscode/
-*.swp
-*.swo
-*~
-.project
-.settings/
-.classpath
+.idea/
 *.sublime-project
 *.sublime-workspace
+*~
+*.swp
+*.swo
 
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Dependency directories
-node_modules/
-bower_components/
-
-# Build/Distribution directories
-dist/
-build/
-out/
-
-# Environment files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Temporary files
+# Temporary Files
 *.tmp
 *.temp
 .tmp/
-.temp/
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.Python
-venv/
-ENV/
-
-# Backup files
+# Backup Files
 *.bak
 *.backup
 *backup/
 
-# Cache directories
+# Logs
+*.log
+logs/
+
+# Node dependencies
+node_modules/
+
+# Tests and artifacts (do not upload)
+tests/
+test-results/
+playwright-report/
+.playwright-cache/
+coverage/
+jest.config.js
+playwright.config.ts
+
+# Environment Files (if any are added later)
+.env
+.env.local
+
+# Cache Directories
 .cache/
 .sass-cache/
 
-# Test coverage
-coverage/
-.nyc_output/
+# Development Server Files
+*.pid
 
-# macOS
+# macOS Specific
 .AppleDouble
 .LSOverride
-Icon
-.DocumentRevisions-V100
+.Spotlight-V100
+.Trashes
 .fseventsd
+.DocumentRevisions-V100
 .TemporaryItems
 .VolumeIcon.icns
-.com.apple.timemachine.donotpresent
 
-# Windows
-Desktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
+# Windows Specific
 *.lnk
+ehthumbs.db
 
-# Linux
-*~
-.fuse_hidden*
+# Linux Specific
 .directory
 .Trash-*
 .nfs*
