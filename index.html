@@ -55,7 +55,10 @@
 
                 <div id="results" class="results hidden">
                     <h2>🎯 Your Pricing Details</h2>
-                    <div class="breakdown">
+                    <button type="button" id="toggle-breakdown-btn" class="toggle-breakdown-btn" aria-expanded="true" aria-controls="results-breakdown" style="display:none;">
+                        Show details ▾
+                    </button>
+                    <div id="results-breakdown" class="breakdown">
                         <div class="breakdown-item">
                             <span class="label">🐕 Number of Dogs:</span>
                             <span class="value" id="num-dogs-display">1</span>
