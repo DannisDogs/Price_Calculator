@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // - Keep multi-dog pricing (first dog full price, each additional +50%)
 
         const NIGHTLY_RATE_PER_DOG = 45;
-        const HOURLY_RATE_PER_DOG = 4;
+        const HOURLY_RATE_PER_DOG = 5;
 
         // Calculate total duration
         const totalHours = (pickup - dropoff) / (1000 * 60 * 60);
