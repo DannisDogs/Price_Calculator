@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculatePricing(dropoff, pickup, numDogs = 1) {
         // New simplified pricing model:
         // - $45 per 24-hour period (overnight)
-        // - $4 per extra hour, unless extra hours reach another 24 hours (then count as another night)
+        // - $5 per extra hour, unless extra hours reach another 24 hours (then count as another night)
         // - Keep multi-dog pricing (first dog full price, each additional +50%)
 
         const NIGHTLY_RATE_PER_DOG = 45;
@@ -615,7 +615,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show extra hours line item if applicable
         if (extraHours > 0) {
-            const hourlyCostPerDog = 4; // Base cost per dog per hour
+            const hourlyCostPerDog = 5; // Base cost per dog per hour
             breakdownHtml += `
                 <div class="breakdown-item cost-line">
                     <span>Extra Hours:</span>
