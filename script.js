@@ -1192,7 +1192,7 @@ END:VCALENDAR`;
         if (pricing.extraHours > 0) {
             document.getElementById('extra-hours-count').textContent = pricing.extraHours;
             // Display base per-dog amount (without multi-dog surcharge)
-            const baseExtraHoursCostPerDog = 4 * pricing.extraHours;
+            const baseExtraHoursCostPerDog = 5 * pricing.extraHours;
             document.getElementById('extra-hours-cost').textContent = `$${baseExtraHoursCostPerDog}`;
             extraHoursRow.style.display = 'flex';
             hasLineItems = true;
