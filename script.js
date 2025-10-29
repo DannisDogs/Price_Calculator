@@ -473,235 +473,252 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
     
-    function buildPrintReceipt() {
-        const printReceipt = document.getElementById('print-receipt');
-        const receiptDate = document.getElementById('receipt-date');
-        const receiptDateDup = document.getElementById('receipt-date-dup');
-        const receiptNumber = document.getElementById('receipt-number');
-        const receiptDogs = document.getElementById('receipt-dogs');
-        const receiptSummary = document.getElementById('receipt-summary');
-        const receiptBreakdown = document.getElementById('receipt-breakdown');
-        const receiptTotal = document.getElementById('receipt-total');
-        
-        // Calculate pricing for the receipt
-        const dropoffDate = new Date(dropoffInput.dataset.dateValue);
-        const pickupDate = new Date(pickupInput.dataset.dateValue);
-        const numDogs = dogs.length;
-        const pricing = calculatePricing(dropoffDate, pickupDate, numDogs);
-        
-        // Set date
-        const now = new Date();
-        const printDate = now.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit'
-        });
-        receiptDate.textContent = printDate;
-        if (receiptDateDup) receiptDateDup.textContent = now.toLocaleString();
+/* Replaced buildPrintReceipt() with a version that computes printed duration
+   using the same rounding logic as calculatePricing (i.e. remaining hours
+   are rounded up to the next whole hour; if that reaches 24 it becomes another day).
+*/
+function buildPrintReceipt() {
+    const printReceipt = document.getElementById('print-receipt');
+    const receiptDate = document.getElementById('receipt-date');
+    const receiptDateDup = document.getElementById('receipt-date-dup');
+    const receiptNumber = document.getElementById('receipt-number');
+    const receiptDogs = document.getElementById('receipt-dogs');
+    const receiptSummary = document.getElementById('receipt-summary');
+    const receiptBreakdown = document.getElementById('receipt-breakdown');
+    const receiptTotal = document.getElementById('receipt-total');
+    
+    // Calculate pricing for the receipt
+    const dropoffDate = new Date(dropoffInput.dataset.dateValue);
+    const pickupDate = new Date(pickupInput.dataset.dateValue);
+    const numDogs = dogs.length;
+    const pricing = calculatePricing(dropoffDate, pickupDate, numDogs);
+    
+    // Set date
+    const now = new Date();
+    const prinfunctiotDate = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+    });
+    receiptDate.textContent = printDate;
+    if (receiptDateDup) receiptDateDup.textContent = now.toLocaleString();
 
-        // Simple readable receipt number YYYYMMDD-HHMM-XXX
-        if (receiptNumber) {
-            const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-            const timePart = `${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
-            const randPart = Math.floor(Math.random()*1000).toString().padStart(3,'0');
-            receiptNumber.textContent = `${datePart}-${timePart}-${randPart}`;
-        }
+    // Simple readable receipt number YYYYMMDD-HHMM-XXX
+    if (receiptNumber) {
+        const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+        const timePart = `${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+        const randPart = Math.floor(Math.random()*1000).toString().padStart(3,'0');
+        receiptNumber.textContent = `${datePart}-${timePart}-${randPart}`;
+    }
+    
+    // Build dogs section
+    let dogsHtml = '<h3>Dogs in Care</h3>';
+    dogs.forEach((dog, index) => {
+        const breedIcons = {
+            'labrador': '🦮',
+            'german-shepherd': '🐕‍🦺',
+            'poodle': '🐩',
+            'bulldog': '🐕',
+            'chihuahua': '🐕',
+            'mixed': '🐶'
+        };
         
-        // Build dogs section
-        let dogsHtml = '<h3>Dogs in Care</h3>';
-        dogs.forEach((dog, index) => {
-            const breedIcons = {
-                'labrador': '🦮',
-                'german-shepherd': '🐕‍🦺',
-                'poodle': '🐩',
-                'bulldog': '🐕',
-                'chihuahua': '🐕',
-                'mixed': '🐶'
-            };
-            
-            const displayBreed = dog.breed === 'mixed' && dog.customBreed ? 
-                                dog.customBreed : 
-                                dog.breed.charAt(0).toUpperCase() + dog.breed.slice(1).replace('-', ' ');
-            
-            dogsHtml += `
-                <div class="receipt-dog">
-                    <span class="dog-icon">${breedIcons[dog.breed] || '🐶'}</span>
-                    <div class="dog-info">
-                        <div class="dog-name">${dog.name}</div>
-                        <div class="dog-details">${displayBreed} • ${dog.size.charAt(0).toUpperCase() + dog.size.slice(1)}</div>
-                    </div>
+        const displayBreed = dog.breed === 'mixed' && dog.customBreed ? 
+                            dog.customBreed : 
+                            dog.breed.charAt(0).toUpperCase() + dog.breed.slice(1).replace('-', ' ');
+        
+        dogsHtml += `
+            <div class="receipt-dog">
+                <span class="dog-icon">${breedIcons[dog.breed] || '🐶'}</span>
+                <div class="dog-info">
+                    <div class="dog-name">${dog.name}</div>
+                    <div class="dog-details">${displayBreed} • ${dog.size.charAt(0).toUpperCase() + dog.size.slice(1)}</div>
                 </div>
-            `;
-        });
-        receiptDogs.innerHTML = dogsHtml;
-        
-        // Build summary section
-        const dropoffDateFormatted = dropoffDate.toLocaleDateString('en-US', { 
-            weekday: 'short', month: 'short', day: 'numeric', 
-            hour: 'numeric', minute: '2-digit' 
-        });
-        const pickupDateFormatted = pickupDate.toLocaleDateString('en-US', { 
-            weekday: 'short', month: 'short', day: 'numeric', 
-            hour: 'numeric', minute: '2-digit' 
-        });
-        // Duration in days/hours for clarity
-        const ms = Math.max(0, pickupDate - dropoffDate);
-        const totalHours = Math.round(ms / (1000*60*60));
-        const fullDays = Math.floor(totalHours / 24);
-        const remHours = totalHours % 24;
-        const durationLabel = `${fullDays} day${fullDays!==1?'s':''}${remHours>0?` ${remHours} hr${remHours!==1?'s':''}`:''}`;
+            </div>
+        `;
+    });
+    receiptDogs.innerHTML = dogsHtml;
+    
+    // Build summary section
+    const dropoffDateFormatted = dropoffDate.toLocaleDateString('en-US', { 
+        weekday: 'short', month: 'short', day: 'numeric', 
+        hour: 'numeric', minute: '2-digit' 
+    });
+    const pickupDateFormatted = pickupDate.toLocaleDateString('en-US', { 
+        weekday: 'short', month: 'short', day: 'numeric', 
+        hour: 'numeric', minute: '2-digit' 
+    });
 
-        const summaryHtml = `
-            <h3>Service Period</h3>
-            <div class="summary-item">
-                <span>Drop-off:</span>
-                <span>${dropoffDateFormatted}</span>
-            </div>
-            <div class="summary-item">
-                <span>Pick-up:</span>
-                <span>${pickupDateFormatted}</span>
-            </div>
-            <div class="summary-item">
-                <span>Duration:</span>
-                <span>${durationLabel}</span>
-            </div>
-        `;
-        receiptSummary.innerHTML = summaryHtml;
-        
-        // Build breakdown section
-        const daySessions = pricing.daySessions;
-        const twentyFourHourSessions = pricing.twentyFourHourSessions;
-        const extraHours = pricing.extraHours;
-        const numDogsDisplay = dogs.length;
-        
-        let breakdownHtml = `
-            <h3>Pricing Breakdown</h3>
-            <div class="breakdown-item">
-                <span>Number of Dogs:</span>
-                <span>${numDogsDisplay}</span>
-            </div>
-        `;
-        
-        // Add divider after number of dogs
-        breakdownHtml += `<div class="breakdown-divider"></div>`;
-        
-        let hasLineItems = false;
-        
-        // Day sessions removed in new model
-        
-        // Show 24-hour sessions line item if applicable
-        if (twentyFourHourSessions > 0) {
-            const twentyFourHourCostPerDog = 45; // Base cost per dog for 24-hour session
-            if (pricing.is24HourStay) {
-                breakdownHtml += `
-                    <div class="breakdown-item cost-line">
-                        <span>24-Hour Stay:</span>
-                        <span>1 × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog)}</span>
-                    </div>
-                `;
-            } else {
-                breakdownHtml += `
-                    <div class="breakdown-item cost-line">
-                        <span>24-Hour Sessions:</span>
-                        <span>${twentyFourHourSessions} × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog * twentyFourHourSessions)}</span>
-                    </div>
-                `;
-            }
-            hasLineItems = true;
-        }
-        
-        // Show extra hours line item if applicable
-        if (extraHours > 0) {
-            const hourlyCostPerDog = 5; // Base cost per dog per hour
+    // Duration in days/hours for clarity
+    // Use the same rounding rules as calculatePricing:
+    //  - compute total raw hours (fractional)
+    //  - count full 24-hour days as floor(totalHours / 24)
+    //  - remaining fractional hours are rounded up for billing and display (Math.ceil)
+    //  - if rounding remaining hours reaches 24, convert to another full day
+    const ms = Math.max(0, pickupDate - dropoffDate);
+    const totalHoursRaw = ms / (1000*60*60);
+
+    let fullDays = Math.max(0, Math.floor(totalHoursRaw / 24));
+    let remainingHoursRaw = totalHoursRaw - (fullDays * 24);
+    let remHours = remainingHoursRaw > 0 ? Math.ceil(remainingHoursRaw) : 0;
+    if (remHours >= 24) {
+        fullDays += 1;
+        remHours = 0;
+    }
+
+    const durationLabel = `${fullDays} day${fullDays!==1?'s':''}${remHours>0?` ${remHours} hr${remHours!==1?'s':''}`:''}`;
+
+    const summaryHtml = `
+        <h3>Service Period</h3>
+        <div class="summary-item">
+            <span>Drop-off:</span>
+            <span>${dropoffDateFormatted}</span>
+        </div>
+        <div class="summary-item">
+            <span>Pick-up:</span>
+            <span>${pickupDateFormatted}</span>
+        </div>
+        <div class="summary-item">
+            <span>Duration:</span>
+            <span>${durationLabel}</span>
+        </div>
+    `;
+    receiptSummary.innerHTML = summaryHtml;
+    
+    // Build breakdown section
+    const daySessions = pricing.daySessions;
+    const twentyFourHourSessions = pricing.twentyFourHourSessions;
+    const extraHours = pricing.extraHours;
+    const numDogsDisplay = dogs.length;
+    
+    let breakdownHtml = `
+        <h3>Pricing Breakdown</h3>
+        <div class="breakdown-item">
+            <span>Number of Dogs:</span>
+            <span>${numDogsDisplay}</span>
+        </div>
+    `;
+    
+    // Add divider after number of dogs
+    breakdownHtml += `<div class="breakdown-divider"></div>`;
+    
+    let hasLineItems = false;
+    
+    // Day sessions removed in new model
+    
+    // Show 24-hour sessions line item if applicable
+    if (twentyFourHourSessions > 0) {
+        const twentyFourHourCostPerDog = 45; // Base cost per dog for 24-hour session
+        if (pricing.is24HourStay) {
             breakdownHtml += `
                 <div class="breakdown-item cost-line">
-                    <span>Extra Hours:</span>
-                    <span>${extraHours} × ${formatCurrencyExact(hourlyCostPerDog)} = ${formatCurrencyExact(hourlyCostPerDog * extraHours)}</span>
+                    <span>24-Hour Stay:</span>
+                    <span>1 × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog)}</span>
                 </div>
             `;
-            hasLineItems = true;
+        } else {
+            breakdownHtml += `
+                <div class="breakdown-item cost-line">
+                    <span>24-Hour Sessions:</span>
+                    <span>${twentyFourHourSessions} × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog * twentyFourHourSessions)}</span>
+                </div>
+            `;
         }
+        hasLineItems = true;
+    }
+    
+    // Show extra hours line item if applicable
+    if (extraHours > 0) {
+        const hourlyCostPerDog = 5; // Base cost per dog per hour
+        breakdownHtml += `
+            <div class="breakdown-item cost-line">
+                <span>Extra Hours:</span>
+                <span>${extraHours} × ${formatCurrencyExact(hourlyCostPerDog)} = ${formatCurrencyExact(hourlyCostPerDog * extraHours)}</span>
+            </div>
+        `;
+        hasLineItems = true;
+    }
+    
+    // Show base cost subtotal if multiple items or multi-dog
+    if ((hasLineItems && numDogsDisplay > 1) || (daySessions > 0 && twentyFourHourSessions > 0) || (daySessions > 0 && extraHours > 0) || (twentyFourHourSessions > 0 && extraHours > 0)) {
+        let baseCostPerDog = 0;
+        // Day sessions removed in new model
+        if (twentyFourHourSessions > 0) baseCostPerDog += 45 * twentyFourHourSessions;
+        if (extraHours > 0) baseCostPerDog += 4 * extraHours;
         
-        // Show base cost subtotal if multiple items or multi-dog
-        if ((hasLineItems && numDogsDisplay > 1) || (daySessions > 0 && twentyFourHourSessions > 0) || (daySessions > 0 && extraHours > 0) || (twentyFourHourSessions > 0 && extraHours > 0)) {
-            let baseCostPerDog = 0;
-            // Day sessions removed in new model
-            if (twentyFourHourSessions > 0) baseCostPerDog += 45 * twentyFourHourSessions;
-            if (extraHours > 0) baseCostPerDog += 4 * extraHours;
-            
+        breakdownHtml += `
+            <div class="breakdown-item subtotal-line">
+                <span>Base Cost (per dog):</span>
+                <span>${formatCurrencyExact(baseCostPerDog)}</span>
+            </div>
+        `;
+        
+        // Show total for all dogs if multi-dog
+        if (numDogsDisplay > 1) {
             breakdownHtml += `
                 <div class="breakdown-item subtotal-line">
-                    <span>Base Cost (per dog):</span>
-                    <span>${formatCurrencyExact(baseCostPerDog)}</span>
-                </div>
-            `;
-            
-            // Show total for all dogs if multi-dog
-            if (numDogsDisplay > 1) {
-                breakdownHtml += `
-                    <div class="breakdown-item subtotal-line">
-                        <span>Total for ${numDogsDisplay} dogs:</span>
-                        <span>${formatCurrencyExact(baseCostPerDog * numDogsDisplay)}</span>
-                    </div>
-                `;
-            }
-        }
-        
-        // Add multi-dog pricing line if applicable
-        if (pricing.multiDogSurcharge > 0) {
-            breakdownHtml += `
-                <div class="breakdown-item cost-line multi-dog">
-                    <span>Multi-Dog Pricing (50% per additional dog):</span>
-                    <span>+${formatCurrencyExact(pricing.multiDogSurcharge)}</span>
+                    <span>Total for ${numDogsDisplay} dogs:</span>
+                    <span>${formatCurrencyExact(baseCostPerDog * numDogsDisplay)}</span>
                 </div>
             `;
         }
-        
-        // Add discount section if applicable
-        if (pricing.discount > 0) {
-            const subtotalAmount = pricing.dayCost + pricing.twentyFourHourCost + pricing.hourlyCost;
-            
-            breakdownHtml += `<div class="breakdown-divider"></div>`;
-            
-            breakdownHtml += `
-                <div class="breakdown-item subtotal-line">
-                    <span>Subtotal:</span>
-                    <span>${formatCurrencyExact(subtotalAmount)}</span>
-                </div>
-            `;
-            
-            // Set appropriate discount label
-            let discountLabel = '🎉 Discount:';
-            if (pricing.totalDays >= 7) {
-                if (pricing.totalDays === 7) {
-                    discountLabel = '🎉 7-Day Special Rate:';
-                } else {
-                    discountLabel = '🎉 Extended Stay Discount:';
-                }
-            }
-            
-            breakdownHtml += `
-                <div class="breakdown-item discount-line">
-                    <span>${discountLabel}</span>
-                    <span>-${formatCurrencyExact(pricing.discount)}</span>
-                </div>
-            `;
-        }
-        
-        receiptBreakdown.innerHTML = breakdownHtml;
-        
-        // Build total section
-        const totalCost = document.getElementById('total-cost').textContent;
-        receiptTotal.innerHTML = `
-            <div class="total-amount">
-                <span>Total Cost:</span>
-                <span>${totalCost}</span>
+    }
+    
+    // Add multi-dog pricing line if applicable
+    if (pricing.multiDogSurcharge > 0) {
+        breakdownHtml += `
+            <div class="breakdown-item cost-line multi-dog">
+                <span>Multi-Dog Pricing (50% per additional dog):</span>
+                <span>+${formatCurrencyExact(pricing.multiDogSurcharge)}</span>
             </div>
         `;
     }
+    
+    // Add discount section if applicable
+    if (pricing.discount > 0) {
+        const subtotalAmount = pricing.dayCost + pricing.twentyFourHourCost + pricing.hourlyCost;
+        
+        breakdownHtml += `<div class="breakdown-divider"></div>`;
+        
+        breakdownHtml += `
+            <div class="breakdown-item subtotal-line">
+                <span>Subtotal:</span>
+                <span>${formatCurrencyExact(subtotalAmount)}</span>
+            </div>
+        `;
+        
+        // Set appropriate discount label
+        let discountLabel = '🎉 Discount:';
+        if (pricing.totalDays >= 7) {
+            if (pricing.totalDays === 7) {
+                discountLabel = '🎉 7-Day Special Rate:';
+            } else {
+                discountLabel = '🎉 Extended Stay Discount:';
+            }
+        }
+        
+        breakdownHtml += `
+            <div class="breakdown-item discount-line">
+                <span>${discountLabel}</span>
+                <span>-${formatCurrencyExact(pricing.discount)}</span>
+            </div>
+        `;
+    }
+    
+    receiptBreakdown.innerHTML = breakdownHtml;
+    
+    // Build total section
+    const totalCost = document.getElementById('total-cost').textContent;
+    receiptTotal.innerHTML = `
+        <div class="total-amount">
+            <span>Total Cost:</span>
+            <span>${totalCost}</span>
+        </div>
+    `;
+}
     
     // Add print button to results
     const printBtn = document.createElement('button');
