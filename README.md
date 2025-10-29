@@ -24,7 +24,7 @@ Dog Sitting At Danni's House provides loving, professional pet care in a home en
 
 ### Base Rates
 - **🕐 24-Hour Boarding**: $45 per 24-hour period (overnight)
-- **⏰ Extra Hours**: $4 per hour. If extra hours reach 24, they become another 24-hour period
+- **⏰ Extra Hours**: $5 per hour. If extra hours reach 24, they become another 24-hour period
 
 ### Multi-Dog Pricing
 - **First Dog**: Full price
@@ -63,7 +63,7 @@ The calculator shows clear, itemized pricing so you understand exactly what you'
 🐕 Number of Dogs: 2
 
 🕐 24-Hour Sessions: 2 × $45 = $90
-⏰ Extra Hours: 3 × $4 = $12
+⏰ Extra Hours: 3 × $5 = $15
 
 Base Cost (per dog): $102
 🐕🐕 Multi-Dog Pricing (50% per additional dog): +$51
