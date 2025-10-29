@@ -647,7 +647,7 @@ function buildPrintReceipt() {
         let baseCostPerDog = 0;
         // Day sessions removed in new model
         if (twentyFourHourSessions > 0) baseCostPerDog += 45 * twentyFourHourSessions;
-        if (extraHours > 0) baseCostPerDog += 4 * extraHours;
+        if (extraHours > 0) baseCostPerDog += 5 * extraHours;
         
         breakdownHtml += `
             <div class="breakdown-item subtotal-line">
