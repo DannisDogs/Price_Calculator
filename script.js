@@ -373,8 +373,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const base24HourCost = twentyFourHourSessions * NIGHTLY_RATE_PER_DOG;
         const baseHourlyCost = extraHours * HOURLY_RATE_PER_DOG;
 
-        // Apply multi-dog pricing: first dog at full price, each additional dog adds 75%
-        const multiDogMultiplier = 1 + (numDogs - 1) * 0.75;
+        // Apply multi-dog pricing: first dog at full price, each additional dog adds 80%
+        const multiDogMultiplier = 1 + (numDogs - 1) * 0.80;
 
         // Do not round; preserve exact fractional values (e.g., .5 for multi-dog)
         const dayCost = baseDayCost * multiDogMultiplier;
