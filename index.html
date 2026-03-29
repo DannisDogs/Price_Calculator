@@ -342,21 +342,151 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Success states */
-        .results-success {
+        /* Professional Estimate Layout */
+        .estimate-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: linear-gradient(135deg, rgba(166, 227, 161, 0.1), rgba(148, 226, 213, 0.1));
-            border: 1px solid rgba(166, 227, 161, 0.3);
-            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--surface0);
         }
 
-        .results-success h3 {
+        .estimate-header h3 {
+            font-size: 24px;
+            font-weight: 700;
             color: var(--text);
-            font-size: 20px;
             margin: 0;
+        }
+
+        .estimate-number {
+            font-size: 14px;
+            color: var(--subtext0);
+            font-weight: 500;
+        }
+
+        .estimate-details {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .detail-label {
+            color: var(--subtext1);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .line-items {
+            margin: 1.5rem 0;
+        }
+
+        .line-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--surface0);
+        }
+
+        .line-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-description {
+            color: var(--subtext1);
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .item-calculation {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text);
+        }
+
+        .quantity {
+            font-weight: 600;
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .rate {
+            color: var(--subtext0);
+            min-width: 60px;
+        }
+
+        .amount {
+            font-weight: 600;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .item-amount {
+            font-weight: 600;
+            color: var(--text);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .subtotal-line {
+            margin-top: 0.5rem;
+            border-top: 1px solid var(--surface0);
+            padding-top: 1rem;
+        }
+
+        .subtotal-line .item-description {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .estimate-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            margin-top: 1rem;
+            border-top: 2px solid var(--surface1);
+            background: linear-gradient(135deg, rgba(203, 166, 247, 0.05), rgba(137, 180, 250, 0.05));
+        }
+
+        .total-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .total-amount {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .estimate-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--surface0);
+            text-align: center;
+        }
+
+        .estimate-footer p {
+            color: var(--overlay1);
+            font-size: 14px;
+            margin: 0;
+            font-style: italic;
         }
 
         /* Enhanced button states */
@@ -364,6 +494,201 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        /* Estimate Action Buttons */
+        .estimate-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--surface0);
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            box-shadow: 0 4px 14px rgba(203, 166, 247, 0.25);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(203, 166, 247, 0.35);
+        }
+
+        .action-btn.secondary {
+            background: var(--surface0);
+            color: var(--text);
+            border: 1px solid var(--surface1);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--surface1);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.tertiary {
+            background: transparent;
+            color: var(--subtext1);
+            border: 1px solid var(--surface0);
+        }
+
+        .action-btn.tertiary:hover {
+            background: var(--surface0);
+            color: var(--text);
+        }
+
+        /* Print Receipt Styles */
+        .print-receipt {
+            display: none;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-receipt,
+            .print-receipt * {
+                visibility: visible;
+            }
+            .print-receipt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+                color: black;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                line-height: 1.4;
+                padding: 20px;
+                display: block !important;
+            }
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .receipt-header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .receipt-header h2 {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .receipt-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .receipt-info .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .receipt-client {
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            padding: 15px;
+        }
+
+        .client-fields .field {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .client-fields .line {
+            border-bottom: 1px solid #333;
+            flex: 1;
+            margin-left: 10px;
+            height: 20px;
+        }
+
+        .receipt-line-items {
+            margin: 25px 0;
+        }
+
+        .receipt-line-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .receipt-total-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #333;
+            text-align: right;
+        }
+
+        .receipt-final-total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .receipt-payment {
+            margin: 25px 0;
+            border: 1px solid #ddd;
+            padding: 15px;
+        }
+
+        .payment-options {
+            margin: 10px 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .receipt-signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .sig-block {
+            text-align: center;
+            width: 200px;
+        }
+
+        .signature-line {
+            border-bottom: 1px solid #333;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        .receipt-terms {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #666;
         }
 
         .feature-title {
@@ -1138,69 +1463,79 @@
             </form>
 
             <div id="results" class="results hidden">
-                <div class="results-success">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" style="margin-right: 0.5rem;">
-                        <polyline points="20,6 9,17 4,12"/>
-                    </svg>
-                    <h3>Cost Breakdown</h3>
+                <div class="estimate-header">
+                    <h3>Service Estimate</h3>
+                    <div class="estimate-number">Quote #<span id="quote-number">001</span></div>
                 </div>
-                <div class="breakdown">
-                    <div class="breakdown-item">
-                        <span class="label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                <circle cx="12" cy="12" r="10"/>
-                                <circle cx="12" cy="10" r="3"/>
-                                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
-                            </svg>
-                            Number of Pets:
-                        </span>
-                        <span class="value" id="num-dogs-display">1</span>
-                    </div>
-                    <div class="breakdown-item" id="twenty-four-hour-row">
-                        <span class="label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12,6 12,12 16,14"/>
-                            </svg>
-                            24-Hour Sessions:
-                        </span>
-                        <span class="value">
-                            <span id="twenty-four-hour-count">0</span> × $55 =
-                            <span id="twenty-four-hour-cost">$0</span>
-                        </span>
-                    </div>
-                    <div class="breakdown-item" id="extra-hours-row">
-                        <span class="label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12,6 12,12 16,14"/>
-                            </svg>
-                            Extra Hours:
-                        </span>
-                        <span class="value">
-                            <span id="extra-hours-count">0</span> × $5 =
-                            <span id="extra-hours-cost">$0</span>
-                        </span>
-                    </div>
-                    <div class="breakdown-item" id="base-subtotal-row">
-                        <span class="label">Base Cost (per pet):</span>
-                        <span class="value" id="base-subtotal">$0</span>
-                    </div>
-                    <div class="breakdown-item" id="multi-dog-row" style="display: none;">
-                        <span class="label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                <circle cx="12" cy="12" r="10"/>
-                                <circle cx="12" cy="10" r="3"/>
-                                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
-                            </svg>
-                            Multi-Pet Pricing (20% per additional):
-                        </span>
-                        <span class="value">+<span id="multi-dog-surcharge">$0</span></span>
+
+                <div class="estimate-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Number of Pets</span>
+                        <span class="detail-value" id="num-dogs-display">1</span>
                     </div>
                 </div>
-                <div class="total">
-                    <span>Total Cost:</span>
-                    <span id="total-cost">$0</span>
+
+                <div class="line-items">
+                    <div class="line-item" id="twenty-four-hour-row">
+                        <div class="item-description">24-Hour Boarding Sessions</div>
+                        <div class="item-calculation">
+                            <span class="quantity" id="twenty-four-hour-count">0</span>
+                            <span class="rate">× $55.00</span>
+                            <span class="amount" id="twenty-four-hour-cost">$0.00</span>
+                        </div>
+                    </div>
+                    <div class="line-item" id="extra-hours-row">
+                        <div class="item-description">Additional Hours</div>
+                        <div class="item-calculation">
+                            <span class="quantity" id="extra-hours-count">0</span>
+                            <span class="rate">× $5.00</span>
+                            <span class="amount" id="extra-hours-cost">$0.00</span>
+                        </div>
+                    </div>
+                    <div class="line-item subtotal-line" id="base-subtotal-row">
+                        <div class="item-description">Subtotal (per pet)</div>
+                        <div class="item-amount" id="base-subtotal">$0.00</div>
+                    </div>
+                    <div class="line-item" id="multi-dog-row" style="display: none;">
+                        <div class="item-description">Additional Pet Surcharge (20%)</div>
+                        <div class="item-amount">+<span id="multi-dog-surcharge">$0.00</span></div>
+                    </div>
+                </div>
+
+                <div class="estimate-total">
+                    <div class="total-label">Total Estimated Cost</div>
+                    <div class="total-amount" id="total-cost">$0.00</div>
+                </div>
+
+                <div class="estimate-footer">
+                    <p>This estimate is valid for 30 days. Final pricing confirmed upon booking.</p>
+                </div>
+
+                <div class="estimate-actions">
+                    <button type="button" id="print-estimate-btn" class="action-btn primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <polyline points="6,9 6,2 18,2 18,9"/>
+                            <path d="M6,18H4a2,2,0,0,1-2-2V11a2,2,0,0,1,2-2H20a2,2,0,0,1,2,2v5a2,2,0,0,1-2,2H18"/>
+                            <polyline points="6,14 18,14 18,22 6,22 6,14"/>
+                        </svg>
+                        Print Estimate
+                    </button>
+                    <button type="button" id="save-calendar-btn" class="action-btn secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Save to Calendar
+                    </button>
+                    <button type="button" id="clear-data-btn" class="action-btn tertiary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <polyline points="3,6 5,6 21,6"/>
+                            <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                        </svg>
+                        Clear All
+                    </button>
                 </div>
             </div>
         </div>
@@ -1299,6 +1634,92 @@
             </p>
         </div>
     </footer>
+
+    <!-- Print Receipt Content (Hidden in normal view) -->
+    <div id="print-receipt" class="print-receipt">
+        <div class="receipt-header">
+            <h1>Dog Sitting At Danni's House</h1>
+            <h2>Service Estimate</h2>
+            <div class="receipt-date" id="receipt-date"></div>
+        </div>
+
+        <div class="receipt-meta">
+            <div class="business-info">
+                <div><strong>Dog Sitting At Danni's House</strong></div>
+                <div>Professional Pet Care Services</div>
+            </div>
+            <div class="receipt-info">
+                <div class="info-row"><span>Quote #</span><span id="receipt-quote-number">—</span></div>
+                <div class="info-row"><span>Date</span><span id="receipt-date-dup">—</span></div>
+            </div>
+        </div>
+
+        <div class="receipt-client">
+            <h3>Client Information</h3>
+            <div class="client-fields">
+                <div class="field"><span>Name:</span><span class="line"></span></div>
+                <div class="field"><span>Phone:</span><span class="line"></span></div>
+                <div class="field"><span>Email:</span><span class="line"></span></div>
+                <div class="field"><span>Address:</span><span class="line"></span></div>
+            </div>
+        </div>
+
+        <div class="receipt-service-details">
+            <h3>Service Details</h3>
+            <div class="service-dates">
+                <div><strong>Drop-off:</strong> <span id="receipt-dropoff">—</span></div>
+                <div><strong>Pick-up:</strong> <span id="receipt-pickup">—</span></div>
+                <div><strong>Number of Pets:</strong> <span id="receipt-num-pets">—</span></div>
+            </div>
+        </div>
+
+        <div class="receipt-line-items">
+            <h3>Cost Breakdown</h3>
+            <div id="receipt-breakdown">
+                <!-- Line items will be populated here -->
+            </div>
+
+            <div class="receipt-total-section">
+                <div class="receipt-final-total">
+                    <strong>Total Estimated Cost: <span id="receipt-total">$0.00</span></strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="receipt-payment">
+            <h3>Payment Options</h3>
+            <div class="payment-options">
+                <span>☐ Cash (Preferred)</span>
+                <span>☐ Venmo</span>
+            </div>
+            <p><strong>$50 deposit required for stays 3+ days</strong></p>
+            <p>Payment due upon pickup unless otherwise arranged.</p>
+        </div>
+
+        <div class="receipt-notes">
+            <h3>Special Instructions / Notes</h3>
+            <div style="border: 1px solid #ddd; min-height: 60px; padding: 10px; margin-top: 10px;"></div>
+        </div>
+
+        <div class="receipt-signatures">
+            <div class="sig-block">
+                <div class="signature-line"></div>
+                <div class="sig-label">Client Signature</div>
+            </div>
+            <div class="sig-block">
+                <div class="signature-line"></div>
+                <div class="sig-label">Service Provider Signature</div>
+            </div>
+        </div>
+
+        <div class="receipt-terms">
+            <h4>Terms & Conditions</h4>
+            <p><strong>Estimate Validity:</strong> This estimate is valid for 30 days from the date of issue.</p>
+            <p><strong>Deposit:</strong> A $50 deposit is required for stays of 3 days or longer to secure your booking.</p>
+            <p><strong>Cancellation:</strong> Cancellations within 24 hours of drop-off may incur a fee.</p>
+            <p><strong>Pet Requirements:</strong> All pets must be up to date on vaccinations. Emergency contact details required.</p>
+        </div>
+    </div>
 
     <!-- Date/Time Picker Modal -->
     <div id="datetime-modal" class="modal hidden">
@@ -1417,6 +1838,11 @@
                 e.preventDefault();
                 calculateCost();
             });
+
+            // Action buttons (initially hidden until results are shown)
+            document.getElementById('print-estimate-btn').addEventListener('click', printEstimate);
+            document.getElementById('save-calendar-btn').addEventListener('click', saveToCalendar);
+            document.getElementById('clear-data-btn').addEventListener('click', clearAllData);
 
             // Modal click outside to close
             datetimeModal.addEventListener('click', (e) => {
@@ -1650,27 +2076,52 @@
             }, 800); // Professional delay
         }
 
-        function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCost, baseCost, multiPetSurcharge, totalCost) {
-            document.getElementById('num-dogs-display').textContent = numDogs;
-            document.getElementById('twenty-four-hour-count').textContent = sessions;
-            document.getElementById('twenty-four-hour-cost').textContent = '$' + sessionCost;
-            document.getElementById('extra-hours-count').textContent = extraHours;
-            document.getElementById('extra-hours-cost').textContent = '$' + extraHoursCost;
-            document.getElementById('base-subtotal').textContent = '$' + baseCost;
+        function formatCurrency(amount) {
+            return '$' + amount.toFixed(2);
+        }
 
+        function generateQuoteNumber() {
+            const date = new Date();
+            const year = date.getFullYear().toString().slice(-2);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const random = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+            return `${year}${month}${day}-${random}`;
+        }
+
+        function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCost, baseCost, multiPetSurcharge, totalCost) {
+            // Generate quote number
+            document.getElementById('quote-number').textContent = generateQuoteNumber();
+
+            // Update estimate details
+            document.getElementById('num-dogs-display').textContent = numDogs;
+
+            // Update line items with proper formatting
+            document.getElementById('twenty-four-hour-count').textContent = sessions;
+            document.getElementById('twenty-four-hour-cost').textContent = formatCurrency(sessionCost);
+            document.getElementById('extra-hours-count').textContent = extraHours;
+            document.getElementById('extra-hours-cost').textContent = formatCurrency(extraHoursCost);
+            document.getElementById('base-subtotal').textContent = formatCurrency(baseCost);
+
+            // Handle multi-pet pricing
             const multiDogRow = document.getElementById('multi-dog-row');
             if (numDogs > 1) {
                 multiDogRow.style.display = 'flex';
-                document.getElementById('multi-dog-surcharge').textContent = '$' + multiPetSurcharge.toFixed(2);
+                document.getElementById('multi-dog-surcharge').textContent = formatCurrency(multiPetSurcharge);
             } else {
                 multiDogRow.style.display = 'none';
             }
 
-            document.getElementById('total-cost').textContent = '$' + totalCost.toFixed(2);
+            // Update total with proper formatting
+            document.getElementById('total-cost').textContent = formatCurrency(totalCost);
+
+            // Show results with smooth animation
             resultsDiv.classList.remove('hidden');
 
             // Smooth scroll to results
-            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
         }
 
         function setupIntersectionObserver() {
@@ -1712,6 +2163,133 @@
 
         function capitalizeFirst(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Action button functions
+        function printEstimate() {
+            // Populate print receipt with current data
+            updatePrintReceipt();
+
+            // Trigger print
+            window.print();
+        }
+
+        function saveToCalendar() {
+            if (!dropoffInput.dataset.dateValue || !pickupInput.dataset.dateValue) {
+                alert('Please complete the estimate first.');
+                return;
+            }
+
+            const dropoff = new Date(dropoffInput.dataset.dateValue);
+            const pickup = new Date(pickupInput.dataset.dateValue);
+
+            // Format dates for calendar
+            const startDate = dropoff.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            const endDate = pickup.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+            // Create calendar event data
+            const eventTitle = `Dog Sitting - ${dogs.map(d => d.name).join(', ')}`;
+            const eventDescription = `Pet care service at Danni's House.\\n\\nPets: ${dogs.map(d => `${d.name} (${d.breed}, ${capitalizeFirst(d.size)})`).join(', ')}\\n\\nEstimated cost: ${document.getElementById('total-cost').textContent}`;
+
+            // Generate .ics file content
+            const icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Dog Sitting At Danni\'s House//EN',
+                'BEGIN:VEVENT',
+                `UID:${Date.now()}@dannishouse.com`,
+                `DTSTART:${startDate}`,
+                `DTEND:${endDate}`,
+                `SUMMARY:${eventTitle}`,
+                `DESCRIPTION:${eventDescription}`,
+                'STATUS:TENTATIVE',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\\r\\n');
+
+            // Create download link
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `dog-sitting-${dogs[0]?.name || 'booking'}-${dropoff.getFullYear()}-${(dropoff.getMonth() + 1).toString().padStart(2, '0')}-${dropoff.getDate().toString().padStart(2, '0')}.ics`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This will remove all pets and dates.')) {
+                // Reset form
+                dropoffInput.value = '';
+                pickupInput.value = '';
+                dropoffInput.dataset.dateValue = '';
+                pickupInput.dataset.dateValue = '';
+
+                // Clear dogs
+                dogs = [];
+                renderDogs();
+
+                // Hide results
+                resultsDiv.classList.add('hidden');
+
+                // Clear any validation states
+                document.querySelectorAll('.input-error').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.form-input').forEach(el => {
+                    el.classList.remove('error', 'success');
+                });
+            }
+        }
+
+        function updatePrintReceipt() {
+            const now = new Date();
+            const quoteNum = document.getElementById('quote-number').textContent;
+
+            // Update receipt header
+            document.getElementById('receipt-date').textContent = now.toLocaleDateString();
+            document.getElementById('receipt-date-dup').textContent = now.toLocaleDateString();
+            document.getElementById('receipt-quote-number').textContent = quoteNum;
+
+            // Update service details
+            if (dropoffInput.value && pickupInput.value) {
+                document.getElementById('receipt-dropoff').textContent = dropoffInput.value;
+                document.getElementById('receipt-pickup').textContent = pickupInput.value;
+            }
+            document.getElementById('receipt-num-pets').textContent = dogs.length;
+
+            // Update breakdown
+            const breakdown = document.getElementById('receipt-breakdown');
+            breakdown.innerHTML = '';
+
+            // Add line items from the current estimate
+            const twentyFourCount = document.getElementById('twenty-four-hour-count').textContent;
+            const twentyFourCost = document.getElementById('twenty-four-hour-cost').textContent;
+            const extraCount = document.getElementById('extra-hours-count').textContent;
+            const extraCost = document.getElementById('extra-hours-cost').textContent;
+
+            if (parseInt(twentyFourCount) > 0) {
+                const lineItem = document.createElement('div');
+                lineItem.className = 'receipt-line-item';
+                lineItem.innerHTML = `<span>24-Hour Boarding Sessions (${twentyFourCount})</span><span>${twentyFourCost}</span>`;
+                breakdown.appendChild(lineItem);
+            }
+
+            if (parseInt(extraCount) > 0) {
+                const lineItem = document.createElement('div');
+                lineItem.className = 'receipt-line-item';
+                lineItem.innerHTML = `<span>Additional Hours (${extraCount})</span><span>${extraCost}</span>`;
+                breakdown.appendChild(lineItem);
+            }
+
+            if (dogs.length > 1) {
+                const surcharge = document.getElementById('multi-dog-surcharge').textContent;
+                const lineItem = document.createElement('div');
+                lineItem.className = 'receipt-line-item';
+                lineItem.innerHTML = `<span>Additional Pet Surcharge (20%)</span><span>+${surcharge}</span>`;
+                breakdown.appendChild(lineItem);
+            }
+
+            // Update total
+            document.getElementById('receipt-total').textContent = document.getElementById('total-cost').textContent;
         }
 
         // Smooth scrolling for navigation links
