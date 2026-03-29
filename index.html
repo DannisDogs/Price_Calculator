@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dog Sitting At Danni's House - Professional Pet Care Services</title>
     <meta name="description" content="Professional dog sitting and pet care services. Trusted, reliable, and personalized care for your furry family members. Get an instant quote with our cost calculator.">
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -221,12 +221,12 @@
             border: 1px solid var(--surface1);
             box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 120px rgba(203,166,247,0.06);
             background: var(--mantle);
-            padding: 2rem;
+            padding: 3rem 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 48px;
-            min-height: 300px;
+            min-height: 120px;
         }
 
         /* Sections */
@@ -297,9 +297,88 @@
         }
 
         .feature-icon {
-            font-size: 48px;
             margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(203, 166, 247, 0.1), rgba(137, 180, 250, 0.1));
+            border: 1px solid var(--surface0);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: linear-gradient(135deg, rgba(203, 166, 247, 0.15), rgba(137, 180, 250, 0.15));
+            border-color: var(--surface1);
+        }
+
+        /* Form validation states */
+        .input-error {
+            color: var(--red);
+            font-size: 14px;
+            margin-top: 0.5rem;
             display: block;
+        }
+
+        .input-error.hidden {
+            display: none;
+        }
+
+        .form-input.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(243, 139, 168, 0.15);
+        }
+
+        .form-input.success {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(166, 227, 161, 0.15);
+        }
+
+        /* Loading states */
+        .btn-loading {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-loading.hidden {
+            display: none;
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success states */
+        .results-success {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(166, 227, 161, 0.1), rgba(148, 226, 213, 0.1));
+            border: 1px solid rgba(166, 227, 161, 0.3);
+            border-radius: 8px;
+        }
+
+        .results-success h3 {
+            color: var(--text);
+            font-size: 20px;
+            margin: 0;
+        }
+
+        /* Enhanced button states */
+        .calculate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .feature-title {
@@ -800,18 +879,19 @@
     <!-- Fixed Navigation -->
     <nav>
         <a href="#" class="nav-logo">
-            <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
                 <defs>
                     <linearGradient id="pawGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
                         <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <ellipse cx="16" cy="20" rx="7" ry="6" fill="url(#pawGradient)" />
-                <ellipse cx="10" cy="12" rx="3" ry="4" fill="url(#pawGradient)" />
-                <ellipse cx="16" cy="10" rx="3" ry="4" fill="url(#pawGradient)" />
-                <ellipse cx="22" cy="12" rx="3" ry="4" fill="url(#pawGradient)" />
-                <ellipse cx="7" cy="16" rx="2.5" ry="3.5" fill="url(#pawGradient)" />
+                <ellipse cx="12" cy="15" rx="5" ry="4.5" fill="url(#pawGradient)" />
+                <ellipse cx="8" cy="9" rx="2" ry="2.8" fill="url(#pawGradient)" />
+                <ellipse cx="12" cy="7.5" rx="2" ry="2.8" fill="url(#pawGradient)" />
+                <ellipse cx="16" cy="9" rx="2" ry="2.8" fill="url(#pawGradient)" />
+                <ellipse cx="6" cy="12" rx="1.8" ry="2.5" fill="url(#pawGradient)" />
+                <ellipse cx="18" cy="12" rx="1.8" ry="2.5" fill="url(#pawGradient)" />
             </svg>
             Danni's House
         </a>
@@ -834,14 +914,30 @@
             </p>
             <div class="hero-buttons">
                 <a href="#calculator" class="btn-primary">
-                    🧮 Calculate Costs
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="9" y1="9" x2="9" y2="9"/>
+                        <line x1="15" y1="9" x2="15" y2="9"/>
+                        <line x1="9" y1="15" x2="9" y2="15"/>
+                        <line x1="15" y1="15" x2="15" y2="15"/>
+                    </svg>
+                    Calculate Costs
                 </a>
                 <a href="#services" class="btn-secondary">
-                    📋 Learn More
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                    Learn More
                 </a>
             </div>
             <div class="hero-image">
-                🏠🐕 Your trusted pet care partner
+                <div style="text-align: center; color: var(--subtext0); font-size: 24px; font-weight: 500;">
+                    Your Trusted Pet Care Partner
+                </div>
             </div>
         </div>
     </section>
@@ -857,32 +953,71 @@
         </div>
         <div class="features-grid">
             <div class="feature-card fade-in">
-                <span class="feature-icon">🏠</span>
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#featureGradient)" stroke-width="2">
+                        <defs>
+                            <linearGradient id="featureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                </div>
                 <h3 class="feature-title">Home Environment</h3>
                 <p class="feature-description">Your pets stay in a comfortable, loving home setting rather than a sterile facility. They'll have access to cozy spaces, yards, and personal attention.</p>
             </div>
             <div class="feature-card fade-in">
-                <span class="feature-icon">💰</span>
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#featureGradient)" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                </div>
                 <h3 class="feature-title">Transparent Pricing</h3>
                 <p class="feature-description">No hidden fees or surprise charges. Our calculator shows exactly what you'll pay with clear breakdowns for all services and multi-pet discounts.</p>
             </div>
             <div class="feature-card fade-in">
-                <span class="feature-icon">📱</span>
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#featureGradient)" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
                 <h3 class="feature-title">Instant Quotes</h3>
                 <p class="feature-description">Get accurate pricing in seconds with our advanced calculator. Add multiple pets, select dates, and receive detailed cost breakdowns immediately.</p>
             </div>
             <div class="feature-card fade-in">
-                <span class="feature-icon">🕐</span>
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#featureGradient)" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                </div>
                 <h3 class="feature-title">Flexible Scheduling</h3>
                 <p class="feature-description">24-hour boarding, extended stays, and flexible pickup times. We work with your schedule to provide seamless pet care solutions.</p>
             </div>
             <div class="feature-card fade-in">
-                <span class="feature-icon">❤️</span>
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#featureGradient)" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </div>
                 <h3 class="feature-title">Personalized Care</h3>
                 <p class="feature-description">Every pet receives individualized attention based on their needs, personality, and preferences. Your furry friends are treated like family.</p>
             </div>
             <div class="feature-card fade-in">
-                <span class="feature-icon">📋</span>
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#featureGradient)" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                </div>
                 <h3 class="feature-title">Reliable Care</h3>
                 <p class="feature-description">Experienced pet care with detailed intake processes, emergency protocols, and regular updates for complete peace of mind while you're away.</p>
             </div>
@@ -961,42 +1096,107 @@
         <div class="calculator-container fade-in">
             <form id="calculator-form">
                 <div class="form-group">
-                    <label for="dropoff-date">🐶 Drop-off Date & Time</label>
+                    <label for="dropoff-date">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; vertical-align: text-bottom;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Drop-off Date & Time
+                    </label>
                     <input type="text" id="dropoff-date" class="form-input" readonly placeholder="Select drop-off date and time" required>
+                    <div class="input-error hidden" id="dropoff-error">Please select a drop-off date and time</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="pickup-date">🏠 Pick-up Date & Time</label>
+                    <label for="pickup-date">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; vertical-align: text-bottom;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Pick-up Date & Time
+                    </label>
                     <input type="text" id="pickup-date" class="form-input" readonly placeholder="Select pick-up date and time" required>
+                    <div class="input-error hidden" id="pickup-error">Please select a pick-up date and time</div>
                 </div>
 
                 <div class="form-group">
-                    <label>🐕 Your Pets</label>
+                    <label>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; vertical-align: text-bottom;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="10" r="3"/>
+                            <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+                        </svg>
+                        Your Pets
+                    </label>
                     <div id="dogs-container" class="dogs-container">
                         <!-- Dog cards will be added here -->
                     </div>
-                    <button type="button" id="add-dog-btn" class="add-dog-btn">+ Add a Pet</button>
+                    <button type="button" id="add-dog-btn" class="add-dog-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="16"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                        </svg>
+                        Add a Pet
+                    </button>
+                    <div class="input-error hidden" id="pets-error">Please add at least one pet</div>
                 </div>
 
-                <button type="submit" class="calculate-btn">Calculate Total Cost 🦴</button>
+                <button type="submit" class="calculate-btn">
+                    <span class="btn-text">Calculate Total Cost</span>
+                    <span class="btn-loading hidden">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="loading-spinner">
+                            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                        </svg>
+                        Calculating...
+                    </span>
+                </button>
             </form>
 
             <div id="results" class="results hidden">
-                <h3>🎯 Your Pricing Breakdown</h3>
+                <div class="results-success">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" style="margin-right: 0.5rem;">
+                        <polyline points="20,6 9,17 4,12"/>
+                    </svg>
+                    <h3>Cost Breakdown</h3>
+                </div>
                 <div class="breakdown">
                     <div class="breakdown-item">
-                        <span class="label">🐕 Number of Pets:</span>
+                        <span class="label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="10" r="3"/>
+                                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+                            </svg>
+                            Number of Pets:
+                        </span>
                         <span class="value" id="num-dogs-display">1</span>
                     </div>
                     <div class="breakdown-item" id="twenty-four-hour-row">
-                        <span class="label">🕐 24-Hour Sessions:</span>
+                        <span class="label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            24-Hour Sessions:
+                        </span>
                         <span class="value">
                             <span id="twenty-four-hour-count">0</span> × $55 =
                             <span id="twenty-four-hour-cost">$0</span>
                         </span>
                     </div>
                     <div class="breakdown-item" id="extra-hours-row">
-                        <span class="label">⏰ Extra Hours:</span>
+                        <span class="label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            Extra Hours:
+                        </span>
                         <span class="value">
                             <span id="extra-hours-count">0</span> × $5 =
                             <span id="extra-hours-cost">$0</span>
@@ -1007,7 +1207,14 @@
                         <span class="value" id="base-subtotal">$0</span>
                     </div>
                     <div class="breakdown-item" id="multi-dog-row" style="display: none;">
-                        <span class="label">🐕🐕 Multi-Pet Pricing (20% per additional):</span>
+                        <span class="label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="10" r="3"/>
+                                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+                            </svg>
+                            Multi-Pet Pricing (20% per additional):
+                        </span>
                         <span class="value">+<span id="multi-dog-surcharge">$0</span></span>
                     </div>
                 </div>
@@ -1108,7 +1315,7 @@
                 <a href="#faq">FAQ</a>
             </div>
             <p class="footer-text">
-                Made with ❤️ for our furry friends | © 2025 Dog Sitting At Danni's House
+                Made with care for our furry friends | © 2025 Dog Sitting At Danni's House
             </p>
         </div>
     </footer>
@@ -1123,7 +1330,7 @@
                     <input type="date" id="date-picker" class="form-input" style="width: 100%;">
                 </div>
                 <div>
-                    <h4 style="margin-bottom: 1rem; color: var(--text);">🕐 Time</h4>
+                    <h4 style="margin-bottom: 1rem; color: var(--text);">Time</h4>
                     <input type="time" id="time-picker" class="form-input" style="width: 100%;">
                 </div>
             </div>
@@ -1137,7 +1344,7 @@
     <!-- Dog Modal -->
     <div id="dog-modal" class="modal hidden">
         <div class="modal-content">
-            <h3>🐾 Add Your Pet</h3>
+            <h3>Add Your Pet</h3>
             <div class="form-group">
                 <label for="dog-name">Pet's Name</label>
                 <input type="text" id="dog-name" class="form-input" placeholder="Enter your pet's name" required>
@@ -1339,35 +1546,128 @@
             renderDogs();
         }
 
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+        }
+
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.classList.add('hidden');
+            }
+        }
+
+        function setInputState(input, state) {
+            input.classList.remove('error', 'success');
+            if (state) input.classList.add(state);
+        }
+
+        function validateForm() {
+            let isValid = true;
+
+            // Clear previous errors
+            hideError('dropoff-error');
+            hideError('pickup-error');
+            hideError('pets-error');
+            setInputState(dropoffInput, '');
+            setInputState(pickupInput, '');
+
+            // Validate dropoff date
+            if (!dropoffInput.dataset.dateValue) {
+                showError('dropoff-error', 'Please select a drop-off date and time');
+                setInputState(dropoffInput, 'error');
+                isValid = false;
+            } else {
+                setInputState(dropoffInput, 'success');
+            }
+
+            // Validate pickup date
+            if (!pickupInput.dataset.dateValue) {
+                showError('pickup-error', 'Please select a pick-up date and time');
+                setInputState(pickupInput, 'error');
+                isValid = false;
+            } else {
+                setInputState(pickupInput, 'success');
+            }
+
+            // Validate pets
+            if (dogs.length === 0) {
+                showError('pets-error', 'Please add at least one pet');
+                isValid = false;
+            }
+
+            // Validate date logic
+            if (dropoffInput.dataset.dateValue && pickupInput.dataset.dateValue) {
+                const dropoff = new Date(dropoffInput.dataset.dateValue);
+                const pickup = new Date(pickupInput.dataset.dateValue);
+
+                if (pickup <= dropoff) {
+                    showError('pickup-error', 'Pick-up time must be after drop-off time');
+                    setInputState(pickupInput, 'error');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        function showLoadingState() {
+            const button = document.querySelector('.calculate-btn');
+            const btnText = button.querySelector('.btn-text');
+            const btnLoading = button.querySelector('.btn-loading');
+
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+            button.disabled = true;
+        }
+
+        function hideLoadingState() {
+            const button = document.querySelector('.calculate-btn');
+            const btnText = button.querySelector('.btn-text');
+            const btnLoading = button.querySelector('.btn-loading');
+
+            btnText.classList.remove('hidden');
+            btnLoading.classList.add('hidden');
+            button.disabled = false;
+        }
+
         function calculateCost() {
-            if (!dropoffInput.dataset.dateValue || !pickupInput.dataset.dateValue || dogs.length === 0) {
-                alert('Please fill in all fields and add at least one pet.');
+            // Validate form first
+            if (!validateForm()) {
                 return;
             }
 
-            const dropoff = new Date(dropoffInput.dataset.dateValue);
-            const pickup = new Date(pickupInput.dataset.dateValue);
+            // Show loading state
+            showLoadingState();
 
-            if (pickup <= dropoff) {
-                alert('Pick-up time must be after drop-off time.');
-                return;
-            }
+            // Simulate calculation delay for professional feel
+            setTimeout(() => {
+                const dropoff = new Date(dropoffInput.dataset.dateValue);
+                const pickup = new Date(pickupInput.dataset.dateValue);
 
-            const totalHours = (pickup - dropoff) / (1000 * 60 * 60);
-            const twentyFourHourSessions = Math.floor(totalHours / 24);
-            const extraHours = Math.max(0, totalHours - (twentyFourHourSessions * 24));
+                const totalHours = (pickup - dropoff) / (1000 * 60 * 60);
+                const twentyFourHourSessions = Math.floor(totalHours / 24);
+                const extraHours = Math.max(0, totalHours - (twentyFourHourSessions * 24));
 
-            // Updated pricing: $55 for 24-hour sessions
-            const sessionCost = twentyFourHourSessions * 55;
-            const extraHoursCost = Math.ceil(extraHours) * 5;
-            const baseCost = sessionCost + extraHoursCost;
+                // Updated pricing: $55 for 24-hour sessions
+                const sessionCost = twentyFourHourSessions * 55;
+                const extraHoursCost = Math.ceil(extraHours) * 5;
+                const baseCost = sessionCost + extraHoursCost;
 
-            // Multi-pet pricing: +20% for each additional pet
-            const multiPetSurcharge = dogs.length > 1 ? baseCost * 0.2 * (dogs.length - 1) : 0;
-            const totalCost = baseCost + multiPetSurcharge;
+                // Multi-pet pricing: +20% for each additional pet
+                const multiPetSurcharge = dogs.length > 1 ? baseCost * 0.2 * (dogs.length - 1) : 0;
+                const totalCost = baseCost + multiPetSurcharge;
 
-            displayResults(dogs.length, twentyFourHourSessions, Math.ceil(extraHours),
-                          sessionCost, extraHoursCost, baseCost, multiPetSurcharge, totalCost);
+                // Hide loading state
+                hideLoadingState();
+
+                displayResults(dogs.length, twentyFourHourSessions, Math.ceil(extraHours),
+                              sessionCost, extraHoursCost, baseCost, multiPetSurcharge, totalCost);
+            }, 800); // Professional delay
         }
 
         function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCost, baseCost, multiPetSurcharge, totalCost) {
