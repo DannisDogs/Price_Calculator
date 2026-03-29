@@ -1,23 +1,30 @@
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="pawGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#feca57;stop-opacity:1" />
+    <linearGradient id="professionalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
     </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,0.3)" />
+    </filter>
   </defs>
-  
+
+  <!-- Professional paw print design -->
   <!-- Main paw pad -->
-  <ellipse cx="16" cy="20" rx="7" ry="6" fill="url(#pawGradient)" />
-  
-  <!-- Top left toe -->
-  <ellipse cx="10" cy="12" rx="3" ry="4" fill="url(#pawGradient)" />
-  
+  <ellipse cx="16" cy="20" rx="6.5" ry="5.5" fill="url(#professionalGradient)" filter="url(#shadow)" />
+
   <!-- Top center toe -->
-  <ellipse cx="16" cy="10" rx="3" ry="4" fill="url(#pawGradient)" />
-  
+  <ellipse cx="16" cy="10" rx="2.8" ry="3.8" fill="url(#professionalGradient)" filter="url(#shadow)" />
+
+  <!-- Top left toe -->
+  <ellipse cx="10.5" cy="12" rx="2.6" ry="3.6" fill="url(#professionalGradient)" filter="url(#shadow)" />
+
   <!-- Top right toe -->
-  <ellipse cx="22" cy="12" rx="3" ry="4" fill="url(#pawGradient)" />
-  
-  <!-- Far left toe -->
-  <ellipse cx="7" cy="16" rx="2.5" ry="3.5" fill="url(#pawGradient)" />
+  <ellipse cx="21.5" cy="12" rx="2.6" ry="3.6" fill="url(#professionalGradient)" filter="url(#shadow)" />
+
+  <!-- Left side toe -->
+  <ellipse cx="7.5" cy="16.5" rx="2.3" ry="3.2" fill="url(#professionalGradient)" filter="url(#shadow)" />
+
+  <!-- Right side toe (slightly smaller for asymmetric, natural look) -->
+  <ellipse cx="24.5" cy="16.5" rx="2.1" ry="3.0" fill="url(#professionalGradient)" filter="url(#shadow)" />
 </svg>
