@@ -3,411 +3,1447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog Sitting At Danni's House - Cost Calculator 🐾</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="style.css">
+    <title>Dog Sitting At Danni's House - Professional Pet Care Services</title>
+    <meta name="description" content="Professional dog sitting and pet care services. Trusted, reliable, and personalized care for your furry family members. Get an instant quote with our cost calculator.">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Base surfaces (dark to light) */
+            --crust:    #11111b;   /* page background */
+            --mantle:   #181825;   /* card backgrounds */
+            --base:     #1e1e2e;   /* elevated surfaces */
+
+            /* Content surfaces */
+            --surface0: #313244;   /* borders, dividers */
+            --surface1: #45475a;   /* hover borders */
+            --surface2: #585b70;   /* active borders */
+
+            /* Text hierarchy */
+            --text:     #cdd6f4;   /* primary text */
+            --subtext1: #bac2de;   /* secondary text */
+            --subtext0: #a6adc8;   /* tertiary text, descriptions */
+            --overlay2: #9399b2;   /* kbd text */
+            --overlay1: #7f849c;   /* muted text */
+            --overlay0: #6c7086;   /* footer text */
+
+            /* Accent colors */
+            --accent:   #cba6f7;   /* primary accent (purple) */
+            --accent2:  #89b4fa;   /* secondary accent (blue) */
+            --green:    #a6e3a1;   /* success states */
+            --peach:    #fab387;   /* warning/highlight */
+            --red:      #f38ba8;   /* error states */
+            --yellow:   #f9e2af;   /* attention */
+            --teal:     #94e2d5;   /* info */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--crust);
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 72px;
+        }
+
+        /* Fixed Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 64px;
+            background: rgba(17, 17, 27, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--surface0);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .nav-logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--subtext1);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 14px rgba(203, 166, 247, 0.25);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(203, 166, 247, 0.35);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background: var(--crust);
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 60px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--subtext0);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 8px 32px rgba(203, 166, 247, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px rgba(203, 166, 247, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--surface0);
+            color: var(--text);
+            padding: 1rem 2rem;
+            border: 1px solid var(--surface1);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--surface2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-image {
+            max-width: 920px;
+            margin: 0 auto;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--surface1);
+            box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 120px rgba(203,166,247,0.06);
+            background: var(--mantle);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            min-height: 300px;
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-alt {
+            background: var(--mantle);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-description {
+            font-size: 18px;
+            color: var(--subtext0);
+            line-height: 1.7;
+        }
+
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--mantle);
+            border: 1px solid var(--surface0);
+            border-radius: 14px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .section-alt .feature-card {
+            background: var(--crust);
+        }
+
+        .feature-card:hover {
+            border-color: var(--surface2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--subtext0);
+            line-height: 1.6;
+        }
+
+        /* Pricing Cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--mantle);
+            border: 1px solid var(--surface0);
+            border-radius: 14px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-alt .pricing-card {
+            background: var(--crust);
+        }
+
+        .pricing-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(203, 166, 247, 0.15);
+        }
+
+        .pricing-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .pricing-amount {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-period {
+            color: var(--subtext0);
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: var(--subtext1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .pricing-card a[class*="btn-"] {
+            margin-top: auto;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: var(--mantle);
+            padding: 6rem 2rem;
+        }
+
+        .calculator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--crust);
+            border: 1px solid var(--surface0);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--surface0);
+            border-radius: 12px;
+            background: var(--base);
+            color: var(--text);
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(203, 166, 247, 0.1);
+        }
+
+        .dogs-container {
+            margin-bottom: 1rem;
+        }
+
+        .dog-card {
+            background: var(--base);
+            border: 1px solid var(--surface0);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dog-info h4 {
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .dog-details {
+            color: var(--subtext0);
+            font-size: 14px;
+        }
+
+        .remove-dog-btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .remove-dog-btn:hover {
+            background: #e74c3c;
+            transform: translateY(-1px);
+        }
+
+        .add-dog-btn {
+            width: 100%;
+            padding: 1rem;
+            border: 2px dashed var(--surface1);
+            background: transparent;
+            color: var(--accent);
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .add-dog-btn:hover {
+            border-color: var(--accent);
+            background: rgba(203, 166, 247, 0.05);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(203, 166, 247, 0.3);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(203, 166, 247, 0.4);
+        }
+
+        .results {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--base);
+            border: 1px solid var(--surface0);
+            border-radius: 14px;
+        }
+
+        .results.hidden {
+            display: none;
+        }
+
+        .results h3 {
+            color: var(--text);
+            font-size: 24px;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--surface0);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-item .label {
+            color: var(--subtext1);
+        }
+
+        .breakdown-item .value {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+            border-top: 2px solid var(--surface1);
+            margin-top: 1rem;
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--base);
+            border: 1px solid var(--surface0);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h3 {
+            color: var(--text);
+            font-size: 24px;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .cancel-btn {
+            background: var(--surface0);
+            color: var(--text);
+            border: 1px solid var(--surface1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: var(--surface1);
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--mantle);
+            border: 1px solid var(--surface0);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .section-alt .faq-item {
+            background: var(--crust);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 1.5rem 2rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .faq-icon {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 2rem;
+            color: var(--subtext0);
+        }
+
+        .faq-answer-content {
+            padding-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--base);
+            border-top: 1px solid var(--surface0);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--subtext1);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-text {
+            color: var(--overlay0);
+            font-size: 14px;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 0 1rem;
+            }
+
+            section {
+                padding: 4rem 1rem;
+            }
+
+            .calculator-container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="header-content">
-                <div class="paw-print">🐾</div>
-                <div class="header-text">
-                    <h1>Dog Sitting At Danni's House</h1>
-                    <p class="subtitle">Find out how much your furry friend's stay will cost! 🐕</p>
-                </div>
+    <!-- Fixed Navigation -->
+    <nav>
+        <a href="#" class="nav-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="pawGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <ellipse cx="16" cy="20" rx="7" ry="6" fill="url(#pawGradient)" />
+                <ellipse cx="10" cy="12" rx="3" ry="4" fill="url(#pawGradient)" />
+                <ellipse cx="16" cy="10" rx="3" ry="4" fill="url(#pawGradient)" />
+                <ellipse cx="22" cy="12" rx="3" ry="4" fill="url(#pawGradient)" />
+                <ellipse cx="7" cy="16" rx="2.5" ry="3.5" fill="url(#pawGradient)" />
+            </svg>
+            Danni's House
+        </a>
+        <div class="nav-links">
+            <a href="#services">Services</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#calculator">Calculator</a>
+            <a href="#faq">FAQ</a>
+        </div>
+        <a href="#calculator" class="nav-cta">Get Quote</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content fade-in">
+            <h1>Professional Pet Care Services</h1>
+            <p class="hero-subtitle">
+                Trusted, reliable dog sitting in a loving home environment.
+                Your furry family members deserve the best care while you're away.
+            </p>
+            <div class="hero-buttons">
+                <a href="#calculator" class="btn-primary">
+                    🧮 Calculate Costs
+                </a>
+                <a href="#services" class="btn-secondary">
+                    📋 Learn More
+                </a>
             </div>
-            <div id="header-dogs" class="header-dogs">
-                <!-- Dynamic dogs will be added here -->
+            <div class="hero-image">
+                🏠🐕 Your trusted pet care partner
             </div>
-            <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
-                <span class="sun-icon">☀️</span>
-                <span class="moon-icon">🌙</span>
-            </button>
-        </header>
+        </div>
+    </section>
 
-        <main>
-            <div class="calculator-card">
-                <form id="calculator-form">
-                    <div class="form-group">
-                        <label for="dropoff-date">🐶 When is your pup arriving?</label>
-                        <input type="text" id="dropoff-date" name="dropoff-date" readonly placeholder="Select date and time" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="pickup-date">🏠 When are you picking them up?</label>
-                        <input type="text" id="pickup-date" name="pickup-date" readonly placeholder="Select date and time" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>🐕 Your Dogs</label>
-                        <div id="dogs-container" class="dogs-container">
-                            <!-- Dog cards will be added here dynamically -->
-                        </div>
-                        <button type="button" id="add-dog-btn" class="add-dog-btn">+ Add a Dog</button>
-                    </div>
-
-                    <button type="submit" class="calculate-btn">Calculate Cost 🦴</button>
-                </form>
-
-                <div id="results" class="results hidden">
-                    <h2>🎯 Your Pricing Details</h2>
-                    <button type="button" id="toggle-breakdown-btn" class="toggle-breakdown-btn" aria-expanded="true" aria-controls="results-breakdown" style="display:none;">
-                        Show details ▾
-                    </button>
-                    <div id="results-breakdown" class="breakdown">
-                        <div class="breakdown-item">
-                            <span class="label">🐕 Number of Dogs:</span>
-                            <span class="value" id="num-dogs-display">1</span>
-                        </div>
-                        <div class="breakdown-divider"></div>
-                        
-                        <!-- Day Sessions Line Item -->
-                        <div class="breakdown-item cost-line-item" id="day-sessions-row" style="display: none;">
-                            <span class="label">☀️ Day Sessions (9am-5pm):</span>
-                            <span class="calculation">
-                                <span id="day-sessions-count">0</span> × $30 = 
-                                <span class="item-cost" id="day-sessions-cost">$0</span>
-                            </span>
-                        </div>
-
-                        <!-- 24-Hour Sessions Line Item -->
-                        <div class="breakdown-item cost-line-item" id="twenty-four-hour-row" style="display: none;">
-                            <span class="label">🕐 24-Hour Sessions:</span>
-                            <span class="calculation">
-                                <span id="twenty-four-hour-count">0</span> × $45 = 
-                                <span class="item-cost" id="twenty-four-hour-cost">$0</span>
-                            </span>
-                        </div>
-
-                        <!-- Extra Hours Line Item -->
-                        <div class="breakdown-item cost-line-item" id="extra-hours-row" style="display: none;">
-                            <span class="label">⏰ Extra Hours:</span>
-                            <span class="calculation">
-                                <span id="extra-hours-count">0</span> × $5 = 
-                                <span class="item-cost" id="extra-hours-cost">$0</span>
-                            </span>
-                        </div>
-
-                        <!-- Base Cost Subtotal -->
-                        <div class="breakdown-item subtotal-line" id="base-subtotal-row" style="display: none;">
-                            <span class="label">Base Cost (per dog):</span>
-                            <span class="value" id="base-subtotal">$0</span>
-                        </div>
-
-                        <!-- Multi-Dog Pricing -->
-                        <div class="breakdown-item cost-line-item" id="multi-dog-row" style="display: none;">
-                            <span class="label">🐕🐕 Multi-Dog Pricing (80% per additional dog):</span>
-                            <span class="calculation">
-                                +<span class="item-cost" id="multi-dog-surcharge">$0</span>
-                            </span>
-                        </div>
-
-                        <div class="breakdown-divider" id="discount-divider" style="display: none;"></div>
-
-                        <!-- Subtotal Before Discounts -->
-                        <div class="breakdown-item subtotal-line" id="subtotal-row" style="display: none;">
-                            <span class="label">Subtotal:</span>
-                            <span class="value" id="subtotal">$0</span>
-                        </div>
-
-                        <!-- Discount Line Item -->
-                        <div class="breakdown-item discount-line" id="discount-row" style="display: none;">
-                            <span class="label" id="discount-label">🎉 Discount:</span>
-                            <span class="calculation">
-                                -<span class="item-cost" id="discount-amount">$0</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="total">
-                        <span>Total Cost:</span>
-                        <span id="total-cost">$0</span>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button type="button" id="save-calendar-btn" class="action-btn calendar-btn">
-                            📅 Save to Calendar
-                        </button>
-                        <button type="button" id="clear-data-btn" class="action-btn clear-btn">
-                            🗑️ Clear All Data
-                        </button>
-                    </div>
-                </div>
-
-                <div id="error-message" class="error hidden"></div>
+    <!-- Services Section -->
+    <section id="services" class="section-alt">
+        <div class="section-header fade-in">
+            <div class="section-label">Our Services</div>
+            <h2 class="section-title">Why Choose Danni's House</h2>
+            <p class="section-description">
+                We provide personalized, professional pet care with transparent pricing and genuine love for every furry guest.
+            </p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🏠</span>
+                <h3 class="feature-title">Home Environment</h3>
+                <p class="feature-description">Your pets stay in a comfortable, loving home setting rather than a sterile facility. They'll have access to cozy spaces, yards, and personal attention.</p>
             </div>
-
-            <!-- Date/Time Picker Modal -->
-            <div id="datetime-modal" class="modal hidden">
-                <div class="modal-content datetime-picker">
-                    <h3>📅 Select Date & Time</h3>
-                    <div class="picker-container">
-                        <div class="calendar-section">
-                            <div class="calendar-header">
-                                <button type="button" class="calendar-nav" id="prev-month">‹</button>
-                                <div class="calendar-month-year">
-                                    <span id="calendar-month">January</span>
-                                    <span id="calendar-year">2025</span>
-                                </div>
-                                <button type="button" class="calendar-nav" id="next-month">›</button>
-                            </div>
-                            <div class="calendar-weekdays">
-                                <div>Sun</div>
-                                <div>Mon</div>
-                                <div>Tue</div>
-                                <div>Wed</div>
-                                <div>Thu</div>
-                                <div>Fri</div>
-                                <div>Sat</div>
-                            </div>
-                            <div class="calendar-days" id="calendar-days">
-                                <!-- Days will be dynamically generated -->
-                            </div>
-                        </div>
-                        
-                        <div class="time-section">
-                            <h4>🕐 Select Time</h4>
-                            <div class="time-inputs">
-                                <div class="time-group">
-                                    <label>Hour</label>
-                                    <select id="time-hour">
-                                        <option value="12">12</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9" selected>9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                    </select>
-                                </div>
-                                <div class="time-group">
-                                    <label>Minute</label>
-                                    <select id="time-minute">
-                                        <option value="00" selected>00</option>
-                                        <option value="15">15</option>
-                                        <option value="30">30</option>
-                                        <option value="45">45</option>
-                                    </select>
-                                </div>
-                                <div class="time-group">
-                                    <label>AM/PM</label>
-                                    <select id="time-ampm">
-                                        <option value="AM" selected>AM</option>
-                                        <option value="PM">PM</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="quick-times">
-                                <button type="button" class="quick-time-btn" data-hour="9" data-minute="00" data-ampm="AM">9:00 AM</button>
-                                <button type="button" class="quick-time-btn" data-hour="12" data-minute="00" data-ampm="PM">12:00 PM</button>
-                                <button type="button" class="quick-time-btn" data-hour="5" data-minute="00" data-ampm="PM">5:00 PM</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="datetime-preview">
-                        <strong>Selected:</strong> <span id="datetime-preview-text">No date selected</span>
-                    </div>
-                    
-                    <div class="modal-buttons">
-                        <button type="button" id="cancel-datetime-btn" class="cancel-btn">Cancel</button>
-                        <button type="button" id="save-datetime-btn" class="save-btn" disabled>Set Date & Time</button>
-                    </div>
-                </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">💰</span>
+                <h3 class="feature-title">Transparent Pricing</h3>
+                <p class="feature-description">No hidden fees or surprise charges. Our calculator shows exactly what you'll pay with clear breakdowns for all services and multi-pet discounts.</p>
             </div>
-
-            <!-- Dog Selection Modal -->
-            <div id="dog-modal" class="modal hidden">
-                <div class="modal-content">
-                    <h3>🐾 Add Your Dog</h3>
-                    <div class="dog-form">
-                        <div class="form-group">
-                            <label for="dog-name">Dog's Name</label>
-                            <input type="text" id="dog-name" placeholder="Enter your dog's name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Select Breed</label>
-                            <div class="breed-grid">
-                                <button type="button" class="breed-option" data-breed="labrador">
-                                    <span class="breed-icon">🦮</span>
-                                    <span>Labrador</span>
-                                </button>
-                                <button type="button" class="breed-option" data-breed="german-shepherd">
-                                    <span class="breed-icon">🐕‍🦺</span>
-                                    <span>German Shepherd</span>
-                                </button>
-                                <button type="button" class="breed-option" data-breed="poodle">
-                                    <span class="breed-icon">🐩</span>
-                                    <span>Poodle</span>
-                                </button>
-                                <button type="button" class="breed-option" data-breed="bulldog">
-                                    <span class="breed-icon">🐕</span>
-                                    <span>Bulldog</span>
-                                </button>
-                                <button type="button" class="breed-option" data-breed="chihuahua">
-                                    <span class="breed-icon">🐕</span>
-                                    <span>Chihuahua</span>
-                                </button>
-                                <button type="button" class="breed-option" data-breed="mixed">
-                                    <span class="breed-icon">🐶</span>
-                                    <span>Other/Mixed</span>
-                                </button>
-                            </div>
-                            <div class="custom-breed-input" id="custom-breed-input" style="display: none;">
-                                <input type="text" id="custom-breed-name" placeholder="Enter breed name" maxlength="30">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Select Size</label>
-                            <div class="size-options">
-                                <button type="button" class="size-option" data-size="small">
-                                    <span class="size-label">Small</span>
-                                    <span class="size-desc">&lt; 25 lbs</span>
-                                </button>
-                                <button type="button" class="size-option" data-size="medium">
-                                    <span class="size-label">Medium</span>
-                                    <span class="size-desc">25-60 lbs</span>
-                                </button>
-                                <button type="button" class="size-option" data-size="large">
-                                    <span class="size-label">Large</span>
-                                    <span class="size-desc">&gt; 60 lbs</span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="modal-buttons">
-                            <button type="button" id="cancel-dog-btn" class="cancel-btn">Cancel</button>
-                            <button type="button" id="save-dog-btn" class="save-btn" disabled>Add Dog</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">📱</span>
+                <h3 class="feature-title">Instant Quotes</h3>
+                <p class="feature-description">Get accurate pricing in seconds with our advanced calculator. Add multiple pets, select dates, and receive detailed cost breakdowns immediately.</p>
             </div>
-
-            <!-- Confirmation Modal -->
-            <div id="confirm-modal" class="modal hidden">
-                <div class="modal-content">
-                    <h3>🤔 Are you sure?</h3>
-                    <p id="confirm-message" class="confirm-message">Are you sure you want to clear all data? This will remove all dogs and reset the calculator.</p>
-                    <div class="modal-buttons">
-                        <button type="button" id="confirm-cancel-btn" class="cancel-btn">Cancel</button>
-                        <button type="button" id="confirm-yes-btn" class="save-btn">Yes, Clear Data</button>
-                    </div>
-                </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🕐</span>
+                <h3 class="feature-title">Flexible Scheduling</h3>
+                <p class="feature-description">24-hour boarding, extended stays, and flexible pickup times. We work with your schedule to provide seamless pet care solutions.</p>
             </div>
-
-            <!-- Print Receipt Content (Hidden in normal view) -->
-            <div id="print-receipt" class="print-receipt hidden">
-                <div class="receipt-header">
-                    <h1>🐾 Dog Sitting At Danni's House</h1>
-                    <h2>Service Receipt</h2>
-                    <div class="receipt-date" id="receipt-date"></div>
-                </div>
-
-                <!-- Business + Receipt metadata -->
-                <div class="receipt-meta">
-                    <div class="business-info">
-                        <div class="brand">🐾 Dog Sitting At Danni's House</div>
-                    </div>
-                    <div class="receipt-info">
-                        <div class="info-row"><span>Receipt #</span><span id="receipt-number">—</span></div>
-                        <div class="info-row"><span>Date</span><span id="receipt-date-dup">—</span></div>
-                    </div>
-                </div>
-
-                <!-- Client box (to be filled by hand if desired) -->
-                <div class="receipt-client" id="receipt-client">
-                    <h3>Client Information</h3>
-                    <div class="client-fields">
-                        <div class="field"><span>Name</span><span class="line"></span></div>
-                        <div class="field"><span>Phone</span><span class="line"></span></div>
-                        <div class="field"><span>Email</span><span class="line"></span></div>
-                        <div class="field"><span>Address</span><span class="line long"></span></div>
-                    </div>
-                </div>
-                
-                <div class="receipt-dogs" id="receipt-dogs">
-                    <!-- Dogs will be populated here -->
-                </div>
-                
-                <div class="receipt-summary" id="receipt-summary">
-                    <!-- Summary will be populated here -->
-                </div>
-                
-                <div class="receipt-breakdown" id="receipt-breakdown">
-                    <!-- Breakdown will be populated here -->
-                </div>
-                
-                <div class="receipt-total" id="receipt-total">
-                    <!-- Total will be populated here -->
-                </div>
-
-                <!-- Payment + Notes -->
-                <div class="receipt-payment">
-                    <h3>Payment</h3>
-                    <div class="payment-options">
-                        <span>☐ Cash</span>
-                        <span>☐ Venmo</span>
-                    </div>
-                    <div class="due-note">Payment due upon pickup unless otherwise arranged.</div>
-                </div>
-
-                <div class="receipt-notes">
-                    <h3>Notes</h3>
-                    <div class="notes-box"></div>
-                </div>
-
-                <div class="receipt-signatures">
-                    <div class="sig-block">
-                        <div class="signature-line"></div>
-                        <div class="sig-label">Client Signature</div>
-                    </div>
-                    <div class="sig-block">
-                        <div class="signature-line"></div>
-                        <div class="sig-label">Provider Signature</div>
-                    </div>
-                </div>
-
-                <div class="receipt-terms">
-                    <div class="terms-title">Terms</div>
-                    <p>Cancellations within 24 hours of drop-off may incur a fee. Owner confirms dogs are up to date on vaccinations and provides emergency contact details upon request. We treat every pup like family.</p>
-                </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">❤️</span>
+                <h3 class="feature-title">Personalized Care</h3>
+                <p class="feature-description">Every pet receives individualized attention based on their needs, personality, and preferences. Your furry friends are treated like family.</p>
             </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">📋</span>
+                <h3 class="feature-title">Reliable Care</h3>
+                <p class="feature-description">Experienced pet care with detailed intake processes, emergency protocols, and regular updates for complete peace of mind while you're away.</p>
+            </div>
+        </div>
+    </section>
 
-                <div class="info-section">
-                <h3>🎈 How Our Pricing Works</h3>
-                <ul>
-                    <li>🕐 <strong>24-Hour Boarding:</strong> $45 per 24-hour period (overnight)</li>
-                    <li>⏰ <strong>Extra Hours:</strong> $5 per hour; if extra hours reach 24, it becomes another 24-hour period</li>
-                    <li>🏠 <strong>Multi-Day Stays:</strong> Count full 24-hour nights plus any remaining hours</li>
-                    <li>🐕🐕 <strong>Multiple Dogs:</strong> Each additional dog adds 80% to the total</li>
-                    <li>💡 <strong>Examples:</strong> 
-                        <br>• 1 night (3pm → 3pm next day): $45
-                        <br>• 1 night + 3 hours (3pm → 6pm next day): $45 + (3 × $5) = $60
-                        <br>• 2 nights (Fri 5pm → Sun 5pm): 2 × $45 = $90
-                        <br>• 2 nights + 2 hours (Fri 5pm → Sun 7pm): (2 × $45) + (2 × $5) = $100
-                    </li>
+    <!-- Pricing Section -->
+    <section id="pricing">
+        <div class="section-header fade-in">
+            <div class="section-label">Pricing</div>
+            <h2 class="section-title">Simple, Transparent Rates</h2>
+            <p class="section-description">
+                No complex fee structures or hidden charges. Just honest, upfront pricing for quality pet care.
+                <strong>$50 deposit required for stays 3+ days.</strong> Cash preferred, Venmo accepted.
+            </p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card fade-in">
+                <h3 class="pricing-title">24-Hour Boarding</h3>
+                <div class="pricing-amount">$55</div>
+                <div class="pricing-period">per 24-hour period</div>
+                <ul class="pricing-features">
+                    <li>Overnight care in home environment</li>
+                    <li>Regular meals and walks</li>
+                    <li>Playtime and companionship</li>
+                    <li>Secure, comfortable sleeping area</li>
+                    <li>Updates and photos</li>
                 </ul>
-                <div class="testimonial">
-                    <p>"Your furry friend will have the time of their life with us!" 🐾</p>
+                <a href="#calculator" class="btn-primary" style="width: 100%; text-align: center; text-decoration: none;">
+                    Calculate Total
+                </a>
+            </div>
+            <div class="pricing-card fade-in">
+                <h3 class="pricing-title">Extended Hours</h3>
+                <div class="pricing-amount">$5</div>
+                <div class="pricing-period">per hour</div>
+                <ul class="pricing-features">
+                    <li>Flexible pickup and drop-off times</li>
+                    <li>Early morning or late evening care</li>
+                    <li>Automatic conversion to 24-hour rate</li>
+                    <li>Same quality care throughout</li>
+                    <li>No rush fees or penalties</li>
+                </ul>
+                <a href="#calculator" class="btn-secondary" style="width: 100%; text-align: center; text-decoration: none;">
+                    Get Quote
+                </a>
+            </div>
+            <div class="pricing-card fade-in">
+                <h3 class="pricing-title">Multiple Pets</h3>
+                <div class="pricing-amount">+20%</div>
+                <div class="pricing-period">per additional pet</div>
+                <ul class="pricing-features">
+                    <li>Reduced rate for additional pets</li>
+                    <li>All pets stay together</li>
+                    <li>Individual attention for each pet</li>
+                    <li>Same care standards for all</li>
+                    <li>Family discount applied automatically</li>
+                </ul>
+                <a href="#calculator" class="btn-secondary" style="width: 100%; text-align: center; text-decoration: none;">
+                    Add Pets
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section id="calculator" class="calculator-section">
+        <div class="section-header fade-in">
+            <div class="section-label">Get Your Quote</div>
+            <h2 class="section-title">Cost Calculator</h2>
+            <p class="section-description">
+                Enter your details below to get an instant, accurate quote for your pet's stay.
+            </p>
+        </div>
+
+        <div class="calculator-container fade-in">
+            <form id="calculator-form">
+                <div class="form-group">
+                    <label for="dropoff-date">🐶 Drop-off Date & Time</label>
+                    <input type="text" id="dropoff-date" class="form-input" readonly placeholder="Select drop-off date and time" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pickup-date">🏠 Pick-up Date & Time</label>
+                    <input type="text" id="pickup-date" class="form-input" readonly placeholder="Select pick-up date and time" required>
+                </div>
+
+                <div class="form-group">
+                    <label>🐕 Your Pets</label>
+                    <div id="dogs-container" class="dogs-container">
+                        <!-- Dog cards will be added here -->
+                    </div>
+                    <button type="button" id="add-dog-btn" class="add-dog-btn">+ Add a Pet</button>
+                </div>
+
+                <button type="submit" class="calculate-btn">Calculate Total Cost 🦴</button>
+            </form>
+
+            <div id="results" class="results hidden">
+                <h3>🎯 Your Pricing Breakdown</h3>
+                <div class="breakdown">
+                    <div class="breakdown-item">
+                        <span class="label">🐕 Number of Pets:</span>
+                        <span class="value" id="num-dogs-display">1</span>
+                    </div>
+                    <div class="breakdown-item" id="twenty-four-hour-row">
+                        <span class="label">🕐 24-Hour Sessions:</span>
+                        <span class="value">
+                            <span id="twenty-four-hour-count">0</span> × $55 =
+                            <span id="twenty-four-hour-cost">$0</span>
+                        </span>
+                    </div>
+                    <div class="breakdown-item" id="extra-hours-row">
+                        <span class="label">⏰ Extra Hours:</span>
+                        <span class="value">
+                            <span id="extra-hours-count">0</span> × $5 =
+                            <span id="extra-hours-cost">$0</span>
+                        </span>
+                    </div>
+                    <div class="breakdown-item" id="base-subtotal-row">
+                        <span class="label">Base Cost (per pet):</span>
+                        <span class="value" id="base-subtotal">$0</span>
+                    </div>
+                    <div class="breakdown-item" id="multi-dog-row" style="display: none;">
+                        <span class="label">🐕🐕 Multi-Pet Pricing (20% per additional):</span>
+                        <span class="value">+<span id="multi-dog-surcharge">$0</span></span>
+                    </div>
+                </div>
+                <div class="total">
+                    <span>Total Cost:</span>
+                    <span id="total-cost">$0</span>
                 </div>
             </div>
-        </main>
+        </div>
+    </section>
 
-        <footer>
-            <p>Made with ❤️ for our furry friends | &copy; 2025 Dog Sitting At Danni's House</p>
-        </footer>
+    <!-- FAQ Section -->
+    <section id="faq" class="section-alt">
+        <div class="section-header fade-in">
+            <div class="section-label">FAQ</div>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-description">
+                Get answers to common questions about our pet care services and pricing.
+            </p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item fade-in">
+                <button class="faq-question">
+                    How does 24-hour boarding work?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        24-hour boarding means your pet stays overnight in our home environment. For example, if you drop off at 3pm and pick up at 3pm the next day, that's one 24-hour period at $55. Any extra time is charged at $5 per hour.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <button class="faq-question">
+                    What's included in the boarding rate?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Your pet gets meals, walks, playtime, companionship, a comfortable sleeping area, and regular updates with photos. We treat every pet like a member of our family.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <button class="faq-question">
+                    How does multi-pet pricing work?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        The first pet pays full price, and each additional pet adds 20% to the base cost. For example, if one pet costs $55, two pets would cost $66 total ($55 + $11 for the second pet).
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <button class="faq-question">
+                    What should I bring for my pet?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Please bring your pet's food, any medications, favorite toys or blankets, and detailed care instructions. We'll discuss specific needs during our initial consultation.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <button class="faq-question">
+                    Is there a deposit required?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, we require a $50 deposit for stays of 3 days or longer. This helps secure your booking and covers any preparation needed for extended stays.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <button class="faq-question">
+                    Can I get updates while I'm away?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Absolutely! We provide regular updates with photos and messages about your pet's activities, meals, and mood. You'll have peace of mind knowing how your furry friend is doing.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#services">Services</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#calculator">Calculator</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <p class="footer-text">
+                Made with ❤️ for our furry friends | © 2025 Dog Sitting At Danni's House
+            </p>
+        </div>
+    </footer>
+
+    <!-- Date/Time Picker Modal -->
+    <div id="datetime-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>📅 Select Date & Time</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <div>
+                    <h4 style="margin-bottom: 1rem; color: var(--text);">📅 Date</h4>
+                    <input type="date" id="date-picker" class="form-input" style="width: 100%;">
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem; color: var(--text);">🕐 Time</h4>
+                    <input type="time" id="time-picker" class="form-input" style="width: 100%;">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="cancel-datetime-btn" class="cancel-btn">Cancel</button>
+                <button type="button" id="save-datetime-btn" class="save-btn">Set Date & Time</button>
+            </div>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Dog Modal -->
+    <div id="dog-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>🐾 Add Your Pet</h3>
+            <div class="form-group">
+                <label for="dog-name">Pet's Name</label>
+                <input type="text" id="dog-name" class="form-input" placeholder="Enter your pet's name" required>
+            </div>
+            <div class="form-group">
+                <label for="dog-breed">Breed</label>
+                <input type="text" id="dog-breed" class="form-input" placeholder="Enter breed (e.g., Golden Retriever, Mixed)">
+            </div>
+            <div class="form-group">
+                <label>Size</label>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 0.5rem;">
+                    <button type="button" class="size-option" data-size="small" style="padding: 1rem; border: 2px solid var(--surface0); background: var(--base); color: var(--text); border-radius: 8px; cursor: pointer;">
+                        <div style="font-weight: 600;">Small</div>
+                        <div style="font-size: 12px; color: var(--subtext0);">&lt; 25 lbs</div>
+                    </button>
+                    <button type="button" class="size-option" data-size="medium" style="padding: 1rem; border: 2px solid var(--surface0); background: var(--base); color: var(--text); border-radius: 8px; cursor: pointer;">
+                        <div style="font-weight: 600;">Medium</div>
+                        <div style="font-size: 12px; color: var(--subtext0);">25-60 lbs</div>
+                    </button>
+                    <button type="button" class="size-option" data-size="large" style="padding: 1rem; border: 2px solid var(--surface0); background: var(--base); color: var(--text); border-radius: 8px; cursor: pointer;">
+                        <div style="font-weight: 600;">Large</div>
+                        <div style="font-size: 12px; color: var(--subtext0);">&gt; 60 lbs</div>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" id="cancel-dog-btn" class="cancel-btn">Cancel</button>
+                <button type="button" id="save-dog-btn" class="save-btn">Add Pet</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let dogs = [];
+        let currentDateTimeInput = null;
+        let currentDogData = { name: '', breed: '', size: '' };
+
+        // DOM Elements
+        const form = document.getElementById('calculator-form');
+        const dropoffInput = document.getElementById('dropoff-date');
+        const pickupInput = document.getElementById('pickup-date');
+        const dogsContainer = document.getElementById('dogs-container');
+        const addDogBtn = document.getElementById('add-dog-btn');
+        const resultsDiv = document.getElementById('results');
+
+        // Modals
+        const datetimeModal = document.getElementById('datetime-modal');
+        const dogModal = document.getElementById('dog-modal');
+        const datePicker = document.getElementById('date-picker');
+        const timePicker = document.getElementById('time-picker');
+        const dogNameInput = document.getElementById('dog-name');
+        const dogBreedInput = document.getElementById('dog-breed');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            setupIntersectionObserver();
+            setupFAQ();
+        });
+
+        function setupEventListeners() {
+            // Date inputs
+            dropoffInput.addEventListener('click', () => openDateTimeModal(dropoffInput));
+            pickupInput.addEventListener('click', () => openDateTimeModal(pickupInput));
+
+            // DateTime modal
+            document.getElementById('cancel-datetime-btn').addEventListener('click', closeDateTimeModal);
+            document.getElementById('save-datetime-btn').addEventListener('click', saveDateTimeModal);
+
+            // Dog management
+            addDogBtn.addEventListener('click', openDogModal);
+            document.getElementById('cancel-dog-btn').addEventListener('click', closeDogModal);
+            document.getElementById('save-dog-btn').addEventListener('click', saveDogModal);
+
+            // Size selection
+            document.querySelectorAll('.size-option').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.size-option').forEach(b => {
+                        b.style.borderColor = 'var(--surface0)';
+                    });
+                    btn.style.borderColor = 'var(--accent)';
+                    currentDogData.size = btn.dataset.size;
+                    updateSaveButton();
+                });
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateCost();
+            });
+
+            // Modal click outside to close
+            datetimeModal.addEventListener('click', (e) => {
+                if (e.target === datetimeModal) closeDateTimeModal();
+            });
+            dogModal.addEventListener('click', (e) => {
+                if (e.target === dogModal) closeDogModal();
+            });
+
+            // Input validation
+            dogNameInput.addEventListener('input', updateSaveButton);
+        }
+
+        function openDateTimeModal(input) {
+            currentDateTimeInput = input;
+            datetimeModal.classList.remove('hidden');
+
+            // Set default date to today if empty
+            if (!datePicker.value) {
+                datePicker.value = new Date().toISOString().split('T')[0];
+            }
+            // Set default time to 9:00 AM if empty
+            if (!timePicker.value) {
+                timePicker.value = '09:00';
+            }
+        }
+
+        function closeDateTimeModal() {
+            datetimeModal.classList.add('hidden');
+            currentDateTimeInput = null;
+        }
+
+        function saveDateTimeModal() {
+            if (!datePicker.value || !timePicker.value) return;
+
+            const date = new Date(datePicker.value + 'T' + timePicker.value);
+            const dateValue = date.toISOString();
+            const displayValue = date.toLocaleDateString() + ' at ' +
+                               date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            currentDateTimeInput.value = displayValue;
+            currentDateTimeInput.dataset.dateValue = dateValue;
+
+            closeDateTimeModal();
+        }
+
+        function openDogModal() {
+            dogModal.classList.remove('hidden');
+            currentDogData = { name: '', breed: '', size: '' };
+            dogNameInput.value = '';
+            dogBreedInput.value = '';
+
+            // Reset size buttons
+            document.querySelectorAll('.size-option').forEach(b => {
+                b.style.borderColor = 'var(--surface0)';
+            });
+
+            updateSaveButton();
+        }
+
+        function closeDogModal() {
+            dogModal.classList.add('hidden');
+        }
+
+        function saveDogModal() {
+            if (!currentDogData.name || !currentDogData.size) return;
+
+            const dog = {
+                id: Date.now(),
+                name: currentDogData.name,
+                breed: currentDogData.breed || 'Not specified',
+                size: currentDogData.size
+            };
+
+            dogs.push(dog);
+            renderDogs();
+            closeDogModal();
+        }
+
+        function updateSaveButton() {
+            currentDogData.name = dogNameInput.value.trim();
+            currentDogData.breed = dogBreedInput.value.trim();
+
+            const saveBtn = document.getElementById('save-dog-btn');
+            saveBtn.disabled = !currentDogData.name || !currentDogData.size;
+        }
+
+        function renderDogs() {
+            dogsContainer.innerHTML = '';
+
+            dogs.forEach(dog => {
+                const dogCard = document.createElement('div');
+                dogCard.className = 'dog-card';
+                dogCard.innerHTML = `
+                    <div class="dog-info">
+                        <h4>${dog.name}</h4>
+                        <div class="dog-details">${dog.breed} • ${capitalizeFirst(dog.size)}</div>
+                    </div>
+                    <button type="button" class="remove-dog-btn" onclick="removeDog(${dog.id})">Remove</button>
+                `;
+                dogsContainer.appendChild(dogCard);
+            });
+        }
+
+        function removeDog(id) {
+            dogs = dogs.filter(dog => dog.id !== id);
+            renderDogs();
+        }
+
+        function calculateCost() {
+            if (!dropoffInput.dataset.dateValue || !pickupInput.dataset.dateValue || dogs.length === 0) {
+                alert('Please fill in all fields and add at least one pet.');
+                return;
+            }
+
+            const dropoff = new Date(dropoffInput.dataset.dateValue);
+            const pickup = new Date(pickupInput.dataset.dateValue);
+
+            if (pickup <= dropoff) {
+                alert('Pick-up time must be after drop-off time.');
+                return;
+            }
+
+            const totalHours = (pickup - dropoff) / (1000 * 60 * 60);
+            const twentyFourHourSessions = Math.floor(totalHours / 24);
+            const extraHours = Math.max(0, totalHours - (twentyFourHourSessions * 24));
+
+            // Updated pricing: $55 for 24-hour sessions
+            const sessionCost = twentyFourHourSessions * 55;
+            const extraHoursCost = Math.ceil(extraHours) * 5;
+            const baseCost = sessionCost + extraHoursCost;
+
+            // Multi-pet pricing: +20% for each additional pet
+            const multiPetSurcharge = dogs.length > 1 ? baseCost * 0.2 * (dogs.length - 1) : 0;
+            const totalCost = baseCost + multiPetSurcharge;
+
+            displayResults(dogs.length, twentyFourHourSessions, Math.ceil(extraHours),
+                          sessionCost, extraHoursCost, baseCost, multiPetSurcharge, totalCost);
+        }
+
+        function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCost, baseCost, multiPetSurcharge, totalCost) {
+            document.getElementById('num-dogs-display').textContent = numDogs;
+            document.getElementById('twenty-four-hour-count').textContent = sessions;
+            document.getElementById('twenty-four-hour-cost').textContent = '$' + sessionCost;
+            document.getElementById('extra-hours-count').textContent = extraHours;
+            document.getElementById('extra-hours-cost').textContent = '$' + extraHoursCost;
+            document.getElementById('base-subtotal').textContent = '$' + baseCost;
+
+            const multiDogRow = document.getElementById('multi-dog-row');
+            if (numDogs > 1) {
+                multiDogRow.style.display = 'flex';
+                document.getElementById('multi-dog-surcharge').textContent = '$' + multiPetSurcharge.toFixed(2);
+            } else {
+                multiDogRow.style.display = 'none';
+            }
+
+            document.getElementById('total-cost').textContent = '$' + totalCost.toFixed(2);
+            resultsDiv.classList.remove('hidden');
+
+            // Smooth scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        function setupFAQ() {
+            document.querySelectorAll('.faq-question').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = btn.parentElement;
+                    const answer = item.querySelector('.faq-answer');
+                    const wasOpen = item.classList.contains('open');
+
+                    // Close all other items
+                    document.querySelectorAll('.faq-item').forEach(i => {
+                        i.classList.remove('open');
+                        i.querySelector('.faq-answer').style.maxHeight = null;
+                    });
+
+                    // Open clicked item if it wasn't open
+                    if (!wasOpen) {
+                        item.classList.add('open');
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                    }
+                });
+            });
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
