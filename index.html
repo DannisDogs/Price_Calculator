@@ -13,66 +13,74 @@
     <!-- Performance optimizations -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#eff1f5">
+    <meta name="theme-color" content="#F0EAFF">
 
     <style>
         :root {
-            /* Base surfaces (Catppuccin Latte - Light Theme) */
-            --crust:    #dce0e8;   /* page background */
-            --mantle:   #e6e9ef;   /* card backgrounds */
-            --base:     #eff1f5;   /* elevated surfaces */
+            /* Base surfaces (Custom Poster Palette - Light Theme) */
+            --crust:    #F0EAFF;   /* page background - soft lavender */
+            --mantle:   #FFFFFF;   /* card backgrounds - clean white */
+            --base:     #F8F5FF;   /* elevated surfaces - lighter lavender */
 
             /* Content surfaces */
-            --surface0: #ccd0da;   /* borders, dividers */
-            --surface1: #bcc0cc;   /* hover borders */
-            --surface2: #acb0be;   /* active borders */
+            --surface0: #E0D4F7;   /* borders, dividers */
+            --surface1: #D4C4F0;   /* hover borders */
+            --surface2: #C8B4E9;   /* active borders */
 
             /* Text hierarchy */
-            --text:     #4c4f69;   /* primary text */
-            --subtext1: #5c5f77;   /* secondary text */
-            --subtext0: #6c6f85;   /* tertiary text, descriptions */
-            --overlay2: #7c7f93;   /* kbd text */
-            --overlay1: #8c8fa1;   /* muted text */
-            --overlay0: #9ca0b0;   /* footer text */
+            --text:     #2D1B5E;   /* primary text - deep purple */
+            --subtext1: #4A3B7A;   /* secondary text - medium purple */
+            --subtext0: #6B5B8D;   /* tertiary text, descriptions */
+            --overlay2: #8C7BA0;   /* kbd text */
+            --overlay1: #A99BB3;   /* muted text */
+            --overlay0: #C0B2C6;   /* footer text */
 
             /* Accent colors */
-            --accent:   #8839ef;   /* primary accent (purple) */
-            --accent2:  #1e66f5;   /* secondary accent (blue) */
-            --green:    #40a02b;   /* success states */
-            --peach:    #fe640b;   /* warning/highlight */
-            --red:      #d20f39;   /* error states */
-            --yellow:   #df8e1d;   /* attention */
-            --teal:     #179299;   /* info */
+            --accent:   #B8A5E8;   /* primary accent - poster lavender */
+            --accent2:  #00D4C4;   /* secondary accent - poster teal */
+            --green:    #00C896;   /* success states - teal variant */
+            --peach:    #FFB366;   /* warning/highlight - warm orange */
+            --red:      #FF6B9D;   /* error states - soft pink */
+            --yellow:   #FFD93D;   /* attention - bright yellow */
+            --teal:     #00D4C4;   /* info - poster teal */
+
+            /* Navigation backgrounds */
+            --nav-bg: rgba(240, 234, 255, 0.8);           /* light lavender with transparency */
+            --nav-bg-scrolled: rgba(240, 234, 255, 0.95); /* more opaque when scrolled */
         }
 
-        /* Dark Theme (Catppuccin Mocha) */
+        /* Dark Theme (Custom Poster Palette - Dark Version) */
         [data-theme="dark"] {
             /* Base surfaces (dark to light) */
-            --crust:    #11111b;   /* page background */
-            --mantle:   #181825;   /* card backgrounds */
-            --base:     #1e1e2e;   /* elevated surfaces */
+            --crust:    #1A0D2E;   /* page background - deep purple */
+            --mantle:   #261240;   /* card backgrounds - dark purple */
+            --base:     #321852;   /* elevated surfaces - medium dark purple */
 
             /* Content surfaces */
-            --surface0: #313244;   /* borders, dividers */
-            --surface1: #45475a;   /* hover borders */
-            --surface2: #585b70;   /* active borders */
+            --surface0: #3E1F64;   /* borders, dividers */
+            --surface1: #4A2576;   /* hover borders */
+            --surface2: #562B88;   /* active borders */
 
             /* Text hierarchy */
-            --text:     #cdd6f4;   /* primary text */
-            --subtext1: #bac2de;   /* secondary text */
-            --subtext0: #a6adc8;   /* tertiary text, descriptions */
-            --overlay2: #9399b2;   /* kbd text */
-            --overlay1: #7f849c;   /* muted text */
-            --overlay0: #6c7086;   /* footer text */
+            --text:     #F0EAFF;   /* primary text - light lavender */
+            --subtext1: #E0D4F7;   /* secondary text */
+            --subtext0: #D4C4F0;   /* tertiary text, descriptions */
+            --overlay2: #C8B4E9;   /* kbd text */
+            --overlay1: #BCA4E2;   /* muted text */
+            --overlay0: #B094DB;   /* footer text */
 
             /* Accent colors */
-            --accent:   #cba6f7;   /* primary accent (purple) */
-            --accent2:  #89b4fa;   /* secondary accent (blue) */
-            --green:    #a6e3a1;   /* success states */
-            --peach:    #fab387;   /* warning/highlight */
-            --red:      #f38ba8;   /* error states */
-            --yellow:   #f9e2af;   /* attention */
-            --teal:     #94e2d5;   /* info */
+            --accent:   #D4C4F0;   /* primary accent - light lavender */
+            --accent2:  #00F0DE;   /* secondary accent - bright teal */
+            --green:    #00E6AA;   /* success states - bright teal green */
+            --peach:    #FFCC80;   /* warning/highlight - warm peach */
+            --red:      #FF8A9B;   /* error states - soft coral */
+            --yellow:   #FFE066;   /* attention - bright yellow */
+            --teal:     #00F0DE;   /* info - bright teal */
+
+            /* Navigation backgrounds */
+            --nav-bg: rgba(26, 13, 46, 0.8);           /* dark purple with transparency */
+            --nav-bg-scrolled: rgba(26, 13, 46, 0.95); /* more opaque when scrolled */
         }
 
         * {
@@ -138,13 +146,18 @@
             right: 0;
             z-index: 100;
             height: 64px;
-            background: rgba(17, 17, 27, 0.8);
+            background: var(--nav-bg);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--surface0);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 2rem;
+        }
+
+        /* Navigation scrolled state */
+        nav.scrolled {
+            background: var(--nav-bg-scrolled);
         }
 
         .nav-logo {
@@ -187,7 +200,7 @@
             text-decoration: none;
             font-weight: 600;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 14px rgba(203, 166, 247, 0.25);
+            box-shadow: 0 4px 14px rgba(184, 165, 232, 0.25);
         }
 
         .nav-cta:hover {
@@ -290,7 +303,7 @@
             text-decoration: none;
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 8px 32px rgba(203, 166, 247, 0.3);
+            box-shadow: 0 8px 32px rgba(184, 165, 232, 0.3);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -298,7 +311,7 @@
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 48px rgba(203, 166, 247, 0.4);
+            box-shadow: 0 12px 48px rgba(184, 165, 232, 0.4);
         }
 
         .btn-secondary {
@@ -399,14 +412,14 @@
             width: 64px;
             height: 64px;
             border-radius: 12px;
-            background: linear-gradient(135deg, rgba(203, 166, 247, 0.1), rgba(137, 180, 250, 0.1));
+            background: linear-gradient(135deg, rgba(184, 165, 232, 0.1), rgba(0, 212, 196, 0.1));
             border: 1px solid var(--surface0);
             margin-left: auto;
             margin-right: auto;
         }
 
         .feature-card:hover .feature-icon {
-            background: linear-gradient(135deg, rgba(203, 166, 247, 0.15), rgba(137, 180, 250, 0.15));
+            background: linear-gradient(135deg, rgba(184, 165, 232, 0.15), rgba(0, 212, 196, 0.15));
             border-color: var(--surface1);
         }
 
@@ -567,7 +580,7 @@
             padding: 1.5rem 0;
             margin-top: 1rem;
             border-top: 2px solid var(--surface1);
-            background: linear-gradient(135deg, rgba(203, 166, 247, 0.05), rgba(137, 180, 250, 0.05));
+            background: linear-gradient(135deg, rgba(184, 165, 232, 0.05), rgba(0, 212, 196, 0.05));
         }
 
         .total-label {
@@ -632,12 +645,12 @@
         .action-btn.primary {
             background: linear-gradient(135deg, var(--accent), var(--accent2));
             color: white;
-            box-shadow: 0 4px 14px rgba(203, 166, 247, 0.25);
+            box-shadow: 0 4px 14px rgba(184, 165, 232, 0.25);
         }
 
         .action-btn.primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(203, 166, 247, 0.35);
+            box-shadow: 0 8px 28px rgba(184, 165, 232, 0.35);
         }
 
         .action-btn.secondary {
@@ -948,7 +961,7 @@
         .pricing-card:hover {
             border-color: var(--accent);
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(203, 166, 247, 0.15);
+            box-shadow: 0 12px 40px rgba(184, 165, 232, 0.15);
         }
 
         .pricing-title {
@@ -1039,7 +1052,7 @@
         .form-input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(203, 166, 247, 0.1);
+            box-shadow: 0 0 0 4px rgba(184, 165, 232, 0.1);
         }
 
         .dogs-container {
@@ -1098,7 +1111,7 @@
 
         .add-dog-btn:hover {
             border-color: var(--accent);
-            background: rgba(203, 166, 247, 0.05);
+            background: rgba(184, 165, 232, 0.05);
         }
 
         .calculate-btn {
@@ -1112,12 +1125,12 @@
             font-size: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(203, 166, 247, 0.3);
+            box-shadow: 0 8px 32px rgba(184, 165, 232, 0.3);
         }
 
         .calculate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 48px rgba(203, 166, 247, 0.4);
+            box-shadow: 0 12px 48px rgba(184, 165, 232, 0.4);
         }
 
         .results {
@@ -1769,8 +1782,8 @@
 
             /* Mobile total emphasis */
             .estimate-total {
-                background: linear-gradient(135deg, rgba(203, 166, 247, 0.08), rgba(137, 180, 250, 0.08));
-                border: 1px solid rgba(203, 166, 247, 0.2);
+                background: linear-gradient(135deg, rgba(184, 165, 232, 0.08), rgba(0, 212, 196, 0.08));
+                border: 1px solid rgba(184, 165, 232, 0.2);
             }
 
             .detail-row {
@@ -1807,8 +1820,8 @@
             <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none">
                 <defs>
                     <linearGradient id="pawGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                        <stop offset="0%" style="stop-color:#B8A5E8;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#00D4C4;stop-opacity:1" />
                     </linearGradient>
                 </defs>
                 <ellipse cx="16" cy="20" rx="6.7" ry="6" fill="url(#pawGradient)" />
@@ -1895,8 +1908,8 @@
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#homeGradient)" stroke-width="2">
                         <defs>
                             <linearGradient id="homeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#B8A5E8;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00D4C4;stop-opacity:1" />
                             </linearGradient>
                         </defs>
                         <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -1911,8 +1924,8 @@
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#pricingGradient)" stroke-width="2">
                         <defs>
                             <linearGradient id="pricingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#B8A5E8;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00D4C4;stop-opacity:1" />
                             </linearGradient>
                         </defs>
                         <line x1="12" y1="1" x2="12" y2="23"/>
@@ -1927,8 +1940,8 @@
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#quotesGradient)" stroke-width="2">
                         <defs>
                             <linearGradient id="quotesGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#B8A5E8;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00D4C4;stop-opacity:1" />
                             </linearGradient>
                         </defs>
                         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
@@ -1944,8 +1957,8 @@
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#scheduleGradient)" stroke-width="2">
                         <defs>
                             <linearGradient id="scheduleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#B8A5E8;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00D4C4;stop-opacity:1" />
                             </linearGradient>
                         </defs>
                         <circle cx="12" cy="12" r="10"/>
@@ -1960,8 +1973,8 @@
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#careGradient)" stroke-width="2">
                         <defs>
                             <linearGradient id="careGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#B8A5E8;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00D4C4;stop-opacity:1" />
                             </linearGradient>
                         </defs>
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -1975,8 +1988,8 @@
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#reliableGradient)" stroke-width="2">
                         <defs>
                             <linearGradient id="reliableGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#89b4fa;stop-opacity:1" />
+                                <stop offset="0%" style="stop-color:#B8A5E8;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00D4C4;stop-opacity:1" />
                             </linearGradient>
                         </defs>
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -2922,10 +2935,10 @@
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
             if (scrollTop > 50 && !scrolled) {
-                nav.style.backgroundColor = 'rgba(17, 17, 27, 0.95)';
+                nav.classList.add('scrolled');
                 scrolled = true;
             } else if (scrollTop <= 50 && scrolled) {
-                nav.style.backgroundColor = 'rgba(17, 17, 27, 0.8)';
+                nav.classList.remove('scrolled');
                 scrolled = false;
             }
         }, 16); // ~60fps
@@ -2970,9 +2983,9 @@
             // Update meta theme color
             const metaTheme = document.querySelector('meta[name="theme-color"]');
             if (newTheme === 'dark') {
-                metaTheme.content = '#11111b';
+                metaTheme.content = '#1A0D2E';
             } else {
-                metaTheme.content = '#eff1f5';
+                metaTheme.content = '#F0EAFF';
             }
         }
 
@@ -2988,9 +3001,9 @@
             // Update meta theme color
             const metaTheme = document.querySelector('meta[name="theme-color"]');
             if (theme === 'dark') {
-                metaTheme.content = '#11111b';
+                metaTheme.content = '#1A0D2E';
             } else {
-                metaTheme.content = '#eff1f5';
+                metaTheme.content = '#F0EAFF';
             }
         }
 
