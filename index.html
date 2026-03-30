@@ -634,63 +634,98 @@
                 page-break-inside: avoid;
             }
 
-            /* Optimize spacing for single page */
-            .receipt-header {
-                margin-bottom: 15px;
-                padding-bottom: 10px;
+            /* Compact single-page layout */
+            .print-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #333;
             }
 
-            .receipt-header h1 {
-                font-size: 18px;
-                margin-bottom: 3px;
+            .print-header h1 {
+                font-size: 20px;
+                margin: 0 0 5px 0;
+                color: #333;
             }
 
-            .receipt-header h2 {
+            .print-header p {
+                margin: 0;
+                color: #666;
+                font-size: 12px;
+            }
+
+            .quote-info {
+                text-align: right;
+                font-size: 12px;
+            }
+
+            .service-summary {
+                margin-bottom: 20px;
+            }
+
+            .summary-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                font-size: 12px;
+            }
+
+            .cost-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+                font-size: 12px;
+            }
+
+            .cost-table th,
+            .cost-table td {
+                padding: 8px 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .cost-table th {
+                background: #f5f5f5;
+                font-weight: bold;
+                border-bottom: 2px solid #333;
+            }
+
+            .cost-table td:nth-child(2),
+            .cost-table td:nth-child(3),
+            .cost-table td:nth-child(4),
+            .cost-table th:nth-child(2),
+            .cost-table th:nth-child(3),
+            .cost-table th:nth-child(4) {
+                text-align: right;
+            }
+
+            .cost-table .total-row {
+                border-top: 2px solid #333;
+                background: #f9f9f9;
+            }
+
+            .cost-table .total-row td {
+                border-bottom: none;
                 font-size: 14px;
-                margin-bottom: 5px;
             }
 
-            .receipt-meta {
-                margin-bottom: 15px;
+            .print-footer {
+                margin-top: 30px;
+                padding-top: 15px;
+                border-top: 1px solid #ddd;
+                font-size: 11px;
             }
 
-            .receipt-client {
-                margin-bottom: 15px;
-                padding: 10px;
+            .payment-note {
+                margin-bottom: 8px;
+                color: #333;
             }
 
-            .receipt-service-details {
-                margin-bottom: 15px;
-            }
-
-            .receipt-line-items {
-                margin: 15px 0;
-            }
-
-            .receipt-payment {
-                margin: 15px 0;
-                padding: 10px;
-            }
-
-            .receipt-notes {
-                margin: 10px 0;
-            }
-
-            .receipt-signatures {
-                margin: 15px 0 10px 0;
-            }
-
-            .receipt-terms {
-                margin-top: 10px;
-                font-size: 10px;
-                page-break-inside: avoid;
-            }
-
-            /* Prevent page breaks within important sections */
-            .receipt-total-section,
-            .receipt-signatures,
-            .receipt-payment {
-                page-break-inside: avoid;
+            .validity-note {
+                color: #666;
+                font-style: italic;
             }
         }
 
@@ -1751,87 +1786,55 @@
 
     <!-- Print Receipt Content (Hidden in normal view) -->
     <div id="print-receipt" class="print-receipt">
-        <div class="receipt-header">
-            <h1>Dog Sitting At Danni's House</h1>
-            <h2>Service Estimate</h2>
-            <div class="receipt-date" id="receipt-date"></div>
-        </div>
-
-        <div class="receipt-meta">
-            <div class="business-info">
-                <div><strong>Dog Sitting At Danni's House</strong></div>
-                <div>Professional Pet Care Services</div>
+        <div class="print-header">
+            <div class="company-info">
+                <h1>Dog Sitting At Danni's House</h1>
+                <p>Professional Pet Care Services</p>
             </div>
-            <div class="receipt-info">
-                <div class="info-row"><span>Quote #</span><span id="receipt-quote-number">—</span></div>
-                <div class="info-row"><span>Date</span><span id="receipt-date-dup">—</span></div>
+            <div class="quote-info">
+                <div><strong>Quote #<span id="receipt-quote-number">—</span></strong></div>
+                <div><span id="receipt-date">—</span></div>
             </div>
         </div>
 
-        <div class="receipt-client">
-            <h3>Client Information</h3>
-            <div class="client-fields">
-                <div class="field"><span>Name:</span><span class="line"></span></div>
-                <div class="field"><span>Phone:</span><span class="line"></span></div>
-                <div class="field"><span>Email:</span><span class="line"></span></div>
-                <div class="field"><span>Address:</span><span class="line"></span></div>
+        <div class="service-summary">
+            <div class="summary-row">
+                <span><strong>Service Period:</strong></span>
+                <span><span id="receipt-dropoff">—</span> to <span id="receipt-pickup">—</span></span>
+            </div>
+            <div class="summary-row">
+                <span><strong>Number of Pets:</strong></span>
+                <span id="receipt-num-pets">—</span>
             </div>
         </div>
 
-        <div class="receipt-service-details">
-            <h3>Service Details</h3>
-            <div class="service-dates">
-                <div><strong>Drop-off:</strong> <span id="receipt-dropoff">—</span></div>
-                <div><strong>Pick-up:</strong> <span id="receipt-pickup">—</span></div>
-                <div><strong>Number of Pets:</strong> <span id="receipt-num-pets">—</span></div>
-            </div>
-        </div>
+        <table class="cost-table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Qty</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="receipt-breakdown">
+                <!-- Line items populated by JS -->
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="3"><strong>Total Estimated Cost</strong></td>
+                    <td><strong id="receipt-total">$0.00</strong></td>
+                </tr>
+            </tfoot>
+        </table>
 
-        <div class="receipt-line-items">
-            <h3>Cost Breakdown</h3>
-            <div id="receipt-breakdown">
-                <!-- Line items will be populated here -->
+        <div class="print-footer">
+            <div class="payment-note">
+                <strong>Payment:</strong> Cash preferred, Venmo accepted. $50 deposit for 3+ day stays.
             </div>
-
-            <div class="receipt-total-section">
-                <div class="receipt-final-total">
-                    <strong>Total Estimated Cost: <span id="receipt-total">$0.00</span></strong>
-                </div>
+            <div class="validity-note">
+                Valid for 30 days • Payment due at pickup • Contact for booking confirmation
             </div>
-        </div>
-
-        <div class="receipt-payment">
-            <h3>Payment Options</h3>
-            <div class="payment-options">
-                <span>☐ Cash (Preferred)</span>
-                <span>☐ Venmo</span>
-            </div>
-            <p><strong>$50 deposit required for stays 3+ days</strong></p>
-            <p>Payment due upon pickup unless otherwise arranged.</p>
-        </div>
-
-        <div class="receipt-notes">
-            <h3>Special Instructions / Notes</h3>
-            <div style="border: 1px solid #ddd; min-height: 60px; padding: 10px; margin-top: 10px;"></div>
-        </div>
-
-        <div class="receipt-signatures">
-            <div class="sig-block">
-                <div class="signature-line"></div>
-                <div class="sig-label">Client Signature</div>
-            </div>
-            <div class="sig-block">
-                <div class="signature-line"></div>
-                <div class="sig-label">Service Provider Signature</div>
-            </div>
-        </div>
-
-        <div class="receipt-terms">
-            <h4>Terms & Conditions</h4>
-            <p><strong>Estimate Validity:</strong> This estimate is valid for 30 days from the date of issue.</p>
-            <p><strong>Deposit:</strong> A $50 deposit is required for stays of 3 days or longer to secure your booking.</p>
-            <p><strong>Cancellation:</strong> Cancellations within 24 hours of drop-off may incur a fee.</p>
-            <p><strong>Pet Requirements:</strong> All pets must be up to date on vaccinations. Emergency contact details required.</p>
         </div>
     </div>
 
@@ -2448,9 +2451,8 @@
             const now = new Date();
             const quoteNum = document.getElementById('quote-number').textContent;
 
-            // Update receipt header
+            // Update header
             document.getElementById('receipt-date').textContent = now.toLocaleDateString();
-            document.getElementById('receipt-date-dup').textContent = now.toLocaleDateString();
             document.getElementById('receipt-quote-number').textContent = quoteNum;
 
             // Update service details
@@ -2460,36 +2462,51 @@
             }
             document.getElementById('receipt-num-pets').textContent = dogs.length;
 
-            // Update breakdown
+            // Update table breakdown
             const breakdown = document.getElementById('receipt-breakdown');
             breakdown.innerHTML = '';
 
-            // Add line items from the current estimate
+            // Get current estimate values
             const twentyFourCount = document.getElementById('twenty-four-hour-count').textContent;
             const twentyFourCost = document.getElementById('twenty-four-hour-cost').textContent;
             const extraCount = document.getElementById('extra-hours-count').textContent;
             const extraCost = document.getElementById('extra-hours-cost').textContent;
 
+            // Add 24-hour sessions if any
             if (parseInt(twentyFourCount) > 0) {
-                const lineItem = document.createElement('div');
-                lineItem.className = 'receipt-line-item';
-                lineItem.innerHTML = `<span>24-Hour Boarding Sessions (${twentyFourCount})</span><span>${twentyFourCost}</span>`;
-                breakdown.appendChild(lineItem);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>24-Hour Boarding</td>
+                    <td>${twentyFourCount}</td>
+                    <td>$55.00</td>
+                    <td>${twentyFourCost}</td>
+                `;
+                breakdown.appendChild(row);
             }
 
+            // Add extra hours if any
             if (parseInt(extraCount) > 0) {
-                const lineItem = document.createElement('div');
-                lineItem.className = 'receipt-line-item';
-                lineItem.innerHTML = `<span>Additional Hours (${extraCount})</span><span>${extraCost}</span>`;
-                breakdown.appendChild(lineItem);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>Additional Hours</td>
+                    <td>${extraCount}</td>
+                    <td>$5.00</td>
+                    <td>${extraCost}</td>
+                `;
+                breakdown.appendChild(row);
             }
 
+            // Add multi-pet surcharge if applicable
             if (dogs.length > 1) {
                 const surcharge = document.getElementById('multi-dog-surcharge').textContent;
-                const lineItem = document.createElement('div');
-                lineItem.className = 'receipt-line-item';
-                lineItem.innerHTML = `<span>Additional Pet Surcharge (20%)</span><span>+${surcharge}</span>`;
-                breakdown.appendChild(lineItem);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>Additional Pet Surcharge</td>
+                    <td>20%</td>
+                    <td>—</td>
+                    <td>+${surcharge}</td>
+                `;
+                breakdown.appendChild(row);
             }
 
             // Update total
