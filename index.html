@@ -2866,7 +2866,15 @@
             document.getElementById('twenty-four-hour-cost').textContent = formatCurrency(sessionCost);
             document.getElementById('extra-hours-count').textContent = extraHours;
             document.getElementById('extra-hours-cost').textContent = formatCurrency(extraHoursCost);
-            document.getElementById('base-subtotal').textContent = formatCurrency(baseCost);
+
+            // Ensure subtotal calculation is explicit and bulletproof
+            const calculatedSubtotal = sessionCost + extraHoursCost;
+            document.getElementById('base-subtotal').textContent = formatCurrency(calculatedSubtotal);
+
+            // Verify baseCost matches the explicit calculation
+            if (baseCost !== calculatedSubtotal) {
+                console.error('Subtotal mismatch detected:', { baseCost, calculatedSubtotal, sessionCost, extraHoursCost });
+            }
 
             // Handle multi-pet pricing
             const multiDogRow = document.getElementById('multi-dog-row');
