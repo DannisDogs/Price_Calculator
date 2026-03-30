@@ -1943,7 +1943,7 @@
             }
         }
 
-        function requestIdleCallback(callback) {
+        function runWhenIdle(callback) {
             if ('requestIdleCallback' in window) {
                 window.requestIdleCallback(callback);
             } else {
@@ -1966,7 +1966,7 @@
             setupEventListeners();
 
             // Non-critical in idle time
-            requestIdleCallback(() => {
+            runWhenIdle(() => {
                 setupIntersectionObserver();
                 setupFAQ();
                 preloadCriticalResources();
