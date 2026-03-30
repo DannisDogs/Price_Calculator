@@ -1,139 +1,211 @@
-# Dog Sitting At Danni's House 🐾
+# Dog Sitting At Danni's House
 
-Welcome to our dog sitting cost calculator! This friendly web application helps you calculate the cost of your furry friend's stay with us.
+**Professional Pet Care Services | Cost Calculator & Booking Platform**
 
-![Dog Sitting Calculator](https://img.shields.io/badge/status-active-success.svg)
-![Pet Friendly](https://img.shields.io/badge/pet-friendly-green.svg)
+[![Status](https://img.shields.io/badge/status-production-success.svg)](https://github.com/dannisdogs/dannisdogs.github.io)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-2.0-brightgreen.svg)](https://github.com/dannisdogs/dannisdogs.github.io/releases)
 
-## 🏠 About Us
+## Overview
 
-Dog Sitting At Danni's House provides loving, professional pet care in a home environment. Your furry friends will receive personalized attention and care while you're away.
+Dog Sitting At Danni's House provides professional pet care services in a home environment. This platform offers transparent pricing calculations, instant service estimates, and professional documentation for pet boarding services.
 
-## ✨ Calculator Features
+### Core Value Proposition
 
-- 🐕 **Multiple Dog Support** - Add all your furry friends with breed and size details
-- 📅 **Custom Date/Time Picker** - Easy calendar and time selection
-- 💰 **Transparent Pricing** - Detailed breakdown of all costs
-- 🧮 **Exact Totals (No Rounding)** - Amounts show true values with cents
-- 🌙 **Flexible Stay Options** - Overnight and multi-night stays
-- 🖨️ **Professional Receipts** - Print-friendly receipts for your records
-- 🌙 **Dark Mode** - Easy on the eyes for any time of day
-- 📱 **Mobile Friendly** - Works perfectly on all devices
+- **Transparent Pricing**: No hidden fees or surprise charges
+- **Professional Service**: Experienced pet care with detailed protocols
+- **Instant Quotes**: Real-time cost calculations and estimate generation
+- **Multi-Pet Support**: Automated pricing for multiple pet households
+- **Professional Documentation**: Print-ready estimates and calendar integration
 
-## 💸 Our Pricing
+## Service Offerings
 
-### Base Rates
-- **🕐 24-Hour Boarding**: $45 per 24-hour period (overnight)
-- **⏰ Extra Hours**: $5 per hour. If extra hours reach 24, they become another 24-hour period
+### Primary Services
 
-### Multi-Dog Pricing
-- **First Dog**: Full price
-- **Each Additional Dog**: +50% of total cost
+**24-Hour Boarding**: $55.00 per 24-hour period
+- Overnight care in residential environment
+- Regular feeding and exercise schedules
+- Secure, comfortable accommodation
+- Progress updates and documentation
 
-### Notes
-- Simple, predictable nightly pricing. No weekly discounting; we just count full 24-hour nights and any extra hours.
+**Extended Hours**: $5.00 per hour
+- Flexible drop-off and pick-up scheduling
+- Early morning and evening care available
+- Automatic conversion to daily rates when applicable
 
-### Pricing Examples
+**Multi-Pet Services**: 20% surcharge per additional pet
+- All pets accommodated together
+- Individual attention and care protocols
+- Volume pricing for family pet households
 
-**24-Hour Boarding:**
-- Drop off 3pm, pick up 3pm next day: **$45**
+### Service Policies
 
-**Extra Hours:**
-- 1 night + 3 hours (3pm → 6pm next day): $45 + (3 × $4) = **$57**
+- **Deposit Requirement**: $50 for stays exceeding 3 days
+- **Payment Methods**: Cash (preferred), Venmo accepted
+- **Estimate Validity**: 30 days from issue date
+- **Cancellation Policy**: 24-hour advance notice required
 
-**Multi-Night:**
-- Friday 5pm → Sunday 5pm: 2 × $45 = **$90**
-- Friday 5pm → Sunday 7pm: (2 × $45) + (2 × $4) = **$98**
+## Technical Specifications
 
-**Multiple Dogs:**
-- 2 dogs, 1 night: $45 × 1.50 = **$67.5** total
+### Platform Architecture
 
-## 🚀 Using the Calculator
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Design System**: Professional dark theme with gradient accents
+- **Performance**: Hardware-accelerated animations, optimized rendering
+- **Compatibility**: Cross-browser support (Chrome, Firefox, Safari, Edge)
+- **Mobile Support**: Responsive design for all device types
 
-1. **Add Your Dogs** - Click "Add a Dog" and enter their details
-2. **Select Dates** - Choose drop-off and pick-up times using our calendar
-3. **Get Your Quote** - See the detailed cost breakdown instantly
-4. **Print Receipt** - Save or print your quote for your records
+### Features
 
-### Pricing Breakdown Example
+#### Cost Calculator
+- Real-time pricing calculations
+- Multi-pet pricing algorithms
+- Date range processing with hour calculations
+- Professional estimate generation
 
-The calculator shows clear, itemized pricing so you understand exactly what you're paying for:
+#### Documentation Export
+- PDF estimate generation
+- Calendar integration (.ics format)
+- Print-optimized layouts
+- Professional receipt formatting
 
-```
-🐕 Number of Dogs: 2
+#### User Interface
+- Form validation with error handling
+- Loading states and progress indicators
+- Smooth animations and transitions
+- Professional success confirmations
 
-🕐 24-Hour Sessions: 2 × $45 = $90
-⏰ Extra Hours: 3 × $5 = $15
+### Browser Compatibility
 
-Base Cost (per dog): $102
-🐕🐕 Multi-Dog Pricing (50% per additional dog): +$51
+| Browser | Version | Status |
+|---------|---------|--------|
+| Chrome | 90+ | Full Support |
+| Firefox | 88+ | Full Support |
+| Safari | 14+ | Full Support |
+| Edge | 90+ | Full Support |
 
-Total Cost: $153
-```
+## Installation & Deployment
 
-This transparent breakdown helps you see:
-- Exactly what services you're receiving
-- How pricing is calculated for each component  
-- Multi-dog pricing applied clearly
-- Any applicable discounts or special rates
+### Local Development
 
-## 🌐 Access the Calculator
-
-Visit our calculator at: [Your GitHub Pages URL]
-
-Or run it locally:
 ```bash
-# Clone the repository
-git clone [your-repo-url]
-cd [repo-name]
+# Clone repository
+git clone https://github.com/dannisdogs/dannisdogs.github.io.git
+cd dannisdogs.github.io
 
 # Start local server
 python3 -m http.server 8080
 
-# Visit http://localhost:8080
+# Access application
+open http://localhost:8080
 ```
 
- 
+### Production Deployment
 
-## 📱 Browser Support
+**GitHub Pages (Recommended)**
+1. Push code to main branch
+2. Navigate to Repository Settings → Pages
+3. Source: Deploy from branch (main, /docs)
+4. Access at: `https://dannisdogs.github.io`
 
-Our calculator works on all modern browsers:
-- Chrome, Firefox, Safari, Edge
-- Mobile browsers (iOS Safari, Chrome Mobile)
-- Tablets and desktop computers
+**Alternative Deployment**
+- Any static web hosting provider
+- CDN deployment supported
+- No server-side requirements
 
-## 🛠️ Technical Details
+## API Reference
 
-**Built with:**
-- HTML5, CSS3, Vanilla JavaScript
-- Responsive design for all screen sizes
-- Print-optimized CSS for professional receipts
-- Local storage for dark mode preferences
- - Print receipt payment options: Cash and Venmo
+### Calculator Functions
 
-**Project Structure:**
-```
-/
-├── index.html          # Main calculator page
-├── style.css           # Styling and animations
-├── script.js           # Calculator logic
-├── favicon.svg         # Paw print icon
-├── README.md           # This file
-└── .gitignore          # Git ignore rules
-```
+#### `calculateCost(dropoff, pickup, pets)`
+Processes service dates and pet information to generate cost estimates.
+
+**Parameters:**
+- `dropoff` (Date): Service start date and time
+- `pickup` (Date): Service end date and time
+- `pets` (Array): Pet information objects
+
+**Returns:**
+- `estimate` (Object): Complete cost breakdown and total
+
+#### `generateEstimate()`
+Creates formatted estimate with quote number and professional layout.
+
+**Returns:**
+- `quote` (Object): Print-ready estimate document
+
+## Development Guidelines
+
+### Code Standards
+- ES6+ JavaScript syntax
+- CSS3 with custom properties
+- Semantic HTML5 markup
+- WCAG 2.1 accessibility compliance
+
+### Performance Requirements
+- First Contentful Paint < 1.5s
+- Largest Contentful Paint < 2.5s
+- Cumulative Layout Shift < 0.1
+- 60fps animation performance
+
+### Browser Testing
+- Cross-browser compatibility testing required
+- Mobile device testing across iOS and Android
+- Print layout verification for estimate output
+
+## Security & Compliance
+
+### Data Handling
+- No sensitive data storage
+- Local browser storage only
+- No external API dependencies
+- Client-side processing exclusively
+
+### Privacy
+- No user tracking or analytics
+- No third-party data sharing
+- Local calculation processing
+- Browser-only data persistence
+
+## Support & Maintenance
+
+### Technical Support
+For technical issues or feature requests:
+- Create GitHub issue
+- Include browser and version information
+- Provide detailed reproduction steps
+
+### Service Inquiries
+For pet care service bookings:
+- Use the integrated cost calculator
+- Generate estimate for service quotes
+- Contact information available via estimate output
+
+## License & Copyright
+
+**MIT License**
+
+Copyright © 2025 Dog Sitting At Danni's House
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+## Version History
+
+### Version 2.0 (Current)
+- Professional UI redesign
+- Enhanced performance optimizations
+- Improved print functionality
+- Mobile responsiveness improvements
+
+### Version 1.0
+- Initial calculator implementation
+- Basic pricing functionality
+- Simple receipt generation
 
 ---
 
-## 🔧 For Developers
-
-This is an open-source calculator built for transparency and ease of use. 
-
-**Contributing:**
-- Feel free to submit issues or pull requests
-- All contributions welcome to improve the pet care experience
-
-**License:** MIT License - Feel free to use and modify
-
----
-
-*Made with ❤️ for our furry friends | © 2025 Dog Sitting At Danni's House*
+**Professional Pet Care Services** | Built with modern web technologies for reliable service delivery
