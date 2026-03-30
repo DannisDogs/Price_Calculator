@@ -1132,6 +1132,95 @@
             overflow-y: auto;
         }
 
+        /* Professional DateTime Modal */
+        .datetime-modal {
+            max-width: 420px;
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-header h3 {
+            color: var(--text);
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .modal-subtitle {
+            color: var(--subtext0);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .datetime-form {
+            margin-bottom: 2rem;
+        }
+
+        .datetime-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-times {
+            margin-top: 1.5rem;
+        }
+
+        .quick-times-label {
+            display: block;
+            color: var(--subtext1);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .quick-time-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .quick-time-btn {
+            padding: 0.75rem;
+            border: 1px solid var(--surface0);
+            background: var(--surface0);
+            color: var(--text);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .quick-time-btn:hover {
+            background: var(--surface1);
+            border-color: var(--surface1);
+        }
+
+        .quick-time-btn.selected {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 480px) {
+            .datetime-modal {
+                max-width: 100%;
+                margin: 1rem;
+            }
+
+            .quick-time-buttons {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+
         .modal h3 {
             color: var(--text);
             font-size: 24px;
@@ -1284,7 +1373,7 @@
             transform: translateY(0);
         }
 
-        /* Responsive */
+        /* Mobile Professional Results Optimization */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -1316,6 +1405,128 @@
                 width: 100%;
                 max-width: 300px;
                 justify-content: center;
+            }
+
+            /* CRITICAL: Professional Mobile Results */
+            .results {
+                margin-top: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            .estimate-header {
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+            }
+
+            .estimate-header h3 {
+                font-size: 20px;
+            }
+
+            .estimate-number {
+                font-size: 13px;
+            }
+
+            .line-items {
+                margin: 1rem 0;
+            }
+
+            .line-item {
+                padding: 1rem 0;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .item-description {
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--text);
+            }
+
+            .item-calculation {
+                align-self: flex-end;
+                font-size: 14px;
+            }
+
+            .item-amount {
+                align-self: flex-end;
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .estimate-total {
+                padding: 1.5rem 1rem;
+                margin-top: 1rem;
+                border-radius: 12px;
+            }
+
+            .total-label {
+                font-size: 16px;
+            }
+
+            .total-amount {
+                font-size: 22px;
+            }
+
+            .estimate-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-top: 1.5rem;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 1rem;
+                font-size: 15px;
+            }
+
+            .calculator-container {
+                padding: 2rem 1.5rem;
+                margin: 0 1rem;
+            }
+
+            /* Mobile line item visual hierarchy */
+            .line-item .item-description::after {
+                content: ':';
+            }
+
+            .line-item .item-calculation .quantity {
+                font-weight: 700;
+                color: var(--accent);
+            }
+
+            .line-item .item-calculation .amount,
+            .line-item .item-amount {
+                color: var(--accent);
+                font-weight: 700;
+            }
+
+            /* Mobile estimate actions visual enhancement */
+            .estimate-actions .action-btn {
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            }
+
+            .estimate-actions .action-btn:active {
+                transform: translateY(1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Mobile total emphasis */
+            .estimate-total {
+                background: linear-gradient(135deg, rgba(203, 166, 247, 0.08), rgba(137, 180, 250, 0.08));
+                border: 1px solid rgba(203, 166, 247, 0.2);
+            }
+
+            .detail-row {
+                padding: 0.75rem 0;
+                font-size: 15px;
+            }
+
+            .detail-value {
+                font-size: 16px;
+                font-weight: 700;
+                color: var(--accent);
             }
         }
 
@@ -1870,21 +2081,51 @@
 
     <!-- Date/Time Picker Modal -->
     <div id="datetime-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>📅 Select Date & Time</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                <div>
-                    <h4 style="margin-bottom: 1rem; color: var(--text);">📅 Date</h4>
-                    <input type="date" id="date-picker" class="form-input" style="width: 100%;">
+        <div class="modal-content datetime-modal">
+            <div class="modal-header">
+                <h3>Select Date & Time</h3>
+                <p class="modal-subtitle">Choose your preferred drop-off or pick-up time</p>
+            </div>
+
+            <div class="datetime-form">
+                <div class="form-group">
+                    <label for="date-picker">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Date
+                    </label>
+                    <input type="date" id="date-picker" class="form-input">
                 </div>
-                <div>
-                    <h4 style="margin-bottom: 1rem; color: var(--text);">Time</h4>
-                    <input type="time" id="time-picker" class="form-input" style="width: 100%;">
+
+                <div class="form-group">
+                    <label for="time-picker">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        Time
+                    </label>
+                    <input type="time" id="time-picker" class="form-input">
+                </div>
+
+                <div class="quick-times">
+                    <label class="quick-times-label">Quick Times:</label>
+                    <div class="quick-time-buttons">
+                        <button type="button" class="quick-time-btn" data-time="09:00">9:00 AM</button>
+                        <button type="button" class="quick-time-btn" data-time="12:00">12:00 PM</button>
+                        <button type="button" class="quick-time-btn" data-time="17:00">5:00 PM</button>
+                        <button type="button" class="quick-time-btn" data-time="18:00">6:00 PM</button>
+                    </div>
                 </div>
             </div>
+
             <div class="modal-buttons">
                 <button type="button" id="cancel-datetime-btn" class="cancel-btn">Cancel</button>
-                <button type="button" id="save-datetime-btn" class="save-btn">Set Date & Time</button>
+                <button type="button" id="save-datetime-btn" class="save-btn">Confirm Selection</button>
             </div>
         </div>
     </div>
@@ -2011,6 +2252,18 @@
             // DateTime modal
             document.getElementById('cancel-datetime-btn').addEventListener('click', closeDateTimeModal);
             document.getElementById('save-datetime-btn').addEventListener('click', saveDateTimeModal);
+
+            // Quick time buttons
+            document.querySelectorAll('.quick-time-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove previous selection
+                    document.querySelectorAll('.quick-time-btn').forEach(b => b.classList.remove('selected'));
+                    // Add selection to clicked button
+                    btn.classList.add('selected');
+                    // Set time picker value
+                    timePicker.value = btn.dataset.time;
+                });
+            });
 
             // Dog management
             addDogBtn.addEventListener('click', openDogModal);
