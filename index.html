@@ -13,10 +13,40 @@
     <!-- Performance optimizations -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#11111b">
+    <meta name="theme-color" content="#eff1f5">
 
     <style>
         :root {
+            /* Base surfaces (Catppuccin Latte - Light Theme) */
+            --crust:    #dce0e8;   /* page background */
+            --mantle:   #e6e9ef;   /* card backgrounds */
+            --base:     #eff1f5;   /* elevated surfaces */
+
+            /* Content surfaces */
+            --surface0: #ccd0da;   /* borders, dividers */
+            --surface1: #bcc0cc;   /* hover borders */
+            --surface2: #acb0be;   /* active borders */
+
+            /* Text hierarchy */
+            --text:     #4c4f69;   /* primary text */
+            --subtext1: #5c5f77;   /* secondary text */
+            --subtext0: #6c6f85;   /* tertiary text, descriptions */
+            --overlay2: #7c7f93;   /* kbd text */
+            --overlay1: #8c8fa1;   /* muted text */
+            --overlay0: #9ca0b0;   /* footer text */
+
+            /* Accent colors */
+            --accent:   #8839ef;   /* primary accent (purple) */
+            --accent2:  #1e66f5;   /* secondary accent (blue) */
+            --green:    #40a02b;   /* success states */
+            --peach:    #fe640b;   /* warning/highlight */
+            --red:      #d20f39;   /* error states */
+            --yellow:   #df8e1d;   /* attention */
+            --teal:     #179299;   /* info */
+        }
+
+        /* Dark Theme (Catppuccin Mocha) */
+        [data-theme="dark"] {
             /* Base surfaces (dark to light) */
             --crust:    #11111b;   /* page background */
             --mantle:   #181825;   /* card backgrounds */
@@ -162,7 +192,46 @@
 
         .nav-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(203, 166, 247, 0.35);
+            box-shadow: 0 8px 28px rgba(136, 57, 239, 0.35);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--subtext1);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--surface0);
+            color: var(--text);
+        }
+
+        .theme-toggle .moon-icon.hidden,
+        .theme-toggle .sun-icon.hidden {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: block;
         }
 
         /* Hero Section */
@@ -1206,6 +1275,7 @@
 
         /* Mobile optimization */
         @media (max-width: 480px) {
+            /* DateTime modal optimization */
             .datetime-modal {
                 max-width: 100%;
                 margin: 1rem;
@@ -1218,6 +1288,94 @@
 
             .modal-content {
                 padding: 1.5rem;
+            }
+
+            /* Pet modal mobile optimization */
+            .modal {
+                padding: 0.5rem;
+            }
+
+            .size-option {
+                padding: 1.25rem 1rem !important;
+                min-height: 48px !important;
+                font-size: 15px !important;
+                border-radius: 10px !important;
+            }
+
+            .size-option div:first-child {
+                font-size: 16px !important;
+                font-weight: 700 !important;
+            }
+
+            .size-option div:last-child {
+                font-size: 13px !important;
+                margin-top: 0.25rem !important;
+            }
+
+            /* Section spacing mobile */
+            section {
+                padding: 4rem 1rem;
+            }
+
+            .section-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .section-label {
+                font-size: 11px;
+                margin-bottom: 0.75rem;
+            }
+
+            /* Feature cards mobile */
+            .feature-card {
+                padding: 2rem 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .feature-title {
+                font-size: 18px;
+                margin-bottom: 1rem;
+            }
+
+            .feature-description {
+                font-size: 15px;
+                line-height: 1.5;
+            }
+
+            /* Pricing cards mobile */
+            .pricing-card {
+                padding: 2rem 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .pricing-title {
+                font-size: 20px;
+            }
+
+            .pricing-amount {
+                font-size: 42px;
+            }
+
+            .pricing-features {
+                margin-bottom: 1.5rem;
+            }
+
+            .pricing-features li {
+                padding: 0.75rem 0;
+                font-size: 14px;
+            }
+
+            /* FAQ mobile */
+            .faq-question {
+                padding: 1.25rem 1.5rem;
+                font-size: 15px;
+                min-height: 48px;
+            }
+
+            .faq-answer-content {
+                padding-bottom: 1.25rem;
+                font-size: 14px;
+                line-height: 1.6;
             }
         }
 
@@ -1375,16 +1533,58 @@
 
         /* Mobile Professional Results Optimization */
         @media (max-width: 768px) {
+            /* Mobile Navigation - Show hamburger menu instead of hiding */
             .nav-links {
                 display: none;
             }
 
+            nav {
+                padding: 0 1rem;
+                height: 56px;
+            }
+
+            .nav-actions {
+                gap: 0.75rem;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                padding: 0.4rem;
+            }
+
+            .nav-cta {
+                padding: 0.6rem 1rem;
+                font-size: 13px;
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+            }
+
+            /* Hero mobile optimization - reduce height */
+            .hero {
+                min-height: 50vh;
+                padding: 6rem 1rem 3rem;
+            }
+
             .hero h1 {
-                font-size: 38px;
+                font-size: 32px;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+                margin-bottom: 2rem;
             }
 
             .section-title {
-                font-size: 28px;
+                font-size: 26px;
+                line-height: 1.3;
+            }
+
+            .section-description {
+                font-size: 16px;
             }
 
             .features-grid {
@@ -1407,10 +1607,13 @@
                 justify-content: center;
             }
 
-            /* CRITICAL: Professional Mobile Results */
+            /* CRITICAL: Professional Mobile Results - Full Width */
             .results {
-                margin-top: 1.5rem;
+                margin: 1.5rem 0 0 0;
                 padding: 1.5rem;
+                border-radius: 0;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .estimate-header {
@@ -1481,9 +1684,61 @@
                 font-size: 15px;
             }
 
+            /* Form and Calculator Mobile Optimization */
             .calculator-container {
-                padding: 2rem 1.5rem;
-                margin: 0 1rem;
+                padding: 1.5rem;
+                margin: 0;
+                border-radius: 0;
+                width: 100%;
+            }
+
+            .form-group {
+                margin-bottom: 2rem;
+            }
+
+            .form-group label {
+                font-size: 15px;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+            }
+
+            .form-input {
+                padding: 1.25rem;
+                font-size: 16px;
+                min-height: 48px;
+                border-radius: 10px;
+            }
+
+            .add-dog-btn {
+                padding: 1.25rem;
+                font-size: 15px;
+                min-height: 48px;
+                border-radius: 10px;
+            }
+
+            .calculate-btn {
+                padding: 1.5rem;
+                font-size: 16px;
+                min-height: 52px;
+                border-radius: 12px;
+                margin-top: 1rem;
+            }
+
+            /* Dog card mobile optimization */
+            .dog-card {
+                padding: 1.25rem;
+                margin-bottom: 1rem;
+                border-radius: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .remove-dog-btn {
+                align-self: flex-end;
+                padding: 0.75rem 1.25rem;
+                min-height: 44px;
             }
 
             /* Mobile line item visual hierarchy */
@@ -1571,7 +1826,25 @@
             <a href="#calculator">Calculator</a>
             <a href="#faq">FAQ</a>
         </div>
-        <a href="#calculator" class="nav-cta">Get Quote</a>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+                <svg class="moon-icon hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <a href="#calculator" class="nav-cta">Get Quote</a>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -1860,8 +2133,20 @@
 
                 <div class="estimate-details">
                     <div class="detail-row">
-                        <span class="detail-label">Number of Pets</span>
-                        <span class="detail-value" id="num-dogs-display">1</span>
+                        <span class="detail-label">Service Period</span>
+                        <span class="detail-value" id="service-period-display">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Drop-off</span>
+                        <span class="detail-value" id="dropoff-display">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Pick-up</span>
+                        <span class="detail-value" id="pickup-display">—</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Pets in Care</span>
+                        <span class="detail-value" id="pets-list-display">—</span>
                     </div>
                 </div>
 
@@ -2233,6 +2518,9 @@
 
         // Initialize with performance optimization
         domReady(function() {
+            // Initialize theme first (prevents flash)
+            initializeTheme();
+
             // Critical path first
             setupEventListeners();
 
@@ -2245,6 +2533,9 @@
         });
 
         function setupEventListeners() {
+            // Theme toggle
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
             // Date inputs
             dropoffInput.addEventListener('click', () => openDateTimeModal(dropoffInput));
             pickupInput.addEventListener('click', () => openDateTimeModal(pickupInput));
@@ -2542,8 +2833,20 @@
             // Generate quote number
             document.getElementById('quote-number').textContent = generateQuoteNumber();
 
-            // Update estimate details
-            document.getElementById('num-dogs-display').textContent = numDogs;
+            // Calculate service duration
+            const dropoff = new Date(dropoffInput.dataset.dateValue);
+            const pickup = new Date(pickupInput.dataset.dateValue);
+            const duration = Math.ceil((pickup - dropoff) / (1000 * 60 * 60 * 24));
+            const servicePeriod = duration === 1 ? '1 day' : `${duration} days`;
+
+            // Update estimate details with actual booking info
+            document.getElementById('service-period-display').textContent = servicePeriod;
+            document.getElementById('dropoff-display').textContent = dropoffInput.value || '—';
+            document.getElementById('pickup-display').textContent = pickupInput.value || '—';
+
+            // Create pet names list
+            const petNames = dogs.map(dog => `${dog.name} (${dog.breed})`).join(', ');
+            document.getElementById('pets-list-display').textContent = petNames || '—';
 
             // Update line items with proper formatting
             document.getElementById('twenty-four-hour-count').textContent = sessions;
@@ -2653,6 +2956,42 @@
 
         function capitalizeFirst(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('preferred-theme', newTheme);
+
+            // Update meta theme color
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (newTheme === 'dark') {
+                metaTheme.content = '#11111b';
+            } else {
+                metaTheme.content = '#eff1f5';
+            }
+        }
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('preferred-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            // Use saved theme, or default to light (system preference override)
+            const theme = savedTheme || 'light';
+
+            document.documentElement.setAttribute('data-theme', theme);
+
+            // Update meta theme color
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (theme === 'dark') {
+                metaTheme.content = '#11111b';
+            } else {
+                metaTheme.content = '#eff1f5';
+            }
         }
 
         // Action button functions
