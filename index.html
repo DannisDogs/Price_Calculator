@@ -10,6 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#11111b">
+
     <style>
         :root {
             /* Base surfaces (dark to light) */
@@ -52,11 +57,47 @@
             color: var(--text);
             background: var(--crust);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 72px;
+        }
+
+        /* Performance optimizations */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Hardware acceleration for smooth animations */
+        .nav-cta,
+        .btn-primary,
+        .btn-secondary,
+        .feature-card,
+        .pricing-card,
+        .calculate-btn,
+        .action-btn {
+            transform: translateZ(0);
+            will-change: transform, box-shadow;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* Optimized scrolling */
+        body {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        /* CSS Containment for better rendering performance */
+        .feature-card,
+        .pricing-card,
+        .calculator-container,
+        .modal-content {
+            contain: layout style paint;
         }
 
         /* Fixed Navigation */
@@ -558,25 +599,98 @@
         }
 
         @media print {
-            body * {
-                visibility: hidden;
+            * {
+                box-sizing: border-box;
             }
-            .print-receipt,
-            .print-receipt * {
-                visibility: visible;
+
+            /* Hide everything except print content */
+            body > *:not(.print-receipt) {
+                display: none !important;
             }
-            .print-receipt {
-                position: absolute;
-                left: 0;
-                top: 0;
+
+            html, body {
+                margin: 0;
+                padding: 0;
                 width: 100%;
+                height: auto;
+                background: white;
+                font-size: 12px;
+                line-height: 1.3;
+                color: black;
+            }
+
+            .print-receipt {
+                display: block !important;
+                position: static;
+                width: 100%;
+                max-width: 8.5in;
+                margin: 0 auto;
+                padding: 0.5in;
                 background: white;
                 color: black;
                 font-family: Arial, sans-serif;
+                font-size: 12px;
+                line-height: 1.3;
+                page-break-inside: avoid;
+            }
+
+            /* Optimize spacing for single page */
+            .receipt-header {
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+
+            .receipt-header h1 {
+                font-size: 18px;
+                margin-bottom: 3px;
+            }
+
+            .receipt-header h2 {
                 font-size: 14px;
-                line-height: 1.4;
-                padding: 20px;
-                display: block !important;
+                margin-bottom: 5px;
+            }
+
+            .receipt-meta {
+                margin-bottom: 15px;
+            }
+
+            .receipt-client {
+                margin-bottom: 15px;
+                padding: 10px;
+            }
+
+            .receipt-service-details {
+                margin-bottom: 15px;
+            }
+
+            .receipt-line-items {
+                margin: 15px 0;
+            }
+
+            .receipt-payment {
+                margin: 15px 0;
+                padding: 10px;
+            }
+
+            .receipt-notes {
+                margin: 10px 0;
+            }
+
+            .receipt-signatures {
+                margin: 15px 0 10px 0;
+            }
+
+            .receipt-terms {
+                margin-top: 10px;
+                font-size: 10px;
+                page-break-inside: avoid;
+            }
+
+            /* Prevent page breaks within important sections */
+            .receipt-total-section,
+            .receipt-signatures,
+            .receipt-payment {
+                page-break-inside: avoid;
             }
         }
 
@@ -1800,11 +1914,60 @@
         const dogNameInput = document.getElementById('dog-name');
         const dogBreedInput = document.getElementById('dog-breed');
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        // Performance utilities
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+
+        function requestIdleCallback(callback) {
+            if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(callback);
+            } else {
+                setTimeout(callback, 1);
+            }
+        }
+
+        // Optimized DOM ready
+        function domReady(callback) {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', callback);
+            } else {
+                callback();
+            }
+        }
+
+        // Initialize with performance optimization
+        domReady(function() {
+            // Critical path first
             setupEventListeners();
-            setupIntersectionObserver();
-            setupFAQ();
+
+            // Non-critical in idle time
+            requestIdleCallback(() => {
+                setupIntersectionObserver();
+                setupFAQ();
+                preloadCriticalResources();
+            });
         });
 
         function setupEventListeners() {
@@ -2125,19 +2288,60 @@
         }
 
         function setupIntersectionObserver() {
+            // Optimized with root margin for better performance
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        // Use requestAnimationFrame for smooth animations
+                        requestAnimationFrame(() => {
+                            entry.target.classList.add('visible');
+                        });
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.1 });
+            }, {
+                threshold: 0.1,
+                rootMargin: '50px 0px -10% 0px' // Trigger animations earlier
+            });
 
             document.querySelectorAll('.fade-in').forEach(el => {
                 observer.observe(el);
             });
         }
+
+        function preloadCriticalResources() {
+            // Preload any critical resources that might be needed
+            const preloadLinks = [
+                // Could add any critical images here
+            ];
+
+            preloadLinks.forEach(href => {
+                if (href) {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.as = 'image';
+                    link.href = href;
+                    document.head.appendChild(link);
+                }
+            });
+        }
+
+        // Optimized scroll handler for nav effects
+        let scrolled = false;
+        const handleScroll = throttle(() => {
+            const nav = document.querySelector('nav');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > 50 && !scrolled) {
+                nav.style.backgroundColor = 'rgba(17, 17, 27, 0.95)';
+                scrolled = true;
+            } else if (scrollTop <= 50 && scrolled) {
+                nav.style.backgroundColor = 'rgba(17, 17, 27, 0.8)';
+                scrolled = false;
+            }
+        }, 16); // ~60fps
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
 
         function setupFAQ() {
             document.querySelectorAll('.faq-question').forEach(btn => {
