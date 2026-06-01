@@ -338,12 +338,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateBreakdownToggleVisibility();
     
     function calculatePricing(dropoff, pickup, numDogs = 1) {
-        // New simplified pricing model:
-        // - $45 per 24-hour period (overnight)
-        // - $5 per extra hour, unless extra hours reach another 24 hours (then count as another night)
-        // - Keep multi-dog pricing (first dog full price, each additional +80%)
+        // Pricing model:
+        // - $55 per 24-hour period per dog
+        // - $5 per extra hour per dog
+        // - Additional dogs (2nd, 3rd, etc.) receive 20% off: $44/night, $4/hour
+        // - Extra hours reaching 24 convert to another full 24-hour session
 
-        const NIGHTLY_RATE_PER_DOG = 45;
+        const NIGHTLY_RATE_PER_DOG = 55;
         const HOURLY_RATE_PER_DOG = 5;
 
         // Calculate total duration
@@ -368,27 +369,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // Day sessions no longer used
         const daySessions = 0;
 
-        // Base costs per dog
+        // Base costs if all dogs paid full price (used to calculate discount amount)
         const baseDayCost = 0;
         const base24HourCost = twentyFourHourSessions * NIGHTLY_RATE_PER_DOG;
         const baseHourlyCost = extraHours * HOURLY_RATE_PER_DOG;
 
-        // Apply multi-dog pricing: first dog at full price, each additional dog adds 80%
+        // Multi-dog multiplier: first dog full price, each additional dog at 80% (20% off)
+        // e.g. 2 dogs: 1 + 0.80 = 1.80x; 3 dogs: 1 + 1.60 = 2.60x
         const multiDogMultiplier = 1 + (numDogs - 1) * 0.80;
 
-        // Do not round; preserve exact fractional values (e.g., .5 for multi-dog)
         const dayCost = baseDayCost * multiDogMultiplier;
         const twentyFourHourCost = base24HourCost * multiDogMultiplier;
         const hourlyCost = baseHourlyCost * multiDogMultiplier;
 
-        // Calculate multi-dog surcharge for display
-        const baseCostBeforeSurcharge = baseDayCost + base24HourCost + baseHourlyCost;
-        const totalCostAfterSurcharge = dayCost + twentyFourHourCost + hourlyCost;
-        const multiDogSurcharge = numDogs > 1 ? totalCostAfterSurcharge - baseCostBeforeSurcharge : 0;
+        // Multi-dog discount = what would have been charged at full price minus actual total
+        const fullPriceCost = baseDayCost * numDogs + base24HourCost * numDogs + baseHourlyCost * numDogs;
+        const baseCostBeforeSurcharge = base24HourCost + baseHourlyCost;
+        const multiDogDiscount = numDogs > 1 ? fullPriceCost - (dayCost + twentyFourHourCost + hourlyCost) : 0;
 
         const subtotal = dayCost + twentyFourHourCost + hourlyCost;
 
-        // No weekly/special discounts in the new model
         const discount = 0;
         const finalTotal = subtotal;
 
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
             numDogs,
             discount,
             totalDays,
-            multiDogSurcharge,
+            multiDogDiscount,
             baseCostBeforeSurcharge,
             is24HourStay
         };
@@ -611,7 +611,7 @@ function buildPrintReceipt() {
     
     // Show 24-hour sessions line item if applicable
     if (twentyFourHourSessions > 0) {
-        const twentyFourHourCostPerDog = 45; // Base cost per dog for 24-hour session
+        const twentyFourHourCostPerDog = 55; // Base cost per dog for 24-hour session
         if (pricing.is24HourStay) {
             breakdownHtml += `
                 <div class="breakdown-item cost-line">
@@ -645,35 +645,32 @@ function buildPrintReceipt() {
     // Show base cost subtotal if multiple items or multi-dog
     if ((hasLineItems && numDogsDisplay > 1) || (twentyFourHourSessions > 0 && extraHours > 0)) {
         let baseCostPerDog = 0;
-        // Day sessions removed in new model
-        if (twentyFourHourSessions > 0) baseCostPerDog += 45 * twentyFourHourSessions;
+        if (twentyFourHourSessions > 0) baseCostPerDog += 55 * twentyFourHourSessions;
         if (extraHours > 0) baseCostPerDog += 5 * extraHours;
-        
+
         breakdownHtml += `
             <div class="breakdown-item subtotal-line">
                 <span>Base Cost (per dog):</span>
                 <span>${formatCurrencyExact(baseCostPerDog)}</span>
             </div>
         `;
-        
-        // Show total for all dogs if multi-dog (use actual multiplied cost)
+
         if (numDogsDisplay > 1) {
-            const multiDogMultiplier = 1 + (numDogsDisplay - 1) * 0.80;
             breakdownHtml += `
                 <div class="breakdown-item subtotal-line">
-                    <span>Total for ${numDogsDisplay} dogs (×${multiDogMultiplier.toFixed(2)}):</span>
-                    <span>${formatCurrencyExact(baseCostPerDog * multiDogMultiplier)}</span>
+                    <span>Subtotal (${numDogsDisplay} dogs, full price):</span>
+                    <span>${formatCurrencyExact(baseCostPerDog * numDogsDisplay)}</span>
                 </div>
             `;
         }
     }
     
-    // Add multi-dog pricing line if applicable
-    if (pricing.multiDogSurcharge > 0) {
+    // Add multi-dog discount line if applicable
+    if (pricing.multiDogDiscount > 0) {
         breakdownHtml += `
-            <div class="breakdown-item cost-line multi-dog">
-                <span>Multi-Dog Pricing (80% per additional dog):</span>
-                <span>+${formatCurrencyExact(pricing.multiDogSurcharge)}</span>
+            <div class="breakdown-item discount-line multi-dog">
+                <span>Multi-Dog Discount (20% off additional dogs):</span>
+                <span>-${formatCurrencyExact(pricing.multiDogDiscount)}</span>
             </div>
         `;
     }
@@ -1157,8 +1154,8 @@ END:VCALENDAR`;
         // Show 24-hour sessions if applicable  
         if (pricing.twentyFourHourSessions > 0) {
             document.getElementById('twenty-four-hour-count').textContent = pricing.twentyFourHourSessions;
-            // Display base per-dog amount (without multi-dog surcharge)
-            const baseTwentyFourHourCostPerDog = 45 * pricing.twentyFourHourSessions;
+            // Display base per-dog amount (before multi-dog discount)
+            const baseTwentyFourHourCostPerDog = 55 * pricing.twentyFourHourSessions;
             document.getElementById('twenty-four-hour-cost').textContent = formatCurrencyExact(baseTwentyFourHourCostPerDog);
             twentyFourHourRow.style.display = 'flex';
             hasLineItems = true;
@@ -1167,7 +1164,7 @@ END:VCALENDAR`;
         // Show extra hours if applicable
         if (pricing.extraHours > 0) {
             document.getElementById('extra-hours-count').textContent = pricing.extraHours;
-            // Display base per-dog amount (without multi-dog surcharge)
+            // Display base per-dog amount (before multi-dog discount)
             const baseExtraHoursCostPerDog = 5 * pricing.extraHours;
             document.getElementById('extra-hours-cost').textContent = formatCurrencyExact(baseExtraHoursCostPerDog);
             extraHoursRow.style.display = 'flex';
@@ -1181,9 +1178,9 @@ END:VCALENDAR`;
             baseSubtotalRow.style.display = 'flex';
         }
         
-        // Show multi-dog surcharge if applicable
-        if (pricing.multiDogSurcharge > 0) {
-            document.getElementById('multi-dog-surcharge').textContent = formatCurrencyExact(pricing.multiDogSurcharge);
+        // Show multi-dog discount if applicable
+        if (pricing.multiDogDiscount > 0) {
+            document.getElementById('multi-dog-surcharge').textContent = '-' + formatCurrencyExact(pricing.multiDogDiscount);
             multiDogRow.style.display = 'flex';
         } else {
             multiDogRow.style.display = 'none';
@@ -1203,7 +1200,7 @@ END:VCALENDAR`;
             
             // Update 24-hour display for single stays (base per-dog amount)
             document.getElementById('twenty-four-hour-count').textContent = '1';
-            document.getElementById('twenty-four-hour-cost').textContent = formatCurrencyExact(45);
+            document.getElementById('twenty-four-hour-cost').textContent = formatCurrencyExact(55);
             twentyFourHourRow.style.display = 'flex';
             
             // Update label for clarity
