@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // New simplified pricing model:
         // - $45 per 24-hour period (overnight)
         // - $5 per extra hour, unless extra hours reach another 24 hours (then count as another night)
-        // - Keep multi-dog pricing (first dog full price, each additional +50%)
+        // - Keep multi-dog pricing (first dog full price, each additional +80%)
 
         const NIGHTLY_RATE_PER_DOG = 45;
         const HOURLY_RATE_PER_DOG = 5;
@@ -643,7 +643,7 @@ function buildPrintReceipt() {
     }
     
     // Show base cost subtotal if multiple items or multi-dog
-    if ((hasLineItems && numDogsDisplay > 1) || (daySessions > 0 && twentyFourHourSessions > 0) || (daySessions > 0 && extraHours > 0) || (twentyFourHourSessions > 0 && extraHours > 0)) {
+    if ((hasLineItems && numDogsDisplay > 1) || (twentyFourHourSessions > 0 && extraHours > 0)) {
         let baseCostPerDog = 0;
         // Day sessions removed in new model
         if (twentyFourHourSessions > 0) baseCostPerDog += 45 * twentyFourHourSessions;
@@ -656,12 +656,13 @@ function buildPrintReceipt() {
             </div>
         `;
         
-        // Show total for all dogs if multi-dog
+        // Show total for all dogs if multi-dog (use actual multiplied cost)
         if (numDogsDisplay > 1) {
+            const multiDogMultiplier = 1 + (numDogsDisplay - 1) * 0.80;
             breakdownHtml += `
                 <div class="breakdown-item subtotal-line">
-                    <span>Total for ${numDogsDisplay} dogs:</span>
-                    <span>${formatCurrencyExact(baseCostPerDog * numDogsDisplay)}</span>
+                    <span>Total for ${numDogsDisplay} dogs (×${multiDogMultiplier.toFixed(2)}):</span>
+                    <span>${formatCurrencyExact(baseCostPerDog * multiDogMultiplier)}</span>
                 </div>
             `;
         }
@@ -671,42 +672,13 @@ function buildPrintReceipt() {
     if (pricing.multiDogSurcharge > 0) {
         breakdownHtml += `
             <div class="breakdown-item cost-line multi-dog">
-                <span>Multi-Dog Pricing (50% per additional dog):</span>
+                <span>Multi-Dog Pricing (80% per additional dog):</span>
                 <span>+${formatCurrencyExact(pricing.multiDogSurcharge)}</span>
             </div>
         `;
     }
     
-    // Add discount section if applicable
-    if (pricing.discount > 0) {
-        const subtotalAmount = pricing.dayCost + pricing.twentyFourHourCost + pricing.hourlyCost;
-        
-        breakdownHtml += `<div class="breakdown-divider"></div>`;
-        
-        breakdownHtml += `
-            <div class="breakdown-item subtotal-line">
-                <span>Subtotal:</span>
-                <span>${formatCurrencyExact(subtotalAmount)}</span>
-            </div>
-        `;
-        
-        // Set appropriate discount label
-        let discountLabel = '🎉 Discount:';
-        if (pricing.totalDays >= 7) {
-            if (pricing.totalDays === 7) {
-                discountLabel = '🎉 7-Day Special Rate:';
-            } else {
-                discountLabel = '🎉 Extended Stay Discount:';
-            }
-        }
-        
-        breakdownHtml += `
-            <div class="breakdown-item discount-line">
-                <span>${discountLabel}</span>
-                <span>-${formatCurrencyExact(pricing.discount)}</span>
-            </div>
-        `;
-    }
+    // Discount is not used in the current pricing model — nothing to render
     
     if (receiptBreakdown) receiptBreakdown.innerHTML = breakdownHtml;
     
@@ -1179,13 +1151,8 @@ END:VCALENDAR`;
         
         let hasLineItems = false;
         
-        // Show day sessions if applicable
-        if (pricing.daySessions > 0) {
-            document.getElementById('day-sessions-count').textContent = pricing.daySessions;
-            document.getElementById('day-sessions-cost').textContent = formatCurrencyExact(pricing.dayCost / numDogs);
-            daySessionsRow.style.display = 'flex';
-            hasLineItems = true;
-        }
+        // Day sessions are not used in the current pricing model; always hidden
+        daySessionsRow.style.display = 'none';
         
         // Show 24-hour sessions if applicable  
         if (pricing.twentyFourHourSessions > 0) {
@@ -1208,7 +1175,7 @@ END:VCALENDAR`;
         }
         
         // Show base cost subtotal if there are multiple line items or multi-dog scenario
-        if ((hasLineItems && numDogs > 1) || (pricing.daySessions > 0 && pricing.twentyFourHourSessions > 0) || (pricing.daySessions > 0 && pricing.extraHours > 0) || (pricing.twentyFourHourSessions > 0 && pricing.extraHours > 0)) {
+        if ((hasLineItems && numDogs > 1) || (pricing.twentyFourHourSessions > 0 && pricing.extraHours > 0)) {
             const baseCostPerDog = pricing.baseCostBeforeSurcharge;
             document.getElementById('base-subtotal').textContent = formatCurrencyExact(baseCostPerDog);
             baseSubtotalRow.style.display = 'flex';
@@ -1222,32 +1189,10 @@ END:VCALENDAR`;
             multiDogRow.style.display = 'none';
         }
         
-        // Show subtotal and discount sections if there's a discount
-        if (pricing.discount > 0) {
-            const subtotalAmount = pricing.dayCost + pricing.twentyFourHourCost + pricing.hourlyCost;
-            document.getElementById('subtotal').textContent = formatCurrencyExact(subtotalAmount);
-            document.getElementById('discount-amount').textContent = formatCurrencyExact(pricing.discount);
-            
-            // Set appropriate discount label
-            const discountLabel = document.getElementById('discount-label');
-            if (pricing.totalDays >= 7) {
-                if (pricing.totalDays === 7) {
-                    discountLabel.textContent = '🎉 7-Day Special Rate:';
-                } else {
-                    discountLabel.textContent = '🎉 Extended Stay Discount:';
-                }
-            } else {
-                discountLabel.textContent = '🎉 Discount:';
-            }
-            
-            subtotalRow.style.display = 'flex';
-            discountRow.style.display = 'flex';
-            discountDivider.style.display = 'block';
-        } else {
-            subtotalRow.style.display = 'none';
-            discountRow.style.display = 'none';
-            discountDivider.style.display = 'none';
-        }
+        // Discount is not used in the current pricing model; always hide these rows
+        subtotalRow.style.display = 'none';
+        discountRow.style.display = 'none';
+        discountDivider.style.display = 'none';
         
         // Handle special case for single 24-hour stays
         if (pricing.is24HourStay) {
