@@ -385,11 +385,12 @@ function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCo
     // Generate quote number
     document.getElementById('quote-number').textContent = generateQuoteNumber();
 
-    // Calculate service duration
-    const dropoff = new Date(dropoffInput.dataset.dateValue);
-    const pickup = new Date(pickupInput.dataset.dateValue);
-    const duration = Math.ceil((pickup - dropoff) / (1000 * 60 * 60 * 24));
-    const servicePeriod = duration === 1 ? '1 day' : `${duration} days`;
+    // Build service period label from the billed breakdown (sessions + extra hours)
+    // so it always reconciles with the line items below.
+    const dayPart = sessions > 0 ? `${sessions} day${sessions !== 1 ? 's' : ''}` : '';
+    const hourPart = extraHours > 0 ? `${extraHours} hr${extraHours !== 1 ? 's' : ''}` : '';
+    let servicePeriod = [dayPart, hourPart].filter(Boolean).join(', ');
+    if (!servicePeriod) servicePeriod = '0 hrs';
 
     // Update estimate details with actual booking info
     document.getElementById('service-period-display').textContent = servicePeriod;
