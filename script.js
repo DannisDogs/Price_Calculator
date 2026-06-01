@@ -1,1257 +1,723 @@
-// Fixed/cleaned version of script.js with several bugs that prevented printing and calendar export.
-// - Removed broken/truncated tokens like "[...]" that caused syntax/reference errors.
-// - Fixed buildPrintReceipt variable names (printDate) and used formatCurrencyExact for totals.
-// - Fixed calculateCost conditional that was truncated in the original.
-// - Fixed generateCalendarEvent link.download construction and ICS "Total Cost" placeholder.
-// - Kept original structure and logic, only corrected errors preventing execution.
+// App State
+let dogs = [];
+let currentDateTimeInput = null;
+let currentDogData = { name: '', breed: '', size: '' };
 
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('calculator-form');
-    const dropoffInput = document.getElementById('dropoff-date');
-    const pickupInput = document.getElementById('pickup-date');
-    const resultsDiv = document.getElementById('results');
-    const errorDiv = document.getElementById('error-message');
-    const dogsContainer = document.getElementById('dogs-container');
-    const addDogBtn = document.getElementById('add-dog-btn');
-    const dogModal = document.getElementById('dog-modal');
-    const cancelDogBtn = document.getElementById('cancel-dog-btn');
-    const saveDogBtn = document.getElementById('save-dog-btn');
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    
-    // Date/Time picker elements
-    const datetimeModal = document.getElementById('datetime-modal');
-    const calendarDays = document.getElementById('calendar-days');
-    const calendarMonth = document.getElementById('calendar-month');
-    const calendarYear = document.getElementById('calendar-year');
-    const prevMonthBtn = document.getElementById('prev-month');
-    const nextMonthBtn = document.getElementById('next-month');
-    const timeHourSelect = document.getElementById('time-hour');
-    const timeMinuteSelect = document.getElementById('time-minute');
-    const timeAmpmSelect = document.getElementById('time-ampm');
-    const datetimePreviewText = document.getElementById('datetime-preview-text');
-    const cancelDatetimeBtn = document.getElementById('cancel-datetime-btn');
-    const saveDatetimeBtn = document.getElementById('save-datetime-btn');
-    const quickTimeBtns = document.querySelectorAll('.quick-time-btn');
-    
-    // Dog data management
-    let dogs = [];
-    let currentDogData = { name: '', breed: '', customBreed: '', size: '' };
-    
-    // Data persistence functions
-    function saveAppState() {
-        const appState = {
-            dogs: dogs,
-            dropoffDate: dropoffInput.dataset.dateValue,
-            pickupDate: pickupInput.dataset.dateValue,
-            dropoffDisplayValue: dropoffInput.value,
-            pickupDisplayValue: pickupInput.value,
-            timestamp: new Date().toISOString()
+// DOM Elements
+const form = document.getElementById('calculator-form');
+const dropoffInput = document.getElementById('dropoff-date');
+const pickupInput = document.getElementById('pickup-date');
+const dogsContainer = document.getElementById('dogs-container');
+const addDogBtn = document.getElementById('add-dog-btn');
+const resultsDiv = document.getElementById('results');
+
+// Modals
+const datetimeModal = document.getElementById('datetime-modal');
+const dogModal = document.getElementById('dog-modal');
+const datePicker = document.getElementById('date-picker');
+const timePicker = document.getElementById('time-picker');
+const dogNameInput = document.getElementById('dog-name');
+const dogBreedInput = document.getElementById('dog-breed');
+
+// Performance utilities
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
         };
-        localStorage.setItem('dogSittingCalculatorState', JSON.stringify(appState));
-    }
-    
-    function loadAppState() {
-        try {
-            const savedState = localStorage.getItem('dogSittingCalculatorState');
-            if (savedState) {
-                const appState = JSON.parse(savedState);
-                
-                // Restore dogs
-                if (appState.dogs && Array.isArray(appState.dogs)) {
-                    dogs = appState.dogs;
-                    updateDogsDisplay();
-                    updateHeaderDogs();
-                }
-                
-                // Restore dates if they exist and are not too old (older than 7 days)
-                const savedTime = new Date(appState.timestamp);
-                const now = new Date();
-                const daysDiff = (now - savedTime) / (1000 * 60 * 60 * 24);
-                
-                if (daysDiff < 7 && appState.dropoffDate && appState.pickupDate) {
-                    // Only restore if the dates are in the future
-                    const dropoffDate = new Date(appState.dropoffDate);
-                    const pickupDate = new Date(appState.pickupDate);
-                    
-                    if (dropoffDate > now || pickupDate > now) {
-                        dropoffInput.value = appState.dropoffDisplayValue || '';
-                        dropoffInput.dataset.dateValue = appState.dropoffDate;
-                        pickupInput.value = appState.pickupDisplayValue || '';
-                        pickupInput.dataset.dateValue = appState.pickupDate;
-                    }
-                }
-                
-                // Trigger calculation if we have all required data
-                calculateRealTime();
-            }
-        } catch (error) {
-            console.warn('Failed to load saved state:', error);
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
         }
-    }
-    
-    function clearAppState() {
-        localStorage.removeItem('dogSittingCalculatorState');
-    }
-    
-    // Header dogs management
-    const headerDogsContainer = document.getElementById('header-dogs');
-    
-    function updateHeaderDogs() {
-        // Clear existing header dogs
-        headerDogsContainer.innerHTML = '';
-        
-        // Add a bouncing dog for each dog in the list
-        dogs.forEach((dog, index) => {
-            const breedIcons = {
-                'labrador': '🦮',
-                'german-shepherd': '🐕‍🦺',
-                'poodle': '🐩',
-                'bulldog': '🐕',
-                'chihuahua': '🐕',
-                'mixed': '🐶'
-            };
-            
-            const dogElement = document.createElement('div');
-            dogElement.className = 'bouncing-dog';
-            dogElement.textContent = breedIcons[dog.breed] || '🐶';
-            dogElement.style.animationDelay = `${index * 0.5}s`;
-            
-            headerDogsContainer.appendChild(dogElement);
-        });
-    }
-    
-    // Date/Time picker state
-    let currentDatetimeInput = null;
-    let selectedDate = null;
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
-    
-    // Initialize dark mode
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    
-    // Dark mode toggle
-    darkModeToggle.addEventListener('click', function() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-    });
-    
-    // Add dog button click
-    addDogBtn.addEventListener('click', function() {
-        currentDogData = { name: '', breed: '', customBreed: '', size: '' };
-        resetDogForm();
-        dogModal.classList.remove('hidden');
-        updateBodyScrollLock();
-    });
-    
-    // Cancel dog button
-    cancelDogBtn.addEventListener('click', function() {
-        dogModal.classList.add('hidden');
-        updateBodyScrollLock();
-    });
-    
-    // Dog name input
-    const dogNameInput = document.getElementById('dog-name');
-    const customBreedInput = document.getElementById('custom-breed-name');
-    const customBreedDiv = document.getElementById('custom-breed-input');
-    
-    dogNameInput.addEventListener('input', function() {
-        currentDogData.name = this.value;
-        updateSaveButton();
-    });
-    
-    // Custom breed input
-    customBreedInput.addEventListener('input', function() {
-        currentDogData.customBreed = this.value;
-        updateSaveButton();
-    });
-    
-    // Breed selection
-    document.querySelectorAll('.breed-option').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.breed-option').forEach(b => b.classList.remove('selected'));
-            this.classList.add('selected');
-            currentDogData.breed = this.dataset.breed;
-            
-            // Show/hide custom breed input
-            if (this.dataset.breed === 'mixed') {
-                customBreedDiv.style.display = 'block';
-                customBreedInput.focus();
-            } else {
-                customBreedDiv.style.display = 'none';
-                currentDogData.customBreed = '';
-            }
-            
-            updateSaveButton();
-        });
-    });
-    
-    // Size selection
-    document.querySelectorAll('.size-option').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.size-option').forEach(b => b.classList.remove('selected'));
-            this.classList.add('selected');
-            currentDogData.size = this.dataset.size;
-            updateSaveButton();
-        });
-    });
-    
-    // Save dog
-    saveDogBtn.addEventListener('click', function() {
-        const isValid = currentDogData.name && currentDogData.breed && currentDogData.size &&
-                       (currentDogData.breed !== 'mixed' || currentDogData.customBreed);
-        
-        if (isValid) {
-            dogs.push({...currentDogData});
-            updateDogsDisplay();
-            updateHeaderDogs();
-            dogModal.classList.add('hidden');
-            calculateRealTime();
-            saveAppState();
-            updateBodyScrollLock();
-        }
-    });
-    
-    // Update save button state
-    function updateSaveButton() {
-        const isValid = currentDogData.name && currentDogData.breed && currentDogData.size &&
-                       (currentDogData.breed !== 'mixed' || currentDogData.customBreed);
-        saveDogBtn.disabled = !isValid;
-    }
-    
-    // Reset dog form
-    function resetDogForm() {
-        dogNameInput.value = '';
-        customBreedInput.value = '';
-        customBreedDiv.style.display = 'none';
-        document.querySelectorAll('.breed-option').forEach(b => b.classList.remove('selected'));
-        document.querySelectorAll('.size-option').forEach(b => b.classList.remove('selected'));
-        saveDogBtn.disabled = true;
-    }
-    
-    // Update dogs display
-    function updateDogsDisplay() {
-        dogsContainer.innerHTML = '';
-        dogs.forEach((dog, index) => {
-            const dogCard = document.createElement('div');
-            dogCard.className = 'dog-card';
-            
-            const breedIcons = {
-                'labrador': '🦮',
-                'german-shepherd': '🐕‍🦺',
-                'poodle': '🐩',
-                'bulldog': '🐕',
-                'chihuahua': '🐕',
-                'mixed': '🐶'
-            };
-            
-            const breedNames = {
-                'labrador': 'Labrador',
-                'german-shepherd': 'German Shepherd',
-                'poodle': 'Poodle',
-                'bulldog': 'Bulldog',
-                'chihuahua': 'Chihuahua',
-                'mixed': 'Other/Mixed'
-            };
-            
-            const sizeNames = {
-                'small': 'Small',
-                'medium': 'Medium',
-                'large': 'Large'
-            };
-            
-            // Use custom breed name if available, otherwise use standard breed name
-            const displayBreed = dog.breed === 'mixed' && dog.customBreed ? 
-                                dog.customBreed : breedNames[dog.breed];
-            
-            dogCard.innerHTML = `
-                <span class="dog-icon">${breedIcons[dog.breed] || '🐶'}</span>
-                <div class="dog-info">
-                    <div class="dog-name">${dog.name}</div>
-                    <div class="dog-details">${displayBreed} • ${sizeNames[dog.size]}</div>
-                </div>
-                <button class="remove-dog" data-index="${index}">×</button>
-            `;
-            
-            dogsContainer.appendChild(dogCard);
-        });
-        
-        // Add remove dog listeners
-        document.querySelectorAll('.remove-dog').forEach(btn => {
-            btn.addEventListener('click', function() {
-                dogs.splice(parseInt(this.dataset.index), 1);
-                updateDogsDisplay();
-                updateHeaderDogs();
-                calculateRealTime();
-                saveAppState();
-            });
-        });
-    }
-    
-    // Real-time calculation
-    function calculateRealTime() {
-        if (dropoffInput.value && pickupInput.value && dogs.length > 0) {
-            calculateCost(false);
-        }
-    }
-    
-    // Form submission
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        calculateCost(true);
-    });
-
-    // Mobile: toggle breakdown visibility
-    const toggleBreakdownBtn = document.getElementById('toggle-breakdown-btn');
-    const resultsBreakdown = document.getElementById('results-breakdown');
-    let isBreakdownCollapsed = false;
-
-    function updateBreakdownToggleVisibility() {
-        // Show toggle on small screens only
-        const isSmall = window.matchMedia('(max-width: 600px)').matches;
-        toggleBreakdownBtn.style.display = isSmall ? 'block' : 'none';
-        if (!isSmall) {
-            // Always expanded on desktop
-            resultsBreakdown.style.display = '';
-            toggleBreakdownBtn.setAttribute('aria-expanded', 'true');
-            toggleBreakdownBtn.textContent = 'Show details ▾';
-            isBreakdownCollapsed = false;
-        }
-    }
-
-    toggleBreakdownBtn.addEventListener('click', function() {
-        isBreakdownCollapsed = !isBreakdownCollapsed;
-        if (isBreakdownCollapsed) {
-            resultsBreakdown.style.display = 'none';
-            toggleBreakdownBtn.setAttribute('aria-expanded', 'false');
-            toggleBreakdownBtn.textContent = 'Show details ▸';
-        } else {
-            resultsBreakdown.style.display = '';
-            toggleBreakdownBtn.setAttribute('aria-expanded', 'true');
-            toggleBreakdownBtn.textContent = 'Hide details ▾';
-        }
-    });
-
-    window.addEventListener('resize', updateBreakdownToggleVisibility);
-    updateBreakdownToggleVisibility();
-    
-    function calculatePricing(dropoff, pickup, numDogs = 1) {
-        // Pricing model:
-        // - $55 per 24-hour period per dog
-        // - $5 per extra hour per dog
-        // - Additional dogs (2nd, 3rd, etc.) receive 20% off: $44/night, $4/hour
-        // - Extra hours reaching 24 convert to another full 24-hour session
-
-        const NIGHTLY_RATE_PER_DOG = 55;
-        const HOURLY_RATE_PER_DOG = 5;
-
-        // Calculate total duration
-        const totalHours = (pickup - dropoff) / (1000 * 60 * 60);
-
-        // Derive full 24-hour periods and remaining hours
-        let twentyFourHourSessions = Math.max(0, Math.floor(totalHours / 24));
-        const remainingHoursRaw = totalHours - twentyFourHourSessions * 24;
-
-        // Round remaining hours up to whole hours for billing
-        let extraHours = remainingHoursRaw > 0 ? Math.ceil(remainingHoursRaw) : 0;
-
-        // If extra hours reach 24, convert to another 24-hour session
-        if (extraHours >= 24) {
-            twentyFourHourSessions += 1;
-            extraHours = 0;
-        }
-
-        // Special labeling for exactly one 24-hour stay
-        const is24HourStay = twentyFourHourSessions === 1 && extraHours === 0;
-
-        // Day sessions no longer used
-        const daySessions = 0;
-
-        // Base costs if all dogs paid full price (used to calculate discount amount)
-        const baseDayCost = 0;
-        const base24HourCost = twentyFourHourSessions * NIGHTLY_RATE_PER_DOG;
-        const baseHourlyCost = extraHours * HOURLY_RATE_PER_DOG;
-
-        // Multi-dog multiplier: first dog full price, each additional dog at 80% (20% off)
-        // e.g. 2 dogs: 1 + 0.80 = 1.80x; 3 dogs: 1 + 1.60 = 2.60x
-        const multiDogMultiplier = 1 + (numDogs - 1) * 0.80;
-
-        const dayCost = baseDayCost * multiDogMultiplier;
-        const twentyFourHourCost = base24HourCost * multiDogMultiplier;
-        const hourlyCost = baseHourlyCost * multiDogMultiplier;
-
-        // Multi-dog discount = what would have been charged at full price minus actual total
-        const fullPriceCost = baseDayCost * numDogs + base24HourCost * numDogs + baseHourlyCost * numDogs;
-        const baseCostBeforeSurcharge = base24HourCost + baseHourlyCost;
-        const multiDogDiscount = numDogs > 1 ? fullPriceCost - (dayCost + twentyFourHourCost + hourlyCost) : 0;
-
-        const subtotal = dayCost + twentyFourHourCost + hourlyCost;
-
-        const discount = 0;
-        const finalTotal = subtotal;
-
-        const totalDays = Math.ceil(totalHours / 24);
-
-        return {
-            daySessions,
-            twentyFourHourSessions,
-            extraHours,
-            dayCost,
-            twentyFourHourCost,
-            hourlyCost,
-            total: finalTotal,
-            numDogs,
-            discount,
-            totalDays,
-            multiDogDiscount,
-            baseCostBeforeSurcharge,
-            is24HourStay
-        };
-    }
-    
-    // Currency formatting without rounding to whole dollars.
-    function formatCurrencyExact(amount) {
-        const fixed = amount.toFixed(2);
-        const trimmed = fixed.replace(/\.00$/, '').replace(/(\.\d)0$/, '$1');
-        return `$${trimmed}`;
-    }
-
-    function animatePrice(element, finalValue) {
-        const startValue = 0;
-        const duration = 500;
-        const startTime = performance.now();
-
-        element.classList.add('animating');
-
-        function updateValue(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeOutQuad = 1 - (1 - progress) * (1 - progress);
-            const currentValue = startValue + (finalValue - startValue) * easeOutQuad;
-            element.textContent = formatCurrencyExact(progress < 1 ? currentValue : finalValue);
-            if (progress < 1) {
-                requestAnimationFrame(updateValue);
-            } else {
-                element.classList.remove('animating');
-            }
-        }
-
-        requestAnimationFrame(updateValue);
-    }
-    
-    function showError(message) {
-        errorDiv.textContent = message;
-        errorDiv.classList.remove('hidden');
-    }
-    
-    // Print functionality
-    window.addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
-            if (!resultsDiv.classList.contains('hidden')) {
-                e.preventDefault();
-                printReceipt();
-            }
-        }
-    });
-    
-    function printReceipt() {
-        // Make sure results are visible and calculated first
-        if (dogs.length === 0) {
-            alert('Please add dogs before printing.');
-            return;
-        }
-        
-        if (!dropoffInput.dataset.dateValue || !pickupInput.dataset.dateValue) {
-            alert('Please select drop-off and pick-up times before printing.');
-            return;
-        }
-        
-        // Force calculation to ensure results are current
-        calculateCost(false);
-        
-        // Build the print receipt content
-        buildPrintReceipt();
-        
-        // Small delay to ensure DOM updates before printing
-        setTimeout(() => {
-            window.print();
-        }, 100);
-    }
-    
-/* Replaced buildPrintReceipt() with a version that computes printed duration
-   using the same rounding logic as calculatePricing (i.e. remaining hours
-   are rounded up to the next whole hour; if that reaches 24 it becomes another day).
-*/
-function buildPrintReceipt() {
-    const printReceipt = document.getElementById('print-receipt');
-    const receiptDate = document.getElementById('receipt-date');
-    const receiptDateDup = document.getElementById('receipt-date-dup');
-    const receiptNumber = document.getElementById('receipt-number');
-    const receiptDogs = document.getElementById('receipt-dogs');
-    const receiptSummary = document.getElementById('receipt-summary');
-    const receiptBreakdown = document.getElementById('receipt-breakdown');
-    const receiptTotal = document.getElementById('receipt-total');
-    
-    // Calculate pricing for the receipt
-    const dropoffDate = new Date(dropoffInput.dataset.dateValue);
-    const pickupDate = new Date(pickupInput.dataset.dateValue);
-    const numDogs = dogs.length;
-    const pricing = calculatePricing(dropoffDate, pickupDate, numDogs);
-    
-    // Set date
-    const now = new Date();
-    const printDate = now.toLocaleString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit'
-    });
-    if (receiptDate) receiptDate.textContent = printDate;
-    if (receiptDateDup) receiptDateDup.textContent = now.toLocaleString();
-
-    // Simple readable receipt number YYYYMMDD-HHMM-XXX
-    if (receiptNumber) {
-        const datePart = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-        const timePart = `${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
-        const randPart = Math.floor(Math.random()*1000).toString().padStart(3,'0');
-        receiptNumber.textContent = `${datePart}-${timePart}-${randPart}`;
-    }
-    
-    // Build dogs section
-    let dogsHtml = '<h3>Dogs in Care</h3>';
-    dogs.forEach((dog, index) => {
-        const breedIcons = {
-            'labrador': '🦮',
-            'german-shepherd': '🐕‍🦺',
-            'poodle': '🐩',
-            'bulldog': '🐕',
-            'chihuahua': '🐕',
-            'mixed': '🐶'
-        };
-        
-        const displayBreed = dog.breed === 'mixed' && dog.customBreed ? 
-                            dog.customBreed : 
-                            dog.breed.charAt(0).toUpperCase() + dog.breed.slice(1).replace('-', ' ');
-        
-        dogsHtml += `
-            <div class="receipt-dog">
-                <span class="dog-icon">${breedIcons[dog.breed] || '🐶'}</span>
-                <div class="dog-info">
-                    <div class="dog-name">${dog.name}</div>
-                    <div class="dog-details">${displayBreed} • ${dog.size.charAt(0).toUpperCase() + dog.size.slice(1)}</div>
-                </div>
-            </div>
-        `;
-    });
-    if (receiptDogs) receiptDogs.innerHTML = dogsHtml;
-    
-    // Build summary section
-    const dropoffDateFormatted = dropoffDate.toLocaleDateString('en-US', { 
-        weekday: 'short', month: 'short', day: 'numeric', 
-        hour: 'numeric', minute: '2-digit' 
-    });
-    const pickupDateFormatted = pickupDate.toLocaleDateString('en-US', { 
-        weekday: 'short', month: 'short', day: 'numeric', 
-        hour: 'numeric', minute: '2-digit' 
-    });
-
-    // Duration in days/hours for clarity
-    const ms = Math.max(0, pickupDate - dropoffDate);
-    const totalHoursRaw = ms / (1000*60*60);
-
-    let fullDays = Math.max(0, Math.floor(totalHoursRaw / 24));
-    let remainingHoursRaw = totalHoursRaw - (fullDays * 24);
-    let remHours = remainingHoursRaw > 0 ? Math.ceil(remainingHoursRaw) : 0;
-    if (remHours >= 24) {
-        fullDays += 1;
-        remHours = 0;
-    }
-
-    const durationLabel = `${fullDays} day${fullDays!==1?'s':''}${remHours>0?` ${remHours} hr${remHours!==1?'s':''}`:''}`;
-
-    const summaryHtml = `
-        <h3>Service Period</h3>
-        <div class="summary-item">
-            <span>Drop-off:</span>
-            <span>${dropoffDateFormatted}</span>
-        </div>
-        <div class="summary-item">
-            <span>Pick-up:</span>
-            <span>${pickupDateFormatted}</span>
-        </div>
-        <div class="summary-item">
-            <span>Duration:</span>
-            <span>${durationLabel}</span>
-        </div>
-    `;
-    if (receiptSummary) receiptSummary.innerHTML = summaryHtml;
-    
-    // Build breakdown section
-    const daySessions = pricing.daySessions;
-    const twentyFourHourSessions = pricing.twentyFourHourSessions;
-    const extraHours = pricing.extraHours;
-    const numDogsDisplay = dogs.length;
-    
-    let breakdownHtml = `
-        <h3>Pricing Breakdown</h3>
-        <div class="breakdown-item">
-            <span>Number of Dogs:</span>
-            <span>${numDogsDisplay}</span>
-        </div>
-    `;
-    
-    // Add divider after number of dogs
-    breakdownHtml += `<div class="breakdown-divider"></div>`;
-    
-    let hasLineItems = false;
-    
-    // Show 24-hour sessions line item if applicable
-    if (twentyFourHourSessions > 0) {
-        const twentyFourHourCostPerDog = 55; // Base cost per dog for 24-hour session
-        if (pricing.is24HourStay) {
-            breakdownHtml += `
-                <div class="breakdown-item cost-line">
-                    <span>24-Hour Stay:</span>
-                    <span>1 × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog)}</span>
-                </div>
-            `;
-        } else {
-            breakdownHtml += `
-                <div class="breakdown-item cost-line">
-                    <span>24-Hour Sessions:</span>
-                    <span>${twentyFourHourSessions} × ${formatCurrencyExact(twentyFourHourCostPerDog)} = ${formatCurrencyExact(twentyFourHourCostPerDog * twentyFourHourSessions)}</span>
-                </div>
-            `;
-        }
-        hasLineItems = true;
-    }
-    
-    // Show extra hours line item if applicable
-    if (extraHours > 0) {
-        const hourlyCostPerDog = 5; // Base cost per dog per hour
-        breakdownHtml += `
-            <div class="breakdown-item cost-line">
-                <span>Extra Hours:</span>
-                <span>${extraHours} × ${formatCurrencyExact(hourlyCostPerDog)} = ${formatCurrencyExact(hourlyCostPerDog * extraHours)}</span>
-            </div>
-        `;
-        hasLineItems = true;
-    }
-    
-    // Show base cost subtotal if multiple items or multi-dog
-    if ((hasLineItems && numDogsDisplay > 1) || (twentyFourHourSessions > 0 && extraHours > 0)) {
-        let baseCostPerDog = 0;
-        if (twentyFourHourSessions > 0) baseCostPerDog += 55 * twentyFourHourSessions;
-        if (extraHours > 0) baseCostPerDog += 5 * extraHours;
-
-        breakdownHtml += `
-            <div class="breakdown-item subtotal-line">
-                <span>Base Cost (per dog):</span>
-                <span>${formatCurrencyExact(baseCostPerDog)}</span>
-            </div>
-        `;
-
-        if (numDogsDisplay > 1) {
-            breakdownHtml += `
-                <div class="breakdown-item subtotal-line">
-                    <span>Subtotal (${numDogsDisplay} dogs, full price):</span>
-                    <span>${formatCurrencyExact(baseCostPerDog * numDogsDisplay)}</span>
-                </div>
-            `;
-        }
-    }
-    
-    // Add multi-dog discount line if applicable
-    if (pricing.multiDogDiscount > 0) {
-        breakdownHtml += `
-            <div class="breakdown-item discount-line multi-dog">
-                <span>Multi-Dog Discount (20% off additional dogs):</span>
-                <span>-${formatCurrencyExact(pricing.multiDogDiscount)}</span>
-            </div>
-        `;
-    }
-    
-    // Discount is not used in the current pricing model — nothing to render
-    
-    if (receiptBreakdown) receiptBreakdown.innerHTML = breakdownHtml;
-    
-    // Build total section
-    const totalFormatted = formatCurrencyExact(pricing.total);
-    if (receiptTotal) {
-        receiptTotal.innerHTML = `
-            <div class="total-amount">
-                <span>Total Cost:</span>
-                <span>${totalFormatted}</span>
-            </div>
-        `;
     }
 }
 
-    // Add print button to results
-    const printBtn = document.createElement('button');
-    printBtn.innerHTML = '🖨️ Print Receipt';
-    printBtn.className = 'calculate-btn';
-    printBtn.style.marginTop = '1rem';
-    printBtn.onclick = printReceipt;
-    
-    resultsDiv.appendChild(printBtn);
-    
-    // Calendar and data management functionality
-    const saveCalendarBtn = document.getElementById('save-calendar-btn');
-    const clearDataBtn = document.getElementById('clear-data-btn');
-    
-    // Save to calendar functionality
-    saveCalendarBtn.addEventListener('click', function() {
-        if (!dropoffInput.dataset.dateValue || !pickupInput.dataset.dateValue || dogs.length === 0) {
-            alert('Please add dogs and select drop-off/pick-up times before saving to calendar.');
-            return;
-        }
-        
-        generateCalendarEvent();
-    });
-    
-    // Confirmation modal elements
-    const confirmModal = document.getElementById('confirm-modal');
-    const confirmMessage = document.getElementById('confirm-message');
-    const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-    const confirmYesBtn = document.getElementById('confirm-yes-btn');
-    let confirmCallback = null;
-
-    // Utility: lock/unlock background scroll when any modal is open (mobile UX)
-    function updateBodyScrollLock() {
-        const anyModalOpen =
-            !dogModal.classList.contains('hidden') ||
-            !datetimeModal.classList.contains('hidden') ||
-            !confirmModal.classList.contains('hidden');
-        if (anyModalOpen) {
-            document.body.classList.add('no-scroll');
-        } else {
-            document.body.classList.remove('no-scroll');
-        }
+function runWhenIdle(callback) {
+    if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(callback);
+    } else {
+        setTimeout(callback, 1);
     }
+}
 
-    // Custom confirm function
-    function showConfirm(message, callback) {
-        confirmMessage.textContent = message;
-        confirmCallback = callback;
-        confirmModal.classList.remove('hidden');
-        updateBodyScrollLock();
+// Optimized DOM ready
+function domReady(callback) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', callback);
+    } else {
+        callback();
     }
+}
 
-    // Confirm modal event listeners
-    confirmCancelBtn.addEventListener('click', function() {
-        confirmModal.classList.add('hidden');
-        confirmCallback = null;
-        updateBodyScrollLock();
-    });
+// Initialize with performance optimization
+domReady(function() {
+    // Initialize theme first (prevents flash)
+    initializeTheme();
 
-    confirmYesBtn.addEventListener('click', function() {
-        confirmModal.classList.add('hidden');
-        if (confirmCallback) {
-            confirmCallback();
-            confirmCallback = null;
-        }
-        updateBodyScrollLock();
-    });
+    // Critical path first
+    setupEventListeners();
 
-    // Close modal when clicking outside
-    confirmModal.addEventListener('click', function(e) {
-        if (e.target === confirmModal) {
-            confirmModal.classList.add('hidden');
-            confirmCallback = null;
-            updateBodyScrollLock();
-        }
+    // Non-critical in idle time
+    runWhenIdle(() => {
+        setupIntersectionObserver();
+        setupFAQ();
+        preloadCriticalResources();
     });
+});
 
-    // Clear all data functionality
-    clearDataBtn.addEventListener('click', function() {
-        showConfirm('Are you sure you want to clear all data? This will remove all dogs and reset the calculator.', function() {
-            dogs = [];
-            dropoffInput.value = '';
-            dropoffInput.dataset.dateValue = '';
-            pickupInput.value = '';
-            pickupInput.dataset.dateValue = '';
-            updateDogsDisplay();
-            updateHeaderDogs();
-            resultsDiv.classList.add('hidden');
-            errorDiv.classList.add('hidden');
-            clearAppState();
-            
-            // Reset to default values
-            const now = new Date();
-            now.setHours(9, 0, 0, 0);
-            dropoffInput.value = now.toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit'
-            });
-            dropoffInput.dataset.dateValue = now.toISOString();
-            
-            const tomorrow = new Date(now);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            pickupInput.value = tomorrow.toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit'
-            });
-            pickupInput.dataset.dateValue = tomorrow.toISOString();
-        });
-    });
-    
-    // Generate .ics calendar event file
-    function generateCalendarEvent() {
-        const dropoffDate = new Date(dropoffInput.dataset.dateValue);
-        const pickupDate = new Date(pickupInput.dataset.dateValue);
-        
-        // Format dates for .ics format (YYYYMMDDTHHMMSSZ)
-        function formatICSDate(date) {
-            return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-        }
-        
-        // Create dog list for description
-        const dogList = dogs.map(dog => {
-            const displayBreed = dog.breed === 'mixed' && dog.customBreed ? 
-                                dog.customBreed : 
-                                dog.breed.charAt(0).toUpperCase() + dog.breed.slice(1).replace('-', ' ');
-            return `${dog.name} (${displayBreed}, ${dog.size.charAt(0).toUpperCase() + dog.size.slice(1)})`;
-        }).join('\\n');
-        
-        // Get pricing info
-        const pricing = calculatePricing(dropoffDate, pickupDate, dogs.length);
-        const totalFormatted = formatCurrencyExact(pricing.total);
+function setupEventListeners() {
+    // Theme toggle
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 
-        // Create .ics content
-        const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Dog Sitting At Danni's House//Calculator//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-UID:${Date.now()}@local
-DTSTART:${formatICSDate(dropoffDate)}
-DTEND:${formatICSDate(pickupDate)}
-SUMMARY:Dog Sitting at Danni's House - ${dogs.map(d => d.name).join(', ')}
-DESCRIPTION:Dog Sitting Service\\n\\nDogs in care:\\n${dogList}\\n\\nService Details:\\n• Drop-off: ${dropoffDate.toLocaleString()}\\n• Pick-up: ${pickupDate.toLocaleString()}\\n• Total Cost: ${totalFormatted}
-LOCATION:—
-STATUS:CONFIRMED
-TRANSP:OPAQUE
-BEGIN:VALARM
-TRIGGER:-PT1H
-ACTION:DISPLAY
-DESCRIPTION:Dog drop-off in 1 hour
-END:VALARM
-BEGIN:VALARM
-TRIGGER:PT1H
-ACTION:DISPLAY
-DESCRIPTION:Dog pick-up in 1 hour
-END:VALARM
-END:VEVENT
-END:VCALENDAR`;
-        
-        // Create blob and download
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
+    // Date inputs
+    dropoffInput.addEventListener('click', () => openDateTimeModal(dropoffInput));
+    pickupInput.addEventListener('click', () => openDateTimeModal(pickupInput));
 
-        // Sanitize dog names for filename
-        const namesPart = dogs.map(d => d.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '')).join('-') || 'dogs';
-        const y = String(dropoffDate.getFullYear());
-        const m = String(dropoffDate.getMonth() + 1).padStart(2, '0');
-        const d = String(dropoffDate.getDate()).padStart(2, '0');
-        link.download = `dog-sitting-${namesPart}-${y}-${m}-${d}.ics`;
-        
-        // Trigger download
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(link.href);
-        
-        // Show success message
-        const originalText = saveCalendarBtn.innerHTML;
-        saveCalendarBtn.innerHTML = '✅ Saved!';
-        saveCalendarBtn.disabled = true;
-        setTimeout(() => {
-            saveCalendarBtn.innerHTML = originalText;
-            saveCalendarBtn.disabled = false;
-        }, 2000);
-    }
-    
-    // Date/Time picker functions
-    function openDatetimePicker(input) {
-        currentDatetimeInput = input;
-        const existingValue = input.dataset.dateValue;
-        
-        if (existingValue) {
-            selectedDate = new Date(existingValue);
-            currentMonth = selectedDate.getMonth();
-            currentYear = selectedDate.getFullYear();
-            
-            // Set time controls from existing value
-            let hour = selectedDate.getHours();
-            const minute = selectedDate.getMinutes();
-            let ampm = 'AM';
-            
-            if (hour === 0) {
-                hour = 12;
-            } else if (hour === 12) {
-                ampm = 'PM';
-            } else if (hour > 12) {
-                hour -= 12;
-                ampm = 'PM';
-            }
-            
-            timeHourSelect.value = hour;
-            timeMinuteSelect.value = minute.toString().padStart(2, '0');
-            timeAmpmSelect.value = ampm;
-        } else {
-            selectedDate = null;
-            currentMonth = new Date().getMonth();
-            currentYear = new Date().getFullYear();
-            
-            // Reset to default time (9:00 AM)
-            timeHourSelect.value = '9';
-            timeMinuteSelect.value = '00';
-            timeAmpmSelect.value = 'AM';
-        }
-        
-        renderCalendar();
-        updateDatetimePreview();
-        datetimeModal.classList.remove('hidden');
-        updateBodyScrollLock();
-    }
-    
-    function renderCalendar() {
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                          'July', 'August', 'September', 'October', 'November', 'December'];
-        
-        calendarMonth.textContent = monthNames[currentMonth];
-        calendarYear.textContent = currentYear;
-        
-        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
-        
-        calendarDays.innerHTML = '';
-        
-        // Previous month days
-        for (let i = firstDay - 1; i >= 0; i--) {
-            const day = daysInPrevMonth - i;
-            const dayEl = createDayElement(day, true);
-            calendarDays.appendChild(dayEl);
-        }
-        
-        // Current month days
-        const today = new Date();
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayEl = createDayElement(day, false);
-            
-            // Check if this is today
-            if (currentYear === today.getFullYear() && 
-                currentMonth === today.getMonth() && 
-                day === today.getDate()) {
-                dayEl.classList.add('today');
-            }
-            
-            // Check if this is selected
-            if (selectedDate && 
-                currentYear === selectedDate.getFullYear() && 
-                currentMonth === selectedDate.getMonth() && 
-                day === selectedDate.getDate()) {
-                dayEl.classList.add('selected');
-            }
-            
-            calendarDays.appendChild(dayEl);
-        }
-        
-        // Next month days
-        const remainingDays = 42 - calendarDays.children.length;
-        for (let day = 1; day <= remainingDays; day++) {
-            const dayEl = createDayElement(day, true);
-            calendarDays.appendChild(dayEl);
-        }
-    }
-    
-    function createDayElement(day, otherMonth) {
-        const dayEl = document.createElement('div');
-        dayEl.className = 'calendar-day';
-        if (otherMonth) dayEl.classList.add('other-month');
-        dayEl.textContent = day;
-        
-        dayEl.addEventListener('click', function() {
-            if (!otherMonth) {
-                selectedDate = new Date(currentYear, currentMonth, day);
-                if (selectedDate.getHours() === 0) {
-                    selectedDate.setHours(9);
-                }
-                renderCalendar();
-                updateDatetimePreview();
-            }
-        });
-        
-        return dayEl;
-    }
-    
-    function updateDatetimePreview() {
-        if (selectedDate) {
-            let hour = parseInt(timeHourSelect.value);
-            const minute = parseInt(timeMinuteSelect.value);
-            const ampm = timeAmpmSelect.value;
-            
-            // Convert to 24-hour format
-            if (ampm === 'PM' && hour !== 12) {
-                hour += 12;
-            } else if (ampm === 'AM' && hour === 12) {
-                hour = 0;
-            }
-            
-            selectedDate.setHours(hour, minute);
-            
-            const options = { 
-                weekday: 'short', 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit'
-            };
-            datetimePreviewText.textContent = selectedDate.toLocaleString('en-US', options);
-            saveDatetimeBtn.disabled = false;
-        } else {
-            datetimePreviewText.textContent = 'No date selected';
-            saveDatetimeBtn.disabled = true;
-        }
-    }
-    
-    // Calendar navigation
-    prevMonthBtn.addEventListener('click', function() {
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        renderCalendar();
-    });
-    
-    nextMonthBtn.addEventListener('click', function() {
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        renderCalendar();
-    });
-    
-    // Time selection
-    timeHourSelect.addEventListener('change', updateDatetimePreview);
-    timeMinuteSelect.addEventListener('change', updateDatetimePreview);
-    timeAmpmSelect.addEventListener('change', updateDatetimePreview);
-    
+    // DateTime modal
+    document.getElementById('cancel-datetime-btn').addEventListener('click', closeDateTimeModal);
+    document.getElementById('save-datetime-btn').addEventListener('click', saveDateTimeModal);
+
     // Quick time buttons
-    quickTimeBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            timeHourSelect.value = this.dataset.hour;
-            timeMinuteSelect.value = this.dataset.minute;
-            timeAmpmSelect.value = this.dataset.ampm;
-            updateDatetimePreview();
+    document.querySelectorAll('.quick-time-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove previous selection
+            document.querySelectorAll('.quick-time-btn').forEach(b => b.classList.remove('selected'));
+            // Add selection to clicked button
+            btn.classList.add('selected');
+            // Set time picker value
+            timePicker.value = btn.dataset.time;
         });
     });
-    
-    // Save datetime
-    saveDatetimeBtn.addEventListener('click', function() {
-        if (selectedDate && currentDatetimeInput) {
-            const formattedDate = selectedDate.toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit'
+
+    // Dog management
+    addDogBtn.addEventListener('click', openDogModal);
+    document.getElementById('cancel-dog-btn').addEventListener('click', closeDogModal);
+    document.getElementById('save-dog-btn').addEventListener('click', saveDogModal);
+
+    // Size selection
+    document.querySelectorAll('.size-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.size-option').forEach(b => {
+                b.style.borderColor = 'var(--surface0)';
             });
-            
-            currentDatetimeInput.value = formattedDate;
-            currentDatetimeInput.dataset.dateValue = selectedDate.toISOString();
-            datetimeModal.classList.add('hidden');
-            calculateRealTime();
-            saveAppState();
-            updateBodyScrollLock();
+            btn.style.borderColor = 'var(--accent)';
+            currentDogData.size = btn.dataset.size;
+            updateSaveButton();
+        });
+    });
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        calculateCost();
+    });
+
+    // Action buttons (initially hidden until results are shown)
+    document.getElementById('print-estimate-btn').addEventListener('click', printEstimate);
+    document.getElementById('save-calendar-btn').addEventListener('click', saveToCalendar);
+    document.getElementById('clear-data-btn').addEventListener('click', clearAllData);
+
+    // Modal click outside to close
+    datetimeModal.addEventListener('click', (e) => {
+        if (e.target === datetimeModal) closeDateTimeModal();
+    });
+    dogModal.addEventListener('click', (e) => {
+        if (e.target === dogModal) closeDogModal();
+    });
+
+    // Input validation
+    dogNameInput.addEventListener('input', updateSaveButton);
+}
+
+function openDateTimeModal(input) {
+    currentDateTimeInput = input;
+    datetimeModal.classList.remove('hidden');
+
+    // Set default date to today if empty
+    if (!datePicker.value) {
+        datePicker.value = new Date().toISOString().split('T')[0];
+    }
+    // Set default time to 9:00 AM if empty
+    if (!timePicker.value) {
+        timePicker.value = '09:00';
+    }
+}
+
+function closeDateTimeModal() {
+    datetimeModal.classList.add('hidden');
+    currentDateTimeInput = null;
+}
+
+function saveDateTimeModal() {
+    if (!datePicker.value || !timePicker.value) return;
+
+    const date = new Date(datePicker.value + 'T' + timePicker.value);
+    const dateValue = date.toISOString();
+    const displayValue = date.toLocaleDateString() + ' at ' +
+                       date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    currentDateTimeInput.value = displayValue;
+    currentDateTimeInput.dataset.dateValue = dateValue;
+
+    closeDateTimeModal();
+}
+
+function openDogModal() {
+    dogModal.classList.remove('hidden');
+    currentDogData = { name: '', breed: '', size: '' };
+    dogNameInput.value = '';
+    dogBreedInput.value = '';
+
+    // Reset size buttons
+    document.querySelectorAll('.size-option').forEach(b => {
+        b.style.borderColor = 'var(--surface0)';
+    });
+
+    updateSaveButton();
+}
+
+function closeDogModal() {
+    dogModal.classList.add('hidden');
+}
+
+function saveDogModal() {
+    if (!currentDogData.name || !currentDogData.size) return;
+
+    const dog = {
+        id: Date.now(),
+        name: currentDogData.name,
+        breed: currentDogData.breed || 'Not specified',
+        size: currentDogData.size
+    };
+
+    dogs.push(dog);
+    renderDogs();
+    closeDogModal();
+}
+
+function updateSaveButton() {
+    currentDogData.name = dogNameInput.value.trim();
+    currentDogData.breed = dogBreedInput.value.trim();
+
+    const saveBtn = document.getElementById('save-dog-btn');
+    saveBtn.disabled = !currentDogData.name || !currentDogData.size;
+}
+
+function renderDogs() {
+    dogsContainer.innerHTML = '';
+
+    dogs.forEach(dog => {
+        const dogCard = document.createElement('div');
+        dogCard.className = 'dog-card';
+        dogCard.innerHTML = `
+            <div class="dog-info">
+                <h4>${dog.name}</h4>
+                <div class="dog-details">${dog.breed} • ${capitalizeFirst(dog.size)}</div>
+            </div>
+            <button type="button" class="remove-dog-btn" onclick="removeDog(${dog.id})">Remove</button>
+        `;
+        dogsContainer.appendChild(dogCard);
+    });
+}
+
+function removeDog(id) {
+    dogs = dogs.filter(dog => dog.id !== id);
+    renderDogs();
+}
+
+function showError(elementId, message) {
+    const errorElement = document.getElementById(elementId);
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+    }
+}
+
+function hideError(elementId) {
+    const errorElement = document.getElementById(elementId);
+    if (errorElement) {
+        errorElement.classList.add('hidden');
+    }
+}
+
+function setInputState(input, state) {
+    input.classList.remove('error', 'success');
+    if (state) input.classList.add(state);
+}
+
+function validateForm() {
+    let isValid = true;
+
+    // Clear previous errors
+    hideError('dropoff-error');
+    hideError('pickup-error');
+    hideError('pets-error');
+    setInputState(dropoffInput, '');
+    setInputState(pickupInput, '');
+
+    // Validate dropoff date
+    if (!dropoffInput.dataset.dateValue) {
+        showError('dropoff-error', 'Please select a drop-off date and time');
+        setInputState(dropoffInput, 'error');
+        isValid = false;
+    } else {
+        setInputState(dropoffInput, 'success');
+    }
+
+    // Validate pickup date
+    if (!pickupInput.dataset.dateValue) {
+        showError('pickup-error', 'Please select a pick-up date and time');
+        setInputState(pickupInput, 'error');
+        isValid = false;
+    } else {
+        setInputState(pickupInput, 'success');
+    }
+
+    // Validate pets
+    if (dogs.length === 0) {
+        showError('pets-error', 'Please add at least one pet');
+        isValid = false;
+    }
+
+    // Validate date logic
+    if (dropoffInput.dataset.dateValue && pickupInput.dataset.dateValue) {
+        const dropoff = new Date(dropoffInput.dataset.dateValue);
+        const pickup = new Date(pickupInput.dataset.dateValue);
+
+        if (pickup <= dropoff) {
+            showError('pickup-error', 'Pick-up time must be after drop-off time');
+            setInputState(pickupInput, 'error');
+            isValid = false;
         }
-    });
-    
-    // Cancel datetime
-    cancelDatetimeBtn.addEventListener('click', function() {
-        datetimeModal.classList.add('hidden');
-        updateBodyScrollLock();
-    });
-    
-    // Add click handlers to date inputs
-    dropoffInput.addEventListener('click', function() {
-        openDatetimePicker(this);
-    });
-    
-    pickupInput.addEventListener('click', function() {
-        openDatetimePicker(this);
-    });
-    
-    // Update calculateCost to use dataset values
-    function calculateCost(showAnimation = false) {
-        const dropoffValue = dropoffInput.dataset.dateValue;
-        const pickupValue = pickupInput.dataset.dateValue;
-        
-        if (!dropoffValue || !pickupValue) {
-            if (showAnimation) showError('Please select both drop-off and pick-up times.');
-            return;
-        }
-        
-        const dropoffDate = new Date(dropoffValue);
-        const pickupDate = new Date(pickupValue);
+    }
+
+    return isValid;
+}
+
+function showLoadingState() {
+    const button = document.querySelector('.calculate-btn');
+    const btnText = button.querySelector('.btn-text');
+    const btnLoading = button.querySelector('.btn-loading');
+
+    btnText.classList.add('hidden');
+    btnLoading.classList.remove('hidden');
+    button.disabled = true;
+}
+
+function hideLoadingState() {
+    const button = document.querySelector('.calculate-btn');
+    const btnText = button.querySelector('.btn-text');
+    const btnLoading = button.querySelector('.btn-loading');
+
+    btnText.classList.remove('hidden');
+    btnLoading.classList.add('hidden');
+    button.disabled = false;
+}
+
+function calculateCost() {
+    // Validate form first
+    if (!validateForm()) {
+        return;
+    }
+
+    // Show loading state
+    showLoadingState();
+
+    // Simulate calculation delay for professional feel
+    setTimeout(() => {
+        const dropoff = new Date(dropoffInput.dataset.dateValue);
+        const pickup = new Date(pickupInput.dataset.dateValue);
+
+        const totalHours = (pickup - dropoff) / (1000 * 60 * 60);
+        const twentyFourHourSessions = Math.floor(totalHours / 24);
+        const extraHours = Math.max(0, totalHours - (twentyFourHourSessions * 24));
+
+        // Updated pricing: $55 for 24-hour sessions
+        const sessionCost = twentyFourHourSessions * 55;
+        const extraHoursCost = Math.ceil(extraHours) * 5;
+        const baseCost = sessionCost + extraHoursCost;
+
+        // Multi-pet pricing: first pet full price, each additional pet at 80% (20% off).
+        // Total = base x (1 + 0.80 * (numDogs - 1)).
         const numDogs = dogs.length;
-        
-        errorDiv.classList.add('hidden');
-        
-        if (numDogs === 0) {
-            if (showAnimation) showError('Please add at least one dog.');
-            return;
-        }
-        
-        if (pickupDate <= dropoffDate) {
-            if (showAnimation) showError('Pick-up time must be after drop-off time.');
-            return;
-        }
-        
-        const pricing = calculatePricing(dropoffDate, pickupDate, numDogs);
-        
-        // Update number of dogs display
-        document.getElementById('num-dogs-display').textContent = numDogs;
-        
-        // Get all the line item elements
-        const daySessionsRow = document.getElementById('day-sessions-row');
-        const twentyFourHourRow = document.getElementById('twenty-four-hour-row');
-        const extraHoursRow = document.getElementById('extra-hours-row');
-        const baseSubtotalRow = document.getElementById('base-subtotal-row');
-        const multiDogRow = document.getElementById('multi-dog-row');
-        const subtotalRow = document.getElementById('subtotal-row');
-        const discountRow = document.getElementById('discount-row');
-        const discountDivider = document.getElementById('discount-divider');
-        
-        // Reset all displays
-        daySessionsRow.style.display = 'none';
-        twentyFourHourRow.style.display = 'none';
-        extraHoursRow.style.display = 'none';
-        baseSubtotalRow.style.display = 'none';
-        
-        let hasLineItems = false;
-        
-        // Day sessions are not used in the current pricing model; always hidden
-        daySessionsRow.style.display = 'none';
-        
-        // Show 24-hour sessions if applicable  
-        if (pricing.twentyFourHourSessions > 0) {
-            document.getElementById('twenty-four-hour-count').textContent = pricing.twentyFourHourSessions;
-            // Display base per-dog amount (before multi-dog discount)
-            const baseTwentyFourHourCostPerDog = 55 * pricing.twentyFourHourSessions;
-            document.getElementById('twenty-four-hour-cost').textContent = formatCurrencyExact(baseTwentyFourHourCostPerDog);
-            twentyFourHourRow.style.display = 'flex';
-            hasLineItems = true;
-        }
-        
-        // Show extra hours if applicable
-        if (pricing.extraHours > 0) {
-            document.getElementById('extra-hours-count').textContent = pricing.extraHours;
-            // Display base per-dog amount (before multi-dog discount)
-            const baseExtraHoursCostPerDog = 5 * pricing.extraHours;
-            document.getElementById('extra-hours-cost').textContent = formatCurrencyExact(baseExtraHoursCostPerDog);
-            extraHoursRow.style.display = 'flex';
-            hasLineItems = true;
-        }
-        
-        // Show base cost subtotal if there are multiple line items or multi-dog scenario
-        if ((hasLineItems && numDogs > 1) || (pricing.twentyFourHourSessions > 0 && pricing.extraHours > 0)) {
-            const baseCostPerDog = pricing.baseCostBeforeSurcharge;
-            document.getElementById('base-subtotal').textContent = formatCurrencyExact(baseCostPerDog);
-            baseSubtotalRow.style.display = 'flex';
-        }
-        
-        // Show multi-dog discount if applicable
-        if (pricing.multiDogDiscount > 0) {
-            document.getElementById('multi-dog-surcharge').textContent = '-' + formatCurrencyExact(pricing.multiDogDiscount);
-            multiDogRow.style.display = 'flex';
-        } else {
-            multiDogRow.style.display = 'none';
-        }
-        
-        // Discount is not used in the current pricing model; always hide these rows
-        subtotalRow.style.display = 'none';
-        discountRow.style.display = 'none';
-        discountDivider.style.display = 'none';
-        
-        // Handle special case for single 24-hour stays
-        if (pricing.is24HourStay) {
-            // Hide other items and show only the 24-hour session
-            daySessionsRow.style.display = 'none';
-            extraHoursRow.style.display = 'none';
-            baseSubtotalRow.style.display = 'none';
-            
-            // Update 24-hour display for single stays (base per-dog amount)
-            document.getElementById('twenty-four-hour-count').textContent = '1';
-            document.getElementById('twenty-four-hour-cost').textContent = formatCurrencyExact(55);
-            twentyFourHourRow.style.display = 'flex';
-            
-            // Update label for clarity
-            const labelEl = twentyFourHourRow.querySelector('.label');
-            if (labelEl) labelEl.textContent = '🕐 24-Hour Stay:';
-        } else if (pricing.twentyFourHourSessions > 0) {
-            // Reset label for multi-day stays
-            const labelEl = twentyFourHourRow.querySelector('.label');
-            if (labelEl) labelEl.textContent = '🕐 24-Hour Sessions:';
-        }
-        
-        // Animate price if requested
-        if (showAnimation) {
-            animatePrice(document.getElementById('total-cost'), pricing.total);
-        } else {
-            document.getElementById('total-cost').textContent = formatCurrencyExact(pricing.total);
-        }
-        
-        resultsDiv.classList.remove('hidden');
+        const multiplier = 1 + (numDogs - 1) * 0.80;
+        const totalCost = baseCost * multiplier;
+
+        // Discount = what all pets would cost at full price minus the actual total.
+        const fullPriceCost = baseCost * numDogs;
+        const multiPetDiscount = numDogs > 1 ? fullPriceCost - totalCost : 0;
+
+        // Hide loading state
+        hideLoadingState();
+
+        displayResults(numDogs, twentyFourHourSessions, Math.ceil(extraHours),
+                      sessionCost, extraHoursCost, baseCost, multiPetDiscount, fullPriceCost, totalCost);
+    }, 800); // Professional delay
+}
+
+function formatCurrency(amount) {
+    return '$' + amount.toFixed(2);
+}
+
+function generateQuoteNumber() {
+    const date = new Date();
+    const year = date.getFullYear().toString().slice(-2);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const random = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+    return `${year}${month}${day}-${random}`;
+}
+
+function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCost, baseCost, multiPetDiscount, fullPriceCost, totalCost) {
+    // Generate quote number
+    document.getElementById('quote-number').textContent = generateQuoteNumber();
+
+    // Calculate service duration
+    const dropoff = new Date(dropoffInput.dataset.dateValue);
+    const pickup = new Date(pickupInput.dataset.dateValue);
+    const duration = Math.ceil((pickup - dropoff) / (1000 * 60 * 60 * 24));
+    const servicePeriod = duration === 1 ? '1 day' : `${duration} days`;
+
+    // Update estimate details with actual booking info
+    document.getElementById('service-period-display').textContent = servicePeriod;
+    document.getElementById('dropoff-display').textContent = dropoffInput.value || '—';
+    document.getElementById('pickup-display').textContent = pickupInput.value || '—';
+
+    // Create pet names list
+    const petNames = dogs.map(dog => `${dog.name} (${dog.breed})`).join(', ');
+    document.getElementById('pets-list-display').textContent = petNames || '—';
+
+    // Update line items with proper formatting
+    document.getElementById('twenty-four-hour-count').textContent = sessions;
+    document.getElementById('twenty-four-hour-cost').textContent = formatCurrency(sessionCost);
+    document.getElementById('extra-hours-count').textContent = extraHours;
+    document.getElementById('extra-hours-cost').textContent = formatCurrency(extraHoursCost);
+
+    // Ensure subtotal calculation is explicit and bulletproof
+    const calculatedSubtotal = sessionCost + extraHoursCost;
+    document.getElementById('base-subtotal').textContent = formatCurrency(calculatedSubtotal);
+
+    // Verify baseCost matches the explicit calculation
+    if (baseCost !== calculatedSubtotal) {
+        console.error('Subtotal mismatch detected:', { baseCost, calculatedSubtotal, sessionCost, extraHoursCost });
     }
-    
-    // Load saved state or set default datetime values
-    loadAppState();
-    
-    // Set default datetime values only if not loaded from state
-    if (!dropoffInput.value || !pickupInput.value) {
-        const now = new Date();
-        now.setHours(9, 0, 0, 0);
-        
-        if (!dropoffInput.value) {
-            dropoffInput.value = now.toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit'
-            });
-            dropoffInput.dataset.dateValue = now.toISOString();
+
+    // Handle multi-pet pricing (shown as a discount)
+    const multiDogRow = document.getElementById('multi-dog-row');
+    const fullPriceRow = document.getElementById('full-price-row');
+    if (numDogs > 1) {
+        if (fullPriceRow) {
+            fullPriceRow.style.display = 'flex';
+            document.getElementById('full-price-subtotal').textContent = formatCurrency(fullPriceCost);
         }
-        
-        if (!pickupInput.value) {
-            const tomorrow = new Date(now);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            pickupInput.value = tomorrow.toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit'
-            });
-            pickupInput.dataset.dateValue = tomorrow.toISOString();
-        }
+        multiDogRow.style.display = 'flex';
+        document.getElementById('multi-dog-surcharge').textContent = '-' + formatCurrency(multiPetDiscount);
+    } else {
+        if (fullPriceRow) fullPriceRow.style.display = 'none';
+        multiDogRow.style.display = 'none';
     }
+
+    // Update total with proper formatting
+    document.getElementById('total-cost').textContent = formatCurrency(totalCost);
+
+    // Show results with smooth animation
+    resultsDiv.classList.remove('hidden');
+
+    // Smooth scroll to results
+    setTimeout(() => {
+        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
+function setupIntersectionObserver() {
+    // Optimized with root margin for better performance
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Use requestAnimationFrame for smooth animations
+                requestAnimationFrame(() => {
+                    entry.target.classList.add('visible');
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '50px 0px -10% 0px' // Trigger animations earlier
+    });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+function preloadCriticalResources() {
+    // Preload any critical resources that might be needed
+    const preloadLinks = [
+        // Could add any critical images here
+    ];
+
+    preloadLinks.forEach(href => {
+        if (href) {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'image';
+            link.href = href;
+            document.head.appendChild(link);
+        }
+    });
+}
+
+// Optimized scroll handler for nav effects
+let scrolled = false;
+const handleScroll = throttle(() => {
+    const nav = document.querySelector('nav');
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (scrollTop > 50 && !scrolled) {
+        nav.classList.add('scrolled');
+        scrolled = true;
+    } else if (scrollTop <= 50 && scrolled) {
+        nav.classList.remove('scrolled');
+        scrolled = false;
+    }
+}, 16); // ~60fps
+
+window.addEventListener('scroll', handleScroll, { passive: true });
+
+function setupFAQ() {
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            const wasOpen = item.classList.contains('open');
+
+            // Close all other items
+            document.querySelectorAll('.faq-item').forEach(i => {
+                i.classList.remove('open');
+                i.querySelector('.faq-answer').style.maxHeight = null;
+            });
+
+            // Open clicked item if it wasn't open
+            if (!wasOpen) {
+                item.classList.add('open');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
+        });
+    });
+}
+
+function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Theme management
+function toggleTheme() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('preferred-theme', newTheme);
+
+    // Update meta theme color
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (newTheme === 'dark') {
+        metaTheme.content = '#1A0D2E';
+    } else {
+        metaTheme.content = '#F0EAFF';
+    }
+}
+
+function initializeTheme() {
+    const savedTheme = localStorage.getItem('preferred-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Use saved theme, or default to light (system preference override)
+    const theme = savedTheme || 'light';
+
+    document.documentElement.setAttribute('data-theme', theme);
+
+    // Update meta theme color
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (theme === 'dark') {
+        metaTheme.content = '#1A0D2E';
+    } else {
+        metaTheme.content = '#F0EAFF';
+    }
+}
+
+// Action button functions
+function printEstimate() {
+    // Populate print receipt with current data
+    updatePrintReceipt();
+
+    // Trigger print
+    window.print();
+}
+
+function saveToCalendar() {
+    if (!dropoffInput.dataset.dateValue || !pickupInput.dataset.dateValue) {
+        alert('Please complete the estimate first.');
+        return;
+    }
+
+    const dropoff = new Date(dropoffInput.dataset.dateValue);
+    const pickup = new Date(pickupInput.dataset.dateValue);
+
+    // Format dates for calendar
+    const startDate = dropoff.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const endDate = pickup.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+    // Create calendar event data
+    const eventTitle = `Dog Sitting - ${dogs.map(d => d.name).join(', ')}`;
+    const eventDescription = `Pet care service at Danni's House.\\n\\nPets: ${dogs.map(d => `${d.name} (${d.breed}, ${capitalizeFirst(d.size)})`).join(', ')}\\n\\nEstimated cost: ${document.getElementById('total-cost').textContent}`;
+
+    // Generate .ics file content
+    const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Dog Sitting At Danni\'s House//EN',
+        'BEGIN:VEVENT',
+        `UID:${Date.now()}@dannishouse.com`,
+        `DTSTART:${startDate}`,
+        `DTEND:${endDate}`,
+        `SUMMARY:${eventTitle}`,
+        `DESCRIPTION:${eventDescription}`,
+        'STATUS:TENTATIVE',
+        'END:VEVENT',
+        'END:VCALENDAR'
+    ].join('\\r\\n');
+
+    // Create download link
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `dog-sitting-${dogs[0]?.name || 'booking'}-${dropoff.getFullYear()}-${(dropoff.getMonth() + 1).toString().padStart(2, '0')}-${dropoff.getDate().toString().padStart(2, '0')}.ics`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+
+function clearAllData() {
+    if (confirm('Are you sure you want to clear all data? This will remove all pets and dates.')) {
+        // Reset form
+        dropoffInput.value = '';
+        pickupInput.value = '';
+        dropoffInput.dataset.dateValue = '';
+        pickupInput.dataset.dateValue = '';
+
+        // Clear dogs
+        dogs = [];
+        renderDogs();
+
+        // Hide results
+        resultsDiv.classList.add('hidden');
+
+        // Clear any validation states
+        document.querySelectorAll('.input-error').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.form-input').forEach(el => {
+            el.classList.remove('error', 'success');
+        });
+    }
+}
+
+function updatePrintReceipt() {
+    const now = new Date();
+    const quoteNum = document.getElementById('quote-number').textContent;
+
+    // Update header
+    document.getElementById('receipt-date').textContent = now.toLocaleDateString();
+    document.getElementById('receipt-quote-number').textContent = quoteNum;
+
+    // Update service details
+    if (dropoffInput.value && pickupInput.value) {
+        document.getElementById('receipt-dropoff').textContent = dropoffInput.value;
+        document.getElementById('receipt-pickup').textContent = pickupInput.value;
+    }
+    document.getElementById('receipt-num-pets').textContent = dogs.length;
+
+    // Update table breakdown
+    const breakdown = document.getElementById('receipt-breakdown');
+    breakdown.innerHTML = '';
+
+    // Get current estimate values
+    const twentyFourCount = document.getElementById('twenty-four-hour-count').textContent;
+    const twentyFourCost = document.getElementById('twenty-four-hour-cost').textContent;
+    const extraCount = document.getElementById('extra-hours-count').textContent;
+    const extraCost = document.getElementById('extra-hours-cost').textContent;
+
+    // Add 24-hour sessions if any
+    if (parseInt(twentyFourCount) > 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>24-Hour Boarding</td>
+            <td>${twentyFourCount}</td>
+            <td>$55.00</td>
+            <td>${twentyFourCost}</td>
+        `;
+        breakdown.appendChild(row);
+    }
+
+    // Add extra hours if any
+    if (parseInt(extraCount) > 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>Additional Hours</td>
+            <td>${extraCount}</td>
+            <td>$5.00</td>
+            <td>${extraCost}</td>
+        `;
+        breakdown.appendChild(row);
+    }
+
+    // Add multi-pet discount if applicable
+    if (dogs.length > 1) {
+        const fullPrice = document.getElementById('full-price-subtotal').textContent;
+        const fullRow = document.createElement('tr');
+        fullRow.innerHTML = `
+            <td>All Pets (full price)</td>
+            <td>${dogs.length}</td>
+            <td>—</td>
+            <td>${fullPrice}</td>
+        `;
+        breakdown.appendChild(fullRow);
+
+        const discount = document.getElementById('multi-dog-surcharge').textContent;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>Multi-Pet Discount (20% off additional pets)</td>
+            <td>—</td>
+            <td>—</td>
+            <td>${discount}</td>
+        `;
+        breakdown.appendChild(row);
+    }
+
+    // Update total
+    document.getElementById('receipt-total').textContent = document.getElementById('total-cost').textContent;
+}
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
 });
