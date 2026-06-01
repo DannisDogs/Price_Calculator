@@ -416,18 +416,32 @@ function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCo
         console.error('Subtotal mismatch detected:', { baseCost, calculatedSubtotal, sessionCost, extraHoursCost });
     }
 
-    // Handle multi-pet pricing (shown as a discount)
+    // Build per-pet pricing list: first pet full price, each additional pet 20% off
+    const perPetHeader = document.getElementById('per-pet-header');
+    const perPetContainer = document.getElementById('per-pet-breakdown');
     const multiDogRow = document.getElementById('multi-dog-row');
-    const fullPriceRow = document.getElementById('full-price-row');
+    perPetContainer.innerHTML = '';
+
     if (numDogs > 1) {
-        if (fullPriceRow) {
-            fullPriceRow.style.display = 'flex';
-            document.getElementById('full-price-subtotal').textContent = formatCurrency(fullPriceCost);
-        }
+        perPetHeader.style.display = 'block';
+        dogs.forEach((dog, i) => {
+            const isFirst = i === 0;
+            const petPrice = isFirst ? baseCost : baseCost * 0.80;
+            const tag = isFirst ? 'full price' : '20% off';
+            const petName = dog.name ? dog.name : `Pet ${i + 1}`;
+            const row = document.createElement('div');
+            row.className = 'line-item per-pet-item';
+            row.innerHTML = `
+                <div class="item-description">${petName} <span class="per-pet-tag">(${tag})</span></div>
+                <div class="item-amount">${formatCurrency(petPrice)}</div>
+            `;
+            perPetContainer.appendChild(row);
+        });
+
         multiDogRow.style.display = 'flex';
         document.getElementById('multi-dog-surcharge').textContent = '-' + formatCurrency(multiPetDiscount);
     } else {
-        if (fullPriceRow) fullPriceRow.style.display = 'none';
+        perPetHeader.style.display = 'none';
         multiDogRow.style.display = 'none';
     }
 
@@ -685,22 +699,30 @@ function updatePrintReceipt() {
         breakdown.appendChild(row);
     }
 
-    // Add multi-pet discount if applicable
+    // Add per-pet pricing rows if multiple pets
     if (dogs.length > 1) {
-        const fullPrice = document.getElementById('full-price-subtotal').textContent;
-        const fullRow = document.createElement('tr');
-        fullRow.innerHTML = `
-            <td>All Pets (full price)</td>
-            <td>${dogs.length}</td>
-            <td>—</td>
-            <td>${fullPrice}</td>
-        `;
-        breakdown.appendChild(fullRow);
+        // Derive per-pet base from the on-screen subtotal
+        const basePerPet = parseFloat(document.getElementById('base-subtotal').textContent.replace(/[^0-9.]/g, '')) || 0;
+
+        dogs.forEach((dog, i) => {
+            const isFirst = i === 0;
+            const petPrice = isFirst ? basePerPet : basePerPet * 0.80;
+            const tag = isFirst ? 'full price' : '20% off';
+            const petName = dog.name ? dog.name : `Pet ${i + 1}`;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${petName} (${tag})</td>
+                <td>1</td>
+                <td>—</td>
+                <td>${formatCurrency(petPrice)}</td>
+            `;
+            breakdown.appendChild(row);
+        });
 
         const discount = document.getElementById('multi-dog-surcharge').textContent;
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>Multi-Pet Discount (20% off additional pets)</td>
+            <td>Multi-Pet Discount (you save)</td>
             <td>—</td>
             <td>—</td>
             <td>${discount}</td>

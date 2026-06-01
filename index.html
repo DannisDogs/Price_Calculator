@@ -573,6 +573,40 @@
             color: var(--text);
         }
 
+        .per-pet-header {
+            margin-top: 1rem;
+            padding: 0.5rem 0 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--subtext0);
+        }
+
+        .per-pet-item {
+            padding: 0.5rem 0;
+        }
+
+        .per-pet-item .item-description {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .per-pet-tag {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--subtext0);
+        }
+
+        .discount-line .item-description {
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .discount-line .item-amount {
+            color: var(--green);
+        }
+
         .estimate-total {
             display: flex;
             justify-content: space-between;
@@ -2181,15 +2215,13 @@
                         </div>
                     </div>
                     <div class="line-item subtotal-line" id="base-subtotal-row">
-                        <div class="item-description">Subtotal (per pet)</div>
+                        <div class="item-description">Rate per pet</div>
                         <div class="item-amount" id="base-subtotal">$0.00</div>
                     </div>
-                    <div class="line-item" id="full-price-row" style="display: none;">
-                        <div class="item-description">All pets (full price)</div>
-                        <div class="item-amount" id="full-price-subtotal">$0.00</div>
-                    </div>
-                    <div class="line-item" id="multi-dog-row" style="display: none;">
-                        <div class="item-description">Multi-Pet Discount (20% off additional pets)</div>
+                    <div class="per-pet-header" id="per-pet-header" style="display: none;">Per-Pet Pricing</div>
+                    <div id="per-pet-breakdown"></div>
+                    <div class="line-item discount-line" id="multi-dog-row" style="display: none;">
+                        <div class="item-description">Multi-Pet Discount — you save</div>
                         <div class="item-amount"><span id="multi-dog-surcharge">$0.00</span></div>
                     </div>
                 </div>
