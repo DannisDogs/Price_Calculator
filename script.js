@@ -3,6 +3,11 @@ let dogs = [];
 let currentDateTimeInput = null;
 let currentDogData = { name: '', breed: '', size: '' };
 
+// Pricing constants (single source of truth)
+const NIGHTLY_RATE = 55;          // per 24-hour session, per pet (first pet)
+const HOURLY_RATE = 5;            // per extra hour, per pet (first pet)
+const ADDITIONAL_PET_FACTOR = 0.80; // additional pets pay 80% (20% off)
+
 // DOM Elements
 const form = document.getElementById('calculator-form');
 const dropoffInput = document.getElementById('dropoff-date');
@@ -346,14 +351,14 @@ function calculateCost() {
         const extraHours = Math.max(0, totalHours - (twentyFourHourSessions * 24));
 
         // Updated pricing: $55 for 24-hour sessions
-        const sessionCost = twentyFourHourSessions * 55;
-        const extraHoursCost = Math.ceil(extraHours) * 5;
+        const sessionCost = twentyFourHourSessions * NIGHTLY_RATE;
+        const extraHoursCost = Math.ceil(extraHours) * HOURLY_RATE;
         const baseCost = sessionCost + extraHoursCost;
 
         // Multi-pet pricing: first pet full price, each additional pet at 80% (20% off).
-        // Total = base x (1 + 0.80 * (numDogs - 1)).
+        // Total = base x (1 + 0.20-off applied to each additional pet).
         const numDogs = dogs.length;
-        const multiplier = 1 + (numDogs - 1) * 0.80;
+        const multiplier = 1 + (numDogs - 1) * ADDITIONAL_PET_FACTOR;
         const totalCost = baseCost * multiplier;
 
         // Discount = what all pets would cost at full price minus the actual total.
@@ -416,31 +421,72 @@ function displayResults(numDogs, sessions, extraHours, sessionCost, extraHoursCo
         console.error('Subtotal mismatch detected:', { baseCost, calculatedSubtotal, sessionCost, extraHoursCost });
     }
 
-    // Build per-pet pricing list: first pet full price, each additional pet 20% off
+    // Build per-pet pricing list: first pet full price, each additional pet 20% off.
+    // Each pet block breaks down its own boarding + hourly components.
     const perPetHeader = document.getElementById('per-pet-header');
     const perPetContainer = document.getElementById('per-pet-breakdown');
     const multiDogRow = document.getElementById('multi-dog-row');
+    const twentyFourRow = document.getElementById('twenty-four-hour-row');
+    const extraHoursRow = document.getElementById('extra-hours-row');
+    const baseSubtotalRow = document.getElementById('base-subtotal-row');
     perPetContainer.innerHTML = '';
 
     if (numDogs > 1) {
+        // Hide the generic per-pet rate rows; each pet block below shows its own breakdown
+        twentyFourRow.style.display = 'none';
+        extraHoursRow.style.display = 'none';
+        baseSubtotalRow.style.display = 'none';
+
         perPetHeader.style.display = 'block';
         dogs.forEach((dog, i) => {
             const isFirst = i === 0;
-            const petPrice = isFirst ? baseCost : baseCost * 0.80;
+            const factor = isFirst ? 1 : ADDITIONAL_PET_FACTOR;
             const tag = isFirst ? 'full price' : '20% off';
             const petName = dog.name ? dog.name : `Pet ${i + 1}`;
-            const row = document.createElement('div');
-            row.className = 'line-item per-pet-item';
-            row.innerHTML = `
-                <div class="item-description">${petName} <span class="per-pet-tag">(${tag})</span></div>
-                <div class="item-amount">${formatCurrency(petPrice)}</div>
+
+            const petNightlyRate = NIGHTLY_RATE * factor;
+            const petHourlyRate = HOURLY_RATE * factor;
+            const petBoarding = sessions * petNightlyRate;
+            const petHours = extraHours * petHourlyRate;
+            const petTotal = petBoarding + petHours;
+
+            let subRows = '';
+            if (sessions > 0) {
+                subRows += `
+                    <div class="per-pet-sub">
+                        <span class="sub-desc">24-Hour Boarding</span>
+                        <span class="sub-calc">${sessions} × ${formatCurrency(petNightlyRate)}</span>
+                        <span class="sub-amount">${formatCurrency(petBoarding)}</span>
+                    </div>`;
+            }
+            if (extraHours > 0) {
+                subRows += `
+                    <div class="per-pet-sub">
+                        <span class="sub-desc">Additional Hours</span>
+                        <span class="sub-calc">${extraHours} × ${formatCurrency(petHourlyRate)}</span>
+                        <span class="sub-amount">${formatCurrency(petHours)}</span>
+                    </div>`;
+            }
+
+            const group = document.createElement('div');
+            group.className = 'per-pet-group';
+            group.innerHTML = `
+                <div class="line-item per-pet-item">
+                    <div class="item-description">${petName} <span class="per-pet-tag">(${tag})</span></div>
+                    <div class="item-amount">${formatCurrency(petTotal)}</div>
+                </div>
+                ${subRows}
             `;
-            perPetContainer.appendChild(row);
+            perPetContainer.appendChild(group);
         });
 
         multiDogRow.style.display = 'flex';
         document.getElementById('multi-dog-surcharge').textContent = '-' + formatCurrency(multiPetDiscount);
     } else {
+        // Single pet: show the standard rate rows, hide per-pet breakdown
+        twentyFourRow.style.display = 'flex';
+        extraHoursRow.style.display = 'flex';
+        baseSubtotalRow.style.display = 'flex';
         perPetHeader.style.display = 'none';
         multiDogRow.style.display = 'none';
     }
@@ -670,53 +716,68 @@ function updatePrintReceipt() {
     breakdown.innerHTML = '';
 
     // Get current estimate values
-    const twentyFourCount = document.getElementById('twenty-four-hour-count').textContent;
-    const twentyFourCost = document.getElementById('twenty-four-hour-cost').textContent;
-    const extraCount = document.getElementById('extra-hours-count').textContent;
-    const extraCost = document.getElementById('extra-hours-cost').textContent;
+    const twentyFourCount = parseInt(document.getElementById('twenty-four-hour-count').textContent) || 0;
+    const extraCount = parseInt(document.getElementById('extra-hours-count').textContent) || 0;
 
-    // Add 24-hour sessions if any
-    if (parseInt(twentyFourCount) > 0) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>24-Hour Boarding</td>
-            <td>${twentyFourCount}</td>
-            <td>$55.00</td>
-            <td>${twentyFourCost}</td>
-        `;
-        breakdown.appendChild(row);
-    }
-
-    // Add extra hours if any
-    if (parseInt(extraCount) > 0) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>Additional Hours</td>
-            <td>${extraCount}</td>
-            <td>$5.00</td>
-            <td>${extraCost}</td>
-        `;
-        breakdown.appendChild(row);
-    }
-
-    // Add per-pet pricing rows if multiple pets
-    if (dogs.length > 1) {
-        // Derive per-pet base from the on-screen subtotal
-        const basePerPet = parseFloat(document.getElementById('base-subtotal').textContent.replace(/[^0-9.]/g, '')) || 0;
-
-        dogs.forEach((dog, i) => {
-            const isFirst = i === 0;
-            const petPrice = isFirst ? basePerPet : basePerPet * 0.80;
-            const tag = isFirst ? 'full price' : '20% off';
-            const petName = dog.name ? dog.name : `Pet ${i + 1}`;
+    if (dogs.length === 1) {
+        // Single pet: simple rate breakdown
+        if (twentyFourCount > 0) {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${petName} (${tag})</td>
-                <td>1</td>
-                <td>—</td>
-                <td>${formatCurrency(petPrice)}</td>
+                <td>24-Hour Boarding</td>
+                <td>${twentyFourCount}</td>
+                <td>${formatCurrency(NIGHTLY_RATE)}</td>
+                <td>${formatCurrency(twentyFourCount * NIGHTLY_RATE)}</td>
             `;
             breakdown.appendChild(row);
+        }
+        if (extraCount > 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>Additional Hours</td>
+                <td>${extraCount}</td>
+                <td>${formatCurrency(HOURLY_RATE)}</td>
+                <td>${formatCurrency(extraCount * HOURLY_RATE)}</td>
+            `;
+            breakdown.appendChild(row);
+        }
+    } else {
+        // Multiple pets: per-pet breakdown with discounted rates for additional pets
+        dogs.forEach((dog, i) => {
+            const isFirst = i === 0;
+            const factor = isFirst ? 1 : ADDITIONAL_PET_FACTOR;
+            const tag = isFirst ? 'full price' : '20% off';
+            const petName = dog.name ? dog.name : `Pet ${i + 1}`;
+            const petNightlyRate = NIGHTLY_RATE * factor;
+            const petHourlyRate = HOURLY_RATE * factor;
+
+            // Pet header row
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = `
+                <td colspan="4"><strong>${petName} (${tag})</strong></td>
+            `;
+            breakdown.appendChild(headerRow);
+
+            if (twentyFourCount > 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="padding-left:1.5em;">24-Hour Boarding</td>
+                    <td>${twentyFourCount}</td>
+                    <td>${formatCurrency(petNightlyRate)}</td>
+                    <td>${formatCurrency(twentyFourCount * petNightlyRate)}</td>
+                `;
+                breakdown.appendChild(row);
+            }
+            if (extraCount > 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="padding-left:1.5em;">Additional Hours</td>
+                    <td>${extraCount}</td>
+                    <td>${formatCurrency(petHourlyRate)}</td>
+                    <td>${formatCurrency(extraCount * petHourlyRate)}</td>
+                `;
+                breakdown.appendChild(row);
+            }
         });
 
         const discount = document.getElementById('multi-dog-surcharge').textContent;
