@@ -1740,6 +1740,54 @@
                 font-weight: 700;
             }
 
+            /* Per-pet breakdown — mobile layout */
+            .per-pet-header {
+                margin-top: 1.25rem;
+            }
+
+            .per-pet-group {
+                padding-bottom: 0.75rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .per-pet-group .per-pet-item {
+                flex-direction: row;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+
+            .per-pet-group .per-pet-item .item-description {
+                font-size: 15px;
+            }
+
+            .per-pet-group .per-pet-item .item-amount {
+                align-self: auto;
+            }
+
+            .per-pet-sub {
+                flex-wrap: wrap;
+                padding-left: 0.75rem;
+                font-size: 0.8rem;
+                row-gap: 0.1rem;
+            }
+
+            .per-pet-sub .sub-desc {
+                flex: 1 1 100%;
+            }
+
+            .per-pet-sub .sub-calc {
+                flex: 1 1 auto;
+                text-align: left;
+                min-width: 0;
+            }
+
+            .per-pet-sub .sub-amount {
+                flex: 0 0 auto;
+                min-width: 0;
+            }
+
             .estimate-total {
                 padding: 1.5rem 1rem;
                 margin-top: 1rem;
@@ -1825,7 +1873,7 @@
             }
 
             /* Mobile line item visual hierarchy */
-            .line-item .item-description::after {
+            .line-item:not(.per-pet-item):not(.discount-line) > .item-description::after {
                 content: ':';
             }
 
