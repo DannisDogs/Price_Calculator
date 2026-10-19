@@ -685,14 +685,6 @@ function displayResults(est) {
         document.getElementById('multi-dog-surcharge').textContent = formatCurrency(est.multiPetDiscount);
     }
 
-    // Extra hours are always billed as booked; just point out when a full day would be cheaper
-    const tip = document.getElementById('extra-hours-tip');
-    const hoursCostMoreThanDay = est.extraHours * HOURLY_RATE > NIGHTLY_RATE;
-    tip.classList.toggle('hidden', !hoursCostMoreThanDay);
-    tip.textContent = hoursCostMoreThanDay
-        ? `Tip: ${est.extraHours} extra hours come to ${formatCurrency(est.extraHours * HOURLY_RATE)} per pet, more than a full day (${formatCurrency(NIGHTLY_RATE)}). Book the full 24 hours if you'd rather pay the day rate.`
-        : '';
-
     const holidayRow = document.getElementById('holiday-fee-row');
     holidayRow.style.display = est.holidayFee > 0 ? 'flex' : 'none';
     document.getElementById('holiday-fee-amount').textContent = formatCurrency(est.holidayFee);
