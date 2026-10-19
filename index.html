@@ -688,6 +688,16 @@
             color: var(--text);
         }
 
+        .line-tip {
+            padding: 0.5rem 0 0.25rem;
+            font-size: 0.85rem;
+            color: var(--subtext0);
+        }
+
+        .line-tip.hidden {
+            display: none;
+        }
+
         .line-note {
             margin-top: 0.75rem;
             padding: 0.6rem 0.9rem;
@@ -2328,7 +2338,7 @@
                     </svg>
                 </div>
                 <h3 class="feature-title">Flexible Scheduling</h3>
-                <p class="feature-description">Overnight stays, longer boarding, and flexible drop-off and pick-up times. Extra hours are billed by the hour and capped at the daily rate, so a partial day never costs more than a full one.</p>
+                <p class="feature-description">Overnight stays, longer boarding, and flexible drop-off and pick-up times. Extra hours are billed by the hour, so you only pay for the time you book.</p>
             </div>
             <div class="feature-card fade-in">
                 <div class="feature-icon">
@@ -2386,7 +2396,7 @@
                 <ul class="pricing-features">
                     <li>Flexible drop-off and pick-up times</li>
                     <li>Rounded up to the next full hour</li>
-                    <li><span>Capped at the daily rate: after <span class="hour-cap-value">10</span> extra hours it counts as another day</span></li>
+                    <li>Book exactly the time you need; stays are never rounded up to a full day</li>
                     <li>No rush fees or penalties</li>
                 </ul>
                 <a href="#calculator" class="btn-secondary">
@@ -2538,6 +2548,7 @@
                             <span class="amount" id="extra-hours-cost">$0.00</span>
                         </div>
                     </div>
+                    <div class="line-tip hidden" id="extra-hours-tip"></div>
                     <div class="line-item subtotal-line" id="base-subtotal-row">
                         <div class="item-description">Subtotal</div>
                         <div class="item-amount" id="base-subtotal">$0.00</div>
@@ -2630,7 +2641,7 @@
                 </button>
                 <div class="faq-answer">
                     <div class="faq-answer-content">
-                        Each 24-hour period from drop-off counts as one day at <span class="nightly-rate-value">$55</span>. For example, dropping off at 3pm and picking up at 3pm the next day is one day. Any extra time beyond a full day is charged at <span class="hourly-rate-value">$5</span> per hour, rounded up to the next hour. Extra hours never cost more than a day: once they would add up to the daily rate (<span class="hour-flip-value">11</span> or more extra hours), the calculator counts another full day instead.
+                        Each 24-hour period from drop-off counts as one day at <span class="nightly-rate-value">$55</span>. For example, dropping off at 3pm and picking up at 3pm the next day is one day. Any extra time beyond a full day is charged at <span class="hourly-rate-value">$5</span> per hour, rounded up to the next hour. You're never rounded up to a full day; you pay for the time you book. If your extra hours would add up to more than a day, the estimate will mention that booking the full 24 hours costs less, and the choice is yours.
                     </div>
                 </div>
             </div>
