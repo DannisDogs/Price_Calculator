@@ -22,7 +22,7 @@ All rates are defined once, at the top of `script.js`, and every figure shown on
 How a stay is priced:
 
 1. The stay length is measured in local wall-clock time, so a 9am-to-9am night is always 24 hours, even across a daylight-saving change.
-2. Each full 24-hour period is one day. Leftover time is billed by the hour, rounded up to the next hour, and is never rounded up to a full day: a 23-hour stay is 23 × $5 = $115. When the extra hours would cost more than a day, the estimate shows a tip that booking the full 24 hours is cheaper, but the customer's booked time is what gets priced.
+2. Each full 24-hour period is one day. Leftover time is billed by the hour, rounded up to the next hour, and is never rounded up to a full day: a 23-hour stay is 23 × $5 = $115.
 3. The first pet pays the full rate; each additional pet pays 80% of both the daily rate and the extra hours.
 4. If the holiday switch is on, 5% of the stay total is added.
 5. Stays of 3 or more days show the $50 deposit and the balance due at pick-up.
