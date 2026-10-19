@@ -89,18 +89,11 @@ function fillPricingText() {
     fill('.deposit-days-value', String(DEPOSIT_MIN_DAYS));
     fill('.second-pet-rate-value', formatCurrency(NIGHTLY_RATE * ADDITIONAL_PET_FACTOR, true));
     fill('.two-pet-total-value', formatCurrency(NIGHTLY_RATE * (1 + ADDITIONAL_PET_FACTOR), true));
-    fill('.hour-cap-value', String(maxExtraHours()));
-    fill('.hour-flip-value', String(maxExtraHours() + 1));
 
     document.getElementById('twenty-four-hour-rate').textContent = '× ' + formatCurrency(NIGHTLY_RATE);
     document.getElementById('extra-hours-rate').textContent = '× ' + formatCurrency(HOURLY_RATE);
     document.getElementById('holiday-toggle-hint').textContent =
         `Adds a ${formatPercent(HOLIDAY_FEE_RATE)} holiday fee to the stay total`;
-}
-
-// Extra hours beyond this many would cost as much as another full day, so they roll into one.
-function maxExtraHours() {
-    return Math.ceil(NIGHTLY_RATE / HOURLY_RATE) - 1;
 }
 
 function setupEventListeners() {
@@ -499,14 +492,10 @@ function stayMinutes(dropoff, pickup) {
 }
 
 // Split a stay into billed 24-hour days and extra hours. Extra hours are rounded up to the
-// next hour, and once they would cost as much as a full day they become another day instead.
+// next hour and always billed by the hour; a stay is never rounded up to a full day.
 function billableUnits(totalMinutes) {
-    let days = Math.floor(totalMinutes / MINUTES_PER_DAY);
-    let extraHours = Math.ceil((totalMinutes % MINUTES_PER_DAY) / 60);
-    if (extraHours * HOURLY_RATE >= NIGHTLY_RATE) {
-        days += 1;
-        extraHours = 0;
-    }
+    const days = Math.floor(totalMinutes / MINUTES_PER_DAY);
+    const extraHours = Math.ceil((totalMinutes % MINUTES_PER_DAY) / 60);
     return { days, extraHours };
 }
 
@@ -695,6 +684,14 @@ function displayResults(est) {
         // The discounted rates are already in each pet's lines above, so this is a note, not a deduction
         document.getElementById('multi-dog-surcharge').textContent = formatCurrency(est.multiPetDiscount);
     }
+
+    // Extra hours are always billed as booked; just point out when a full day would be cheaper
+    const tip = document.getElementById('extra-hours-tip');
+    const hoursCostMoreThanDay = est.extraHours * HOURLY_RATE > NIGHTLY_RATE;
+    tip.classList.toggle('hidden', !hoursCostMoreThanDay);
+    tip.textContent = hoursCostMoreThanDay
+        ? `Tip: ${est.extraHours} extra hours come to ${formatCurrency(est.extraHours * HOURLY_RATE)} per pet, more than a full day (${formatCurrency(NIGHTLY_RATE)}). Book the full 24 hours if you'd rather pay the day rate.`
+        : '';
 
     const holidayRow = document.getElementById('holiday-fee-row');
     holidayRow.style.display = est.holidayFee > 0 ? 'flex' : 'none';
